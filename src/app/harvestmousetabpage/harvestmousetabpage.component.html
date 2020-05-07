@@ -1,9 +1,8 @@
-<input type="file" accept="" #fileInput
-       style="display:none;"
-       (change)="fileInputChange($event)">
+<input type="file" accept="" #fileInput style="display:none;" (change)="fileInputChange($event)">
 
-<button type="button" class="btn btn-info" 
-        (click)="uploadButtonClick()">Upload CSV File</button>
+<button type="button" class="btn btn-info" (click)="uploadButtonClick()">Upload CSV File</button>
+
+<mat-progress-bar *ngIf="!loaded" mode="buffer"></mat-progress-bar>
 
 <mat-tab-group>
    <mat-tab *ngFor="let tab of tabConfig; let i = index" label="{{tab.tabName}}">

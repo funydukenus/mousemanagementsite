@@ -28,6 +28,9 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
    // with tab id
    @ViewChildren('tab') tabList: QueryList<HarvestmousepageComponent>;
 
+   loaded: boolean = false;
+   trackedLoadedTabCom: number = 0;
+
    tabConfig: TabConfig[] =
       [
          {
@@ -155,7 +158,15 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
             tabConfig.harvestMouseList = the_data;
             tabConfig.datasource = new MatTableDataSource<HarvestMouse>(
                tabConfig.harvestMouseList);
-            tabConfig.tabComponent.InsertDataSource(tabConfig.datasource)
+            tabConfig.tabComponent.InsertDataSource(tabConfig.datasource);
+            this.trackedLoadedTabCom = this.trackedLoadedTabCom + 1;
+            if(this.trackedLoadedTabCom == this.tabList.length)
+            {
+               this.loaded = true;
+               this.toastservice.openSnackBar(
+                  this._snackBar, 'Loaded list completed', 'Dismiss'
+               )
+            }
          }
       );
    }

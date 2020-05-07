@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 
-let serverBaseUrl: string = 'http://127.0.0.1:8000/harvestedmouse/';
+let serverBaseUrl: string = ' https://mousemanagement.herokuapp.com/harvestedmouse/';
 export let harvestMouseListUrl: string = serverBaseUrl + 'list';
 export let harvestMouseFileUploadUrl: string = serverBaseUrl + 'import';
 

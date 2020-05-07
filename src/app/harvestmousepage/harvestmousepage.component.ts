@@ -6,7 +6,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { MatTable } from '@angular/material/table';
 @Component({
    selector: 'app-harvestmousepage',
    templateUrl: './harvestmousepage.component.html',
@@ -19,6 +20,8 @@ export class HarvestmousepageComponent implements OnInit {
 
    // Reference the paginator html element in the template
    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
+   @ViewChild('table') table: MatTable<HarvestMouse>;
 
    dataSource: MatTableDataSource<HarvestMouse>;
 
@@ -79,4 +82,9 @@ export class HarvestmousepageComponent implements OnInit {
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
    }
+
+   drop(event: CdkDragDrop<string[]>) {
+      moveItemInArray(this.displayedColumns, event.previousIndex, event.currentIndex);
+      this.table.renderRows();
+    }
 }

@@ -19,7 +19,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { HarvestmousetabpageComponent } from './harvestmousetabpage/harvestmousetabpage.component';
-
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 @NgModule({
    declarations: [
       AppComponent,
@@ -41,7 +43,10 @@ import { HarvestmousetabpageComponent } from './harvestmousetabpage/harvestmouse
       MatFormFieldModule,
       MatInputModule,
       MatSnackBarModule,
-      MatTabsModule
+      MatTabsModule,
+      MatProgressBarModule,
+      DragDropModule,
+      MatBottomSheetModule
    ],
    providers: [],
    bootstrap: [AppComponent]
