@@ -1,0 +1,84 @@
+<input type="file" accept="" #fileInput
+       style="display:none;"
+       (change)="fileInputChange($event)">
+
+<button type="button" class="btn btn-info" 
+        (click)="uploadButtonClick()">Upload CSV File</button>
+<div class="table-container">
+   <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="">
+   </mat-form-field>
+
+   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+   <!-- Handler Column -->
+   <ng-container matColumnDef="handler">
+      <th class="w-15 th-left" mat-header-cell *matHeaderCellDef mat-sort-header> Handled By </th>
+      <td class="w-15 th-left" mat-cell *matCellDef="let element"> {{element.handler}} </td>
+   </ng-container>
+
+   <!-- Gender Column -->
+   <ng-container matColumnDef="gender">
+      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header> Gender </th>
+      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.gender | genderConverter }} </td>
+   </ng-container>   
+
+   <!-- MouseLine Column -->
+   <ng-container matColumnDef="mouseLine">
+      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header> MouseLine </th>
+      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.mouseLine }} </td>
+   </ng-container>
+
+   <!-- GenoType Column -->
+   <ng-container matColumnDef="genoType">
+      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header> GenoType </th>
+      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.genoType }} </td>
+   </ng-container>   
+
+   <!-- Birth Date Column -->
+   <ng-container matColumnDef="birthDate">
+      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header> BirthDate </th>
+      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.birthDate }} </td>
+   </ng-container>
+
+   <!-- End Date Column -->
+   <ng-container matColumnDef="endDate">
+      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header> EndDate </th>
+      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.endDate }} </td>
+   </ng-container>   
+
+   <!-- Confirmation of GenoType Column -->
+   <ng-container matColumnDef="confirmationOfGenoType">
+      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header> COG </th>
+      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.confirmationOfGenoType }} </td>
+   </ng-container>      
+
+   <!-- PhenoType Column -->
+   <ng-container matColumnDef="phenoType">
+      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header> PhenoType </th>
+      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.phenoType }} </td>
+   </ng-container>         
+
+   <!-- Project Title Column -->
+   <ng-container matColumnDef="projectTitle">
+      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header> Project Title </th>
+      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.projectTitle }} </td>
+   </ng-container>            
+   <!-- Experiment Column -->
+   <ng-container matColumnDef="experiment">
+      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header> Experiment </th>
+      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.experiment }} </td>
+   </ng-container>
+   <!-- Comment Column -->
+   <ng-container matColumnDef="comment">
+      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header> Comment </th>
+      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.comment }} </td>
+   </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+   </table>
+   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
