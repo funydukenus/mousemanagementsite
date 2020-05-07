@@ -1,0 +1,12 @@
+<input type="file" accept="" #fileInput
+       style="display:none;"
+       (change)="fileInputChange($event)">
+
+<button type="button" class="btn btn-info" 
+        (click)="uploadButtonClick()">Upload CSV File</button>
+
+<mat-tab-group>
+   <mat-tab *ngFor="let tab of tabConfig; let i = index" label="{{tab.tabName}}">
+      <app-harvestmousepage #tab [tabName]='tab.tabName'></app-harvestmousepage>
+   </mat-tab>
+</mat-tab-group>

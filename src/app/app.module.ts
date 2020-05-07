@@ -18,13 +18,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { HarvestmousetabpageComponent } from './harvestmousetabpage/harvestmousetabpage.component';
 
 @NgModule({
    declarations: [
       AppComponent,
       MainpageComponent,
       HarvestmousepageComponent,
-      GenderConverter
+      GenderConverter,
+      HarvestmousetabpageComponent
    ],
    imports: [
       BrowserModule,

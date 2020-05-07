@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MainpageComponent } from './mainpage/mainpage.component';
-import { HarvestmousepageComponent } from './harvestmousepage/harvestmousepage.component';
-
+import { HarvestmousetabpageComponent } from './harvestmousetabpage/harvestmousetabpage.component';
 const routes: Routes = [
   {
     path: 'home',
@@ -10,7 +9,7 @@ const routes: Routes = [
   },
   {
     path: 'harvestmouse',
-    component: HarvestmousepageComponent
+    component: HarvestmousetabpageComponent
   },
   {
       path: '',
