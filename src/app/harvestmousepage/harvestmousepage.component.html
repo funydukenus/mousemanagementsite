@@ -4,78 +4,13 @@
       <input matInput (keyup)="applyFilter($event)" placeholder="">
    </mat-form-field>
 
-   <table #table
-          mat-table 
-          [dataSource]="dataSource" 
-          cdkDropList
-          cdkDropListOrientation="horizontal"
-          (cdkDropListDropped)="drop($event)"
-          matSort
-          class="mat-elevation-z8">
+   <table #table mat-table [dataSource]="dataSource" cdkDropList cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event)" matSort class="mat-elevation-z8">
 
-   <!-- Handler Column -->
-   <ng-container matColumnDef="handler">
-      <th class="w-15 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> Handled By </th>
-      <td class="w-15 th-left" mat-cell *matCellDef="let element"> {{element.handler}} </td>
-   </ng-container>
-
-   <!-- Gender Column -->
-   <ng-container matColumnDef="gender">
-      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> Gender </th>
-      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.gender | genderConverter }} </td>
-   </ng-container>   
-
-   <!-- MouseLine Column -->
-   <ng-container matColumnDef="mouseLine">
-      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> MouseLine </th>
-      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.mouseLine }} </td>
-   </ng-container>
-
-   <!-- GenoType Column -->
-   <ng-container matColumnDef="genoType">
-      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> GenoType </th>
-      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.genoType }} </td>
-   </ng-container>   
-
-   <!-- Birth Date Column -->
-   <ng-container matColumnDef="birthDate">
-      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> BirthDate </th>
-      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.birthDate }} </td>
-   </ng-container>
-
-   <!-- End Date Column -->
-   <ng-container matColumnDef="endDate">
-      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> EndDate </th>
-      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.endDate }} </td>
-   </ng-container>   
-
-   <!-- Confirmation of GenoType Column -->
-   <ng-container matColumnDef="confirmationOfGenoType">
-      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> COG </th>
-      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.confirmationOfGenoType }} </td>
-   </ng-container>      
-
-   <!-- PhenoType Column -->
-   <ng-container matColumnDef="phenoType">
-      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> PhenoType </th>
-      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.phenoType }} </td>
-   </ng-container>         
-
-   <!-- Project Title Column -->
-   <ng-container matColumnDef="projectTitle">
-      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> Project Title </th>
-      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.projectTitle }} </td>
-   </ng-container>            
-   <!-- Experiment Column -->
-   <ng-container matColumnDef="experiment">
-      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> Experiment </th>
-      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.experiment }} </td>
-   </ng-container>
-   <!-- Comment Column -->
-   <ng-container matColumnDef="comment">
-      <th class="w-10 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> Comment </th>
-      <td class="w-10 th-left" mat-cell *matCellDef="let element"> {{ element.comment }} </td>
-   </ng-container>
+      <ng-container [matColumnDef]="column.key q" *ngFor="let column of ( displayedColumns | tableheaderconverter )">
+         <th class="w-15 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> {{column.display}} </th>
+         <td class="w-15 th-left" mat-cell *matCellDef="let element"> {{element[column.key]}} </td>
+      </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

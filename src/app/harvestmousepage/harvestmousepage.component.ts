@@ -8,10 +8,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { MatTable } from '@angular/material/table';
+import { ColumnInfo } from '../interface/columninfo';
+import { TableHeaderConverter } from '../pipe/tableheader.pipe';
+
 @Component({
    selector: 'app-harvestmousepage',
    templateUrl: './harvestmousepage.component.html',
-   styleUrls: ['./harvestmousepage.component.scss']
+   styleUrls: ['./harvestmousepage.component.scss'],
 })
 export class HarvestmousepageComponent implements OnInit {
 
@@ -21,6 +24,7 @@ export class HarvestmousepageComponent implements OnInit {
    // Reference the paginator html element in the template
    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
+   // Reference to the table
    @ViewChild('table') table: MatTable<HarvestMouse>;
 
    dataSource: MatTableDataSource<HarvestMouse>;
@@ -46,6 +50,11 @@ export class HarvestmousepageComponent implements OnInit {
       'comment'
    ]
 
+   // This will store each of the column info
+   displayedColumnInfo: ColumnInfo[] = [
+
+   ]
+
    constructor(
       private dataprovider: DataproviderService,
       private toastservice: ToastmessageService,
@@ -54,7 +63,16 @@ export class HarvestmousepageComponent implements OnInit {
    ) { }
 
    ngOnInit(): void {
-
+      this.displayedColumns.forEach(
+         name => {
+            this.displayedColumnInfo.push(
+               {
+                  columnaName: name,
+                  display: true
+               }
+            )
+         }
+      )
    }
 
    /*
@@ -83,6 +101,11 @@ export class HarvestmousepageComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
    }
 
+   /*
+   Function name: drop
+   Description: This function will be called when the column header drop
+                event trigger
+   */
    drop(event: CdkDragDrop<string[]>) {
       moveItemInArray(this.displayedColumns, event.previousIndex, event.currentIndex);
       this.table.renderRows();
