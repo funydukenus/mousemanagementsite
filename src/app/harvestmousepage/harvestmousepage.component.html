@@ -7,7 +7,7 @@
    <table #table mat-table [dataSource]="dataSource" cdkDropList cdkDropListOrientation="horizontal"
       (cdkDropListDropped)="drop($event)" matSort class="mat-elevation-z8">
 
-      <ng-container [matColumnDef]="column.key q" *ngFor="let column of ( displayedColumns | tableheaderconverter )">
+      <ng-container [matColumnDef]="column.key" *ngFor="let column of ( displayedColumns | tableheaderconverter )">
          <th class="w-15 th-left" mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> {{column.display}} </th>
          <td class="w-15 th-left" mat-cell *matCellDef="let element"> {{element[column.key]}} </td>
       </ng-container>

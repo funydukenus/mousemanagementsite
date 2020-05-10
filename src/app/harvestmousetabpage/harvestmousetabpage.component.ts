@@ -6,6 +6,9 @@ import { harvestMouseFileUploadUrl } from '../service/dataprovider.service';
 import { HarvestmousepageComponent } from '../harvestmousepage/harvestmousepage.component';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { MatTableDataSource } from '@angular/material/table';
+import { BottomsheetService } from '../service/bottomsheet.service';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 interface TabConfig {
    filterString: string[],
@@ -49,10 +52,14 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
          },
       ]
 
+   activeTabConfig: TabConfig;
+
    constructor(
       private dataprovider: DataproviderService,
       private toastservice: ToastmessageService,
-      private _snackBar: MatSnackBar
+      private _snackBar: MatSnackBar,
+      private bottomsheetservice: BottomsheetService,
+      private bottomSheet: MatBottomSheet
    ) { }
 
    ngOnInit(): void {}
@@ -141,6 +148,8 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
             );
          }
       );
+
+      this.activeTabConfig = this.tabConfig[0];
    }
 
    /*
@@ -169,5 +178,35 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
             }
          }
       );
+   }
+
+   /*
+   Funtion name: selectedTabChange
+   Description: This function will be triggered when the switching to the new tab
+   */
+   selectedTabChange(event: MatTabChangeEvent){
+      let tabName = event.tab.textLabel;
+      this.tabConfig.forEach(
+         tabConfigEle => {
+            if(tabConfigEle.tabName == tabName)
+            {
+               this.activeTabConfig = tabConfigEle;
+            }
+         }
+      )
+   }
+
+   /*
+   Funtion name: openBottomSheetClick
+   Description: This function will be triggered when the bottom sheet open button
+                is clicked
+   */
+   openBottomSheetClick() 
+   {
+      this.bottomsheetservice.openBottomSheet(
+         this.bottomSheet,
+         this.activeTabConfig.tabComponent.displayedColumnInfo,
+         this.activeTabConfig.tabComponent.displayedColumns
+      )
    }
 }
