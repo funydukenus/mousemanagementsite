@@ -10,11 +10,21 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDragHandle } from '
 import { MatTable } from '@angular/material/table';
 import { ColumnInfo } from '../interface/columninfo';
 import { TableHeaderConverter } from '../pipe/tableheader.pipe';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
    selector: 'app-harvestmousepage',
    templateUrl: './harvestmousepage.component.html',
    styleUrls: ['./harvestmousepage.component.scss'],
+   animations: [
+      trigger('detailExpand', [
+        state('collapsed, void', style({height: '0px', minHeight: '0'})),
+        state('expanded', style({height: '*'})),
+        transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        transition('expanded <=> void', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+      ]),
+    ],
 })
 export class HarvestmousepageComponent implements OnInit {
 
@@ -34,6 +44,10 @@ export class HarvestmousepageComponent implements OnInit {
    // Identification of current rab
    @Input() tabName: string;
 
+   // Used to track which row has been expaneded
+   // Used the element to keep track of the row
+   expandedElement: HarvestMouse | null;
+
    // columns of the table
    displayedColumns: string[] = [
       //'id',
@@ -47,7 +61,7 @@ export class HarvestmousepageComponent implements OnInit {
       'phenoType',
       'projectTitle',
       'experiment',
-      'comment'
+      // 'comment'
    ]
 
    // This will store each of the column info
