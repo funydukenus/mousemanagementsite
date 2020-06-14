@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChildren, ViewChild, ElementRef, QueryList } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DataproviderService } from '../service/dataprovider.service';
-import { ToastmessageService } from '../service/toastmessage.service';
+import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastmessage.service';
 import { harvestMouseFileUploadUrl } from '../service/dataprovider.service';
 import { HarvestmousepageComponent } from '../harvestmousepage/harvestmousepage.component';
 import { HarvestMouse } from '../interface/harvestmouse';
@@ -9,6 +9,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BottomsheetService } from '../service/bottomsheet.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { DiagService } from '../service/diag.service';
+import { MatDialog } from '@angular/material/dialog';
+
+
 
 interface TabConfig {
    filterString: string[],
@@ -31,7 +35,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
    // with tab id
    @ViewChildren('tab') tabList: QueryList<HarvestmousepageComponent>;
 
-   loaded: boolean = false;
+   loaded: boolean;
    trackedLoadedTabCom: number = 0;
 
    tabConfig: TabConfig[] =
@@ -54,13 +58,22 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
 
    activeTabConfig: TabConfig;
 
+   groupSelectedEnabled: boolean;
+
+   // selected harvested mouse
+   selectedHarvestedMouse: HarvestMouse[];
+
    constructor(
       private dataprovider: DataproviderService,
       private toastservice: ToastmessageService,
+      private diagservice: DiagService,
       private _snackBar: MatSnackBar,
       private bottomsheetservice: BottomsheetService,
-      private bottomSheet: MatBottomSheet
-   ) { }
+      private bottomSheet: MatBottomSheet,
+      private diaglog: MatDialog
+   ) { 
+      this.showInProgress();
+   }
 
    ngOnInit(): void {}
 
@@ -105,25 +118,27 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
    */
    fileInputChange(event: any) {
       let file: File = event.target.files[0];
-
+      this.showInProgress();
       this.dataprovider.fileUploadRequest(file, harvestMouseFileUploadUrl).subscribe(
          data => {
             this.toastservice.openSnackBar(
-               this._snackBar, 'Imported Success', 'Dismiss'
+               this._snackBar, 'Imported Success', 'Dismiss', SuccessColor
             )
             // Fresh All the mouse lists in each of the tabs
             this.refreshMouseListsAllTabs();
+            // clear the file cache
+            this.fileInputButton.nativeElement.value = "";
+            this.InProgressDone();
          },
          error => {
             this.toastservice.openSnackBar(
-               this._snackBar, 'Something wrong', 'Dismiss'
+               this._snackBar, 'Something wrong', 'Dismiss', ErrorColor
             )
+            // clear the file cache
+            this.fileInputButton.nativeElement.value = "";
+            this.InProgressDone();
          }
       );
-
-      this.toastservice.openSnackBar(
-         this._snackBar, 'You are in HarvestMouseTable section', 'Dismiss'
-      )
    }
 
    /*
@@ -159,6 +174,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
    */
    GetMouseTabList(tabConfig: TabConfig) {
       // Load the harvested mouse list when the page is loaded
+      this.showInProgress();
       this.dataprovider.getHarvestMouseList(
          tabConfig.filterString
       ).subscribe(
@@ -168,14 +184,21 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
             tabConfig.datasource = new MatTableDataSource<HarvestMouse>(
                tabConfig.harvestMouseList);
             tabConfig.tabComponent.InsertDataSource(tabConfig.datasource);
+            tabConfig.tabComponent.refreshSelected();
             this.trackedLoadedTabCom = this.trackedLoadedTabCom + 1;
             if(this.trackedLoadedTabCom == this.tabList.length)
             {
-               this.loaded = true;
                this.toastservice.openSnackBar(
-                  this._snackBar, 'Loaded list completed', 'Dismiss'
+                  this._snackBar, 'Loaded list completed', 'Dismiss', SuccessColor
                )
             }
+
+            this.InProgressDone();
+         },
+         error => {
+            this.toastservice.openSnackBar(
+               this._snackBar, 'Loaded list completed', 'Dismiss', ErrorColor
+            )
          }
       );
    }
@@ -191,6 +214,8 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
             if(tabConfigEle.tabName == tabName)
             {
                this.activeTabConfig = tabConfigEle;
+               this.selectionEventTrigger(this.activeTabConfig.tabComponent.getSelectedRows());
+               this.activeTabConfig.tabComponent.refreshSelected();
             }
          }
       )
@@ -208,5 +233,62 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
          this.activeTabConfig.tabComponent.displayedColumnInfo,
          this.activeTabConfig.tabComponent.displayedColumns
       )
+   }
+
+   selectionEventTrigger(harvestdMouse){
+      this.selectedHarvestedMouse = harvestdMouse.selected;
+
+      if(this.selectedHarvestedMouse &&
+         this.selectedHarvestedMouse.length > 0){
+         this.groupSelectedEnabled = true;
+      }
+      else{
+         this.groupSelectedEnabled = false;
+      }
+   }
+
+   GroupDeleted(){
+      this.diagservice.openConfirmationDialog(
+         this.diaglog,
+         this.selectedHarvestedMouse
+      ).subscribe(result => {
+         if(result){
+            this.showInProgress();
+            this.dataprovider.deleteHarvestedMouseRequest(
+               this.selectedHarvestedMouse
+            ).subscribe(
+               data => {
+                  console.log(data);
+                  this.refreshMouseListsAllTabs();
+                  this.toastservice.openSnackBar(
+                     this._snackBar,
+                     "Deleted successfully",
+                     "Dismiss",
+                     SuccessColor
+                  )
+                  this.groupSelectedEnabled = false;
+                  this.InProgressDone();
+               },
+               error => {
+                  console.log(error);
+                  this.toastservice.openSnackBar(
+                     this._snackBar,
+                     "Encountered Error",
+                     "Dismiss",
+                     ErrorColor
+                  )
+                  this.InProgressDone();
+               }
+            )
+         }
+      });
+   }
+
+   showInProgress(){
+      this.loaded = true;
+   }
+
+   InProgressDone(){
+      this.loaded = false;
    }
 }

@@ -5,11 +5,27 @@ body {
    margin: 0; 
    font-family: Roboto, "Helvetica Neue", sans-serif; 
    background-image:url("./assets/Images/mainpage_background.jpg");
+   -webkit-user-select: none;
+   -moz-user-select: -moz-none;
+    -ms-user-select: none;
+        user-select: none;
 }
 
 .blue-snackbar {
    background: #2196F3;
    color: white;
+}
+
+.green-snackbar{
+   background: rgb(32, 241, 126);
+   color: black;
+   font-weight: bold;
+}
+
+.red-snackbar{
+   background: rgb(241, 39, 32);
+   color: white;
+   font-weight: bold;
 }
 
 .cdk-drag-preview {

@@ -1,9 +1,9 @@
 .table-container{
-   height: 100%;
-   width: 90%;
-   margin-left: 5%;
+   height: 350px;
+   overflow: auto;
+   width: 95%;
+   margin-left: 2.5%;
 }
-
 
 .mat-form-field {
    font-size: 14px;
@@ -52,7 +52,7 @@ tr.element-detail-row:nth-child(4n+1):hover{
 }
 
 .element-detail {
-   height: 150px;
+   height: 100%;
    overflow: hidden;
 }
 
@@ -65,6 +65,26 @@ tr.element-detail-row {
    justify-content: left;
    font-size: small;
    font-weight: bold;
+ }
+
+.functional-button-group{
+   margin-top: 2%;
+   margin-bottom: 2%;
+   width: 40%;
+   margin-left:60%;
+}
+
+.functional-button{
+   display: block; text-align: center; 
+}
+
+/** No CSS for this example */
+::ng-deep .mat-checkbox .mat-checkbox-frame {
+   border-color: black;
+ }
+ 
+ ::ng-deep .mat-checkbox-checked .mat-checkbox-background {
+   background-color: rgb(50, 211, 157) !important;
  }
 
 .th-center{

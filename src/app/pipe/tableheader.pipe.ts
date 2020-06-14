@@ -11,8 +11,16 @@ export class TableHeaderConverter implements PipeTransform {
    // columns of the table
    displayedColumns: columnDisplay[] = [
       {
+         key: 'position',
+         display: 'Position'
+      },
+      {
          key: 'handler',
          display: 'Handled By'
+      },
+      {
+         key: 'physicalId',
+         display: 'Physical ID'
       },
       {
          key: 'mouseLine',

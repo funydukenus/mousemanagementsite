@@ -1,0 +1,139 @@
+<h2 mat-dialog-title>Editing mouse</h2>
+<mat-dialog-content class="diag-content">
+   <mat-accordion [@.disabled]="disableAnimation">
+      <mat-expansion-panel>
+         <mat-expansion-panel-header>
+            <mat-panel-title>Mouse basic information</mat-panel-title>
+            <mat-panel-description>Physical ID & Gender & Handler</mat-panel-description>
+         </mat-expansion-panel-header>
+         <mat-form-field appearance="outline">
+            <mat-label>Physical ID</mat-label>
+            <input matInput required value="harvestedMouse.physicalId" [(ngModel)]="harvestedMouse.physicalId">
+         </mat-form-field>
+         <mat-form-field appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select [(value)]="harvestedMouse.gender">
+               <mat-option value="M">Male</mat-option>
+               <mat-option value="F">Female</mat-option>
+            </mat-select>
+         </mat-form-field>
+         <mat-form-field appearance="outline">
+            <mat-label>Handled by</mat-label>
+            <input matInput required [matAutocomplete]="autohandler" value="harvestedMouse.handler"
+               [(ngModel)]="harvestedMouse.handler" [formControl]="getDataOptionByName('Handler').control">
+            <mat-autocomplete autoActiveFirstOption #autohandler="matAutocomplete">
+               <mat-option *ngFor="let option of getDataOptionByName('Handler').filteredOptions | async"
+                  [value]="option">
+                  {{option}}
+               </mat-option>
+            </mat-autocomplete>
+         </mat-form-field>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+         <mat-expansion-panel-header>
+            <mat-panel-title>Mouse Gene Information</mat-panel-title>
+            <mat-panel-description>MouseLine & GenoType & PhenoType</mat-panel-description>
+         </mat-expansion-panel-header>
+
+         <mat-form-field class="mouselineInput" appearance="outline">
+            <mat-label>MouseLine</mat-label>
+            <input matInput required [matAutocomplete]="automouseline" value="harvestedMouse.mouseLine"
+               [(ngModel)]="harvestedMouse.mouseLine" [formControl]="getDataOptionByName('MouseLine').control">
+            <mat-autocomplete autoActiveFirstOption #automouseline="matAutocomplete">
+               <mat-option *ngFor="let option of getDataOptionByName('MouseLine').filteredOptions | async"
+                  [value]="option">
+                  {{option}}
+               </mat-option>
+            </mat-autocomplete>
+         </mat-form-field>
+
+         <mat-form-field class="genotypeInput" appearance="outline">
+            <mat-label>GenoType</mat-label>
+            <input matInput required [matAutocomplete]="autogenotype" value="harvestedMouse.genoType"
+               [(ngModel)]="harvestedMouse.genoType" [formControl]="getDataOptionByName('GenoType').control">
+            <mat-autocomplete autoActiveFirstOption #autogenotype="matAutocomplete">
+               <mat-option *ngFor="let option of getDataOptionByName('GenoType').filteredOptions | async"
+                  [value]="option">
+                  {{option}}
+               </mat-option>
+            </mat-autocomplete>
+         </mat-form-field>
+
+         <mat-form-field appearance="outline">
+            <mat-label>PhenoType</mat-label>
+            <input matInput required [matAutocomplete]="autophenotype" value="harvestedMouse.phenoType"
+               [(ngModel)]="harvestedMouse.phenoType" [formControl]="getDataOptionByName('PhenoType').control">
+            <mat-autocomplete autoActiveFirstOption #autophenotype="matAutocomplete">
+               <mat-option *ngFor="let option of getDataOptionByName('PhenoType').filteredOptions | async"
+                  [value]="option">
+                  {{option}}
+               </mat-option>
+            </mat-autocomplete>
+         </mat-form-field>
+         <mat-form-field appearance="outline">
+            <mat-label>Confirmation of GenoType</mat-label>
+            <input matInput required value="harvestedMouse.confirmationOfGenoType" [(ngModel)]="harvestedMouse.confirmationOfGenoType">
+         </mat-form-field>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+         <mat-expansion-panel-header>
+            <mat-panel-title>Mouse Date Information</mat-panel-title>
+            <mat-panel-description>BirthDate & EndDate</mat-panel-description>
+         </mat-expansion-panel-header>
+         <mat-form-field appearance="outline">
+            <mat-label>BirthDate</mat-label>
+            <input matInput [matDatepicker]="birthDatePicker" [(ngModel)]="this.birthDate">
+            <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #birthDatePicker></mat-datepicker>
+         </mat-form-field>
+         <mat-form-field appearance="outline">
+            <mat-label>EndDate</mat-label>
+            <input matInput [min]="this.birthDate" [matDatepicker]="endDatePicker" [(ngModel)]="this.endDate">
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+         </mat-form-field>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+         <mat-expansion-panel-header>
+            <mat-panel-title>Mouse Project Information</mat-panel-title>
+            <mat-panel-description>Project Title & Experiment & Comment</mat-panel-description>
+         </mat-expansion-panel-header>
+
+         <mat-form-field class="projectInput" appearance="outline">
+            <mat-label>Project Title</mat-label>
+            <input matInput required [matAutocomplete]="autoprojectitle" value="harvestedMouse.projectTitle"
+               [(ngModel)]="harvestedMouse.projectTitle" [formControl]="getDataOptionByName('ProjectTitle').control">
+            <mat-autocomplete autoActiveFirstOption #autoprojectitle="matAutocomplete">
+               <mat-option *ngFor="let option of getDataOptionByName('ProjectTitle').filteredOptions | async"
+                  [value]="option">
+                  {{option}}
+               </mat-option>
+            </mat-autocomplete>
+         </mat-form-field>
+         <mat-form-field class="experimentInput" appearance="outline">
+            <mat-label>Experiment</mat-label>
+            <input matInput required [matAutocomplete]="autoexperiment" value="harvestedMouse.experiment"
+               [(ngModel)]="harvestedMouse.experiment" [formControl]="getDataOptionByName('Experiement').control">
+            <mat-autocomplete autoActiveFirstOption #autoexperiment="matAutocomplete">
+               <mat-option *ngFor="let option of getDataOptionByName('Experiement').filteredOptions | async"
+                  [value]="option">
+                  {{option}}
+               </mat-option>
+            </mat-autocomplete>
+         </mat-form-field>
+         <br>
+         <h4><strong>Comment</strong></h4>
+         <div class="element-comment">
+            <textarea cols="500" rows="5" [(ngModel)]="harvestedMouse.comment"></textarea>
+         </div>
+      </mat-expansion-panel>
+
+   </mat-accordion>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+   <div class="btn-group functional-button-group" role="group">
+      <button type="button" class="btn btn-primary" [mat-dialog-close]="consolidateData(true)">Confirm</button>
+      <button type="button" class="btn btn-danger" (click)="CloseConfirm()">Cancel</button>
+   </div>
+</mat-dialog-actions>

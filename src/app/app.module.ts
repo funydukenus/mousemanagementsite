@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainpageComponent } from './mainpage/mainpage.component';
@@ -25,8 +25,16 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from "@angular/material/core";
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { BottomSheetColSelComponent } from './service/bottomsheet.service';
+import { DialogConfirmationComponent, DialogSimpleConfirmationComponent, DialogSingleEditComponent } from './dialog/dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
    declarations: [
@@ -36,7 +44,10 @@ import { BottomSheetColSelComponent } from './service/bottomsheet.service';
       GenderConverter,
       HarvestmousetabpageComponent,
       BottomSheetColSelComponent,
-      TableHeaderConverter
+      TableHeaderConverter,
+      DialogConfirmationComponent,
+      DialogSimpleConfirmationComponent,
+      DialogSingleEditComponent
    ],
    imports: [
       BrowserModule,
@@ -56,7 +67,14 @@ import { BottomSheetColSelComponent } from './service/bottomsheet.service';
       MatProgressBarModule,
       DragDropModule,
       MatBottomSheetModule,
-      MatCheckboxModule
+      MatCheckboxModule,
+      MatDialogModule,
+      MatSelectModule,
+      MatDatepickerModule,
+      MatNativeDateModule,
+      MatExpansionModule,
+      MatAutocompleteModule,
+      ReactiveFormsModule
    ],
    providers: [],
    bootstrap: [AppComponent]

@@ -1,6 +1,7 @@
 export interface HarvestMouse{
    id: number,
    handler: string,
+   physicalId: string,
    gender: string,
    mouseLine: string,
    genoType: string,

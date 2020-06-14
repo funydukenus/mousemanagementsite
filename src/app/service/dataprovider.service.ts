@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 
-let serverBaseUrl: string = ' https://mousemanagement.herokuapp.com/harvestedmouse/';
+let serverBaseUrl: string = 'http://127.0.0.1:8000/harvestedmouse/';
 export let harvestMouseListUrl: string = serverBaseUrl + 'list';
 export let harvestMouseFileUploadUrl: string = serverBaseUrl + 'import';
+export let harvestMouseDeleteUrl: string = serverBaseUrl + 'delete';
+export let harvestMouseUpdateUrl: string = serverBaseUrl + 'update';
+export let getDataListUrl: string = serverBaseUrl + 'getdatalist';
 
 @Injectable({
    providedIn: 'root'
@@ -68,6 +71,68 @@ export class DataproviderService {
    }
 
    /*
+   Function name: httpDeleteRequest
+   Description: Making the http delete request to the desired URL server with 
+                      optional parameters
+   */
+   httpDeleteRequest(harvestedMouseArray: HarvestMouse[], httpHeader: HttpHeaders, url: string) {
+      let options = {
+         headers: httpHeader,
+         body: harvestedMouseArray
+      }
+
+      return this.http.request('DELETE', url, options);
+   }
+
+   /*
+   Function name: httpPutRequest
+   Description: Making the http put request to the desired URL server with 
+                      optional parameters
+   */
+   httpPutRequest(harvestedMouseArray: HarvestMouse[], httpHeader: HttpHeaders, url: string) {
+      let options = {
+         headers: httpHeader,
+         body: harvestedMouseArray
+      }
+
+      return this.http.request('PUT', url, options);
+   }
+
+   /*
+   Function name: deleteHarvestedMouseRequest
+   Description: Making the http delete request to the desired URL server with 
+                      optional parameters
+   */
+   deleteHarvestedMouseRequest(harvestedMouseArray: HarvestMouse[]) {
+      let url = harvestMouseDeleteUrl;
+
+      // Setting up http headers for the file uploading
+      let headers = new HttpHeaders({
+         'enctype': 'multipart/form-data',
+         'Accept': 'application/json'
+      });
+
+      return this.httpDeleteRequest(harvestedMouseArray, headers, url);
+   }
+
+   /*
+   Function name: updateHarvestedMouseRequest
+   Description: Making the http put request to the desired URL server with 
+                      optional parameters
+   */
+   updateHarvestedMouseRequest(harvestedMouseArray: HarvestMouse[]) {
+      let url = harvestMouseUpdateUrl;
+
+      // Setting up http headers for the file uploading
+      let headers = new HttpHeaders({
+         'enctype': 'multipart/form-data',
+         'Accept': 'application/json'
+      });
+
+      return this.httpPutRequest(harvestedMouseArray, headers, url);
+   }
+
+   /*
    Function name: getHarvestMouseList
    Description: Making the get method to query the harvested mouse list
                       from the server
@@ -77,6 +142,14 @@ export class DataproviderService {
       return this.httpGetRequest(url, params);
    }
 
+   /*
+   Function name: getDataList
+   Description: Making the get method to query the inserted set of inserted data
+   */
+   getDataList(params?: string[]) {
+      let url = getDataListUrl;
+      return this.httpGetRequest(url, params);
+   }
 
    /*
    Function name: FileUploadRequest
