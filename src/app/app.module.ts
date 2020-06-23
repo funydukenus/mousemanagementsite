@@ -31,11 +31,11 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from "@angular/material/core";
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-
+import { MatDividerModule } from '@angular/material/divider';
 import { BottomSheetColSelComponent } from './service/bottomsheet.service';
 import { DialogConfirmationComponent, DialogSimpleConfirmationComponent, DialogSingleEditComponent } from './dialog/dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { MatListModule } from '@angular/material/list';
 @NgModule({
    declarations: [
       AppComponent,
@@ -74,7 +74,9 @@ import { ReactiveFormsModule } from '@angular/forms';
       MatNativeDateModule,
       MatExpansionModule,
       MatAutocompleteModule,
-      ReactiveFormsModule
+      ReactiveFormsModule,
+      MatDividerModule,
+      MatListModule
    ],
    providers: [],
    bootstrap: [AppComponent]

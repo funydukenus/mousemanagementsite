@@ -94,6 +94,57 @@
             <mat-datepicker #endDatePicker></mat-datepicker>
          </mat-form-field>
       </mat-expansion-panel>
+      
+      <mat-expansion-panel>
+         <mat-expansion-panel-header>
+            <mat-panel-title>Mouse slices information</mat-panel-title>
+            <mat-panel-description>PFA Record & Freeze Record</mat-panel-description>
+         </mat-expansion-panel-header>
+         <h4>PFA Record</h4>
+         <mat-form-field class="pfaInput" appearance="outline">
+            <mat-label>Liver</mat-label>
+            <input matInput required value="harvestedMouse.pfaRecord.liver" [(ngModel)]="harvestedMouse.pfaRecord.liver" type="number">
+         </mat-form-field>
+         <mat-form-field class="pfaInputExtention" appearance="outline">
+            <mat-label>Liver Tumor</mat-label>
+            <input matInput required value="harvestedMouse.pfaRecord.liverTumor" [(ngModel)]="harvestedMouse.pfaRecord.liverTumor" type="number">
+         </mat-form-field>
+         <mat-form-field class="pfaInputExtention" appearance="outline">
+            <mat-label>Small Intenstine</mat-label>
+            <input matInput required value="harvestedMouse.pfaRecord.smallIntestine" [(ngModel)]="harvestedMouse.pfaRecord.smallIntestine" type="number">
+         </mat-form-field>
+         <mat-form-field class="pfaInputExtention" appearance="outline">
+            <mat-label>Small Intenstine Tumor</mat-label>
+            <input matInput required value="harvestedMouse.pfaRecord.smallIntestineTumor" [(ngModel)]="harvestedMouse.pfaRecord.smallIntestineTumor" type="number">
+         </mat-form-field>
+         <mat-form-field class="pfaInput" appearance="outline">
+            <mat-label>Skin</mat-label>
+            <input matInput required value="harvestedMouse.pfaRecord.skin" [(ngModel)]="harvestedMouse.pfaRecord.skin" type="number">
+         </mat-form-field>
+         <mat-form-field class="pfaInput" appearance="outline">
+            <mat-label>Skin Hair</mat-label>
+            <input matInput required value="harvestedMouse.pfaRecord.skinHair" [(ngModel)]="harvestedMouse.pfaRecord.skinHair" type="number">
+         </mat-form-field>
+         <h4><strong>Others</strong></h4>
+         <div class="element-comment">
+            <textarea cols="500" rows="5" [(ngModel)]="harvestedMouse.pfaRecord.others"></textarea>
+         </div>
+         <hr>
+         <h4>Freeze Record</h4>
+         <mat-form-field class="pfaInput" appearance="outline">
+            <mat-label>Liver</mat-label>
+            <input matInput required value="harvestedMouse.freezeRecord.liver" [(ngModel)]="harvestedMouse.freezeRecord.liver" type="number">
+         </mat-form-field>
+         <mat-form-field class="pfaInputExtention" appearance="outline">
+            <mat-label>Liver Tumor</mat-label>
+            <input matInput required value="harvestedMouse.freezeRecord.liverTumor" [(ngModel)]="harvestedMouse.freezeRecord.liverTumor" type="number">
+         </mat-form-field>
+         <h4><strong>Others</strong></h4>
+         <div class="element-comment">
+            <textarea cols="500" rows="5" [(ngModel)]="harvestedMouse.freezeRecord.others"></textarea>
+         </div>
+      </mat-expansion-panel>
+
       <mat-expansion-panel>
          <mat-expansion-panel-header>
             <mat-panel-title>Mouse Project Information</mat-panel-title>

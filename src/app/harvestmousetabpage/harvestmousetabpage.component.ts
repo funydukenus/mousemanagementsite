@@ -12,8 +12,6 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { DiagService } from '../service/diag.service';
 import { MatDialog } from '@angular/material/dialog';
 
-
-
 interface TabConfig {
    filterString: string[],
    tabName: string,
