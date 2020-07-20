@@ -1,7 +1,11 @@
-.grid-container{
-   width: 80%;
-   margin: 0;
-   position: absolute;
-   top: 25%;
-   left: 10%;
+@import "../../shared/button.scss";
+
+html, body {
+  height: 100%;
+}
+
+.jumbotron {
+  opacity: 0.8;
+  border-radius: 0;
+  height: 100%;
 }
