@@ -1,7 +1,7 @@
 <input type="file" accept="" #fileInput style="display:none;" (change)="fileInputChange($event)" accept=".csv">
 
-<button type="button" class="btn btn-info functional-button" (click)="uploadButtonClick()">Upload CSV File</button>
-<button 
+<!-- <button type="button" class="btn btn-info functional-button" (click)="uploadButtonClick()">Upload CSV File</button> -->
+<button
    *ngIf="groupSelectedEnabled"
    type="button"
    class="btn btn-info btn-danger functional-button"
@@ -9,7 +9,7 @@
    Delete selected mouse
 </button>
 
-<button 
+<button
    *ngIf="groupSelectedEnabled"
    type="button"
    class="btn btn-info btn-warning functional-button-extended"

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Component } from '@angular/core';
 import { Inject } from '@angular/core';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
-import { ColumnInfo } from '../interface/columnInfo';
+import { ColumnInfo } from '../interface/columninfo';
 import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 
 @Injectable({

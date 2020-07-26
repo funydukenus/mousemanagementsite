@@ -3,4 +3,8 @@
 .btn-primary {
   background-color: $secondary-color;
   color: white;
+
+  &:hover {
+    color: white;
+  }
 }
