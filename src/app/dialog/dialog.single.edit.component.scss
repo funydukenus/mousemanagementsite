@@ -16,3 +16,8 @@
 .experimentInput{
    width: 350px;
 }
+
+
+.mat-form-field + .mat-form-field {
+  margin-left: 1rem;
+}
