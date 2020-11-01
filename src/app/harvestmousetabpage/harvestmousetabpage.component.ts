@@ -12,8 +12,6 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { DiagService } from '../service/diag.service';
 import { MatDialog } from '@angular/material/dialog';
 
-
-
 interface TabConfig {
    filterString: string[],
    tabName: string,
@@ -71,7 +69,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
       private bottomsheetservice: BottomsheetService,
       private bottomSheet: MatBottomSheet,
       private diaglog: MatDialog
-   ) { 
+   ) {
       this.showInProgress();
    }
 
@@ -81,7 +79,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
    Funtion name: ngAfterViewInit
    Description: Based on the document,Respond after Angular checks the component's
                 views and child views / the view that a directive is in.
-                Called after the ngAfterViewInit() and every subsequent 
+                Called after the ngAfterViewInit() and every subsequent
                 ngAfterContentChecked().
    */
    ngAfterViewInit(): void{
@@ -94,7 +92,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
             this.tabConfig.forEach(
                tabConfigEle => {
                   let tabNameFromTabConfig:string = tabConfigEle.tabName;
-                  
+
                   // If the found HarvestedMouse has the same tabName
                   // as the tabConfig, assign the tabComponent
                   // to this tabConfig
@@ -176,30 +174,30 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
       // Load the harvested mouse list when the page is loaded
       this.showInProgress();
       this.dataprovider.getHarvestMouseList(
-         tabConfig.filterString
+        tabConfig.filterString
       ).subscribe(
-         data => {
-            let the_data = <HarvestMouse[]>data;
-            tabConfig.harvestMouseList = the_data;
-            tabConfig.datasource = new MatTableDataSource<HarvestMouse>(
-               tabConfig.harvestMouseList);
-            tabConfig.tabComponent.InsertDataSource(tabConfig.datasource);
-            tabConfig.tabComponent.refreshSelected();
-            this.trackedLoadedTabCom = this.trackedLoadedTabCom + 1;
-            if(this.trackedLoadedTabCom == this.tabList.length)
-            {
-               this.toastservice.openSnackBar(
-                  this._snackBar, 'Loaded list completed', 'Dismiss', SuccessColor
-               )
-            }
+        data => {
+          let the_data = <HarvestMouse[]>data;
+          tabConfig.harvestMouseList = the_data;
+          tabConfig.datasource = new MatTableDataSource<HarvestMouse>(
+              tabConfig.harvestMouseList);
+          tabConfig.tabComponent.InsertDataSource(tabConfig.datasource);
+          tabConfig.tabComponent.refreshSelected();
+          this.trackedLoadedTabCom = this.trackedLoadedTabCom + 1;
+          if(this.trackedLoadedTabCom == this.tabList.length)
+          {
+              this.toastservice.openSnackBar(
+                this._snackBar, 'Loaded list completed', 'Dismiss', SuccessColor
+              )
+          }
 
-            this.InProgressDone();
-         },
-         error => {
-            this.toastservice.openSnackBar(
-               this._snackBar, 'Loaded list completed', 'Dismiss', ErrorColor
-            )
-         }
+          this.InProgressDone();
+        },
+        error => {
+          this.toastservice.openSnackBar(
+              this._snackBar, 'Loading list failed', 'Dismiss', ErrorColor
+          )
+        }
       );
    }
 
@@ -226,7 +224,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
    Description: This function will be triggered when the bottom sheet open button
                 is clicked
    */
-   openBottomSheetClick() 
+   openBottomSheetClick()
    {
       this.bottomsheetservice.openBottomSheet(
          this.bottomSheet,

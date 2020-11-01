@@ -1,16 +1,15 @@
 .table-container{
-   height: 350px;
-   overflow: auto;
-   width: 95%;
-   margin-left: 2.5%;
+  height: 350px;
+  overflow: auto;
+  width: 95%;
+  margin-left: 2.5%;
 }
 
 .mat-form-field {
-   font-size: 14px;
-   width: 100%;
-   color:white;
+  font-size: 14px;
+  width: 100%;
+  color:white;
 }
-
 
 .mat-cell {
    color: black;
@@ -75,20 +74,20 @@ tr.element-detail-row {
 }
 
 .functional-button{
-   display: block; text-align: center; 
+   display: block; text-align: center;
 }
 
 /** No CSS for this example */
 ::ng-deep .mat-checkbox .mat-checkbox-frame {
    border-color: black;
  }
- 
+
  ::ng-deep .mat-checkbox-checked .mat-checkbox-background {
    background-color: rgb(50, 211, 157) !important;
  }
 
 .th-center{
-   text-align: center; 
+   text-align: center;
 }
 .th-left{
    text-align: left;

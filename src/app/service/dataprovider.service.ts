@@ -32,7 +32,7 @@ export class DataproviderService {
 
    /*
    Function name: httpGetRequest
-   Description: Making the http get request to the desired URL server with 
+   Description: Making the http get request to the desired URL server with
                       optional parameters
    */
    httpGetRequest(url: string, params?: string[]) {
@@ -72,7 +72,7 @@ export class DataproviderService {
 
    /*
    Function name: httpDeleteRequest
-   Description: Making the http delete request to the desired URL server with 
+   Description: Making the http delete request to the desired URL server with
                       optional parameters
    */
    httpDeleteRequest(harvestedMouseArray: HarvestMouse[], httpHeader: HttpHeaders, url: string) {
@@ -86,7 +86,7 @@ export class DataproviderService {
 
    /*
    Function name: httpPutRequest
-   Description: Making the http put request to the desired URL server with 
+   Description: Making the http put request to the desired URL server with
                       optional parameters
    */
    httpPutRequest(harvestedMouseArray: HarvestMouse[], httpHeader: HttpHeaders, url: string) {
@@ -100,7 +100,7 @@ export class DataproviderService {
 
    /*
    Function name: deleteHarvestedMouseRequest
-   Description: Making the http delete request to the desired URL server with 
+   Description: Making the http delete request to the desired URL server with
                       optional parameters
    */
    deleteHarvestedMouseRequest(harvestedMouseArray: HarvestMouse[]) {
@@ -117,7 +117,7 @@ export class DataproviderService {
 
    /*
    Function name: updateHarvestedMouseRequest
-   Description: Making the http put request to the desired URL server with 
+   Description: Making the http put request to the desired URL server with
                       optional parameters
    */
    updateHarvestedMouseRequest(harvestedMouseArray: HarvestMouse[]) {
