@@ -34,6 +34,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { BottomSheetColSelComponent } from './service/bottomsheet.service';
 import { DialogConfirmationComponent, DialogSimpleConfirmationComponent, DialogSingleEditComponent } from './dialog/dialog.component';
@@ -80,6 +81,7 @@ import { ReactiveFormsModule } from '@angular/forms';
       MatIconModule,
       MatSidenavModule,
       MatListModule,
+      MatMenuModule,
       ReactiveFormsModule
    ],
    providers: [],
