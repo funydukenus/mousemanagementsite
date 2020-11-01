@@ -31,6 +31,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from "@angular/material/core";
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 
 import { BottomSheetColSelComponent } from './service/bottomsheet.service';
 import { DialogConfirmationComponent, DialogSimpleConfirmationComponent, DialogSingleEditComponent } from './dialog/dialog.component';
@@ -74,6 +77,9 @@ import { ReactiveFormsModule } from '@angular/forms';
       MatNativeDateModule,
       MatExpansionModule,
       MatAutocompleteModule,
+      MatIconModule,
+      MatSidenavModule,
+      MatListModule,
       ReactiveFormsModule
    ],
    providers: [],

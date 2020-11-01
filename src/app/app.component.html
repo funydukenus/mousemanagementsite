@@ -1,4 +1,23 @@
-<mat-toolbar color="warn">FNY Lab</mat-toolbar>
-<div class="root-container">
-  <router-outlet></router-outlet>
-</div>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="over">
+    <div class="top">
+      <img src='/assets/images/dukenus-logo.png'/>
+    </div>
+    <mat-list>
+      <a mat-list-item href="/upload_csv">
+        Upload CSV File
+      </a>
+     </mat-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar>
+      <a (click)="sidenav.toggle()">
+        <mat-icon class="material-icons">menu</mat-icon>
+      </a>
+      <span>FNY Lab</span>
+    </mat-toolbar>
+    <div class="root-container">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
