@@ -194,34 +194,8 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
           this.InProgressDone();
         },
         error => {
-          let data = [
-            {
-              id: 1,
-              handler: 'handler',
-              physicalId: 'physicalId',
-              gender: 'gender',
-              mouseLine: 'mouseLine',
-              genoType: 'genoType',
-              birthDate: 'birthdate',
-              endDate: 'endDate',
-              confirmationOfGenoType: 'cog',
-              phenoType: 'phenoType',
-              projectTitle: 'projectTitle',
-              experiment: 'experiment',
-              comment: 'comment'
-            }
-          ]
-          let the_data = <HarvestMouse[]>data;
-          tabConfig.harvestMouseList = the_data;
-          tabConfig.datasource = new MatTableDataSource<HarvestMouse>(
-              tabConfig.harvestMouseList);
-          tabConfig.tabComponent.InsertDataSource(tabConfig.datasource);
-          tabConfig.tabComponent.refreshSelected();
-          this.trackedLoadedTabCom = this.trackedLoadedTabCom + 1;
-          if(this.trackedLoadedTabCom == this.tabList.length)
-
           this.toastservice.openSnackBar(
-              this._snackBar, 'Loaded list completed', 'Dismiss', ErrorColor
+              this._snackBar, 'Loading list failed', 'Dismiss', ErrorColor
           )
         }
       );
