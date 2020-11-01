@@ -94,7 +94,6 @@ export class DialogSingleEditComponent implements OnInit {
       this.harvestedMouse = Object.assign({}, data.harvestedMouse);
       this.birth_date = new Date(this.harvestedMouse.birth_date);
       this.end_date = new Date(this.harvestedMouse.end_date);
-
    }
    ngOnInit(): void {
       this.initDataOption();
@@ -106,7 +105,7 @@ export class DialogSingleEditComponent implements OnInit {
             this.getDataOptionByName('PhenoType').listOfData = JSON.parse(JSON.stringify(data['phenoTypeList']));
             this.getDataOptionByName('Handler').listOfData = JSON.parse(JSON.stringify(data['handlerList']));
             this.getDataOptionByName('ProjectTitle').listOfData = JSON.parse(JSON.stringify(data['projectTitleList']));
-            this.getDataOptionByName('Experiement').listOfData = JSON.parse(JSON.stringify(data['ExperiementList']));
+            // this.getDataOptionByName('Experiement').listOfData = JSON.parse(JSON.stringify(data['ExperiementList']));
             console.log(this.dataOptionList);
             this.dataOptionList.forEach(
                optionElement => {
@@ -201,7 +200,6 @@ export class DialogSingleEditComponent implements OnInit {
    checkDataModifed(){
       this.harvestedMouse.birth_date = this.birth_date.getFullYear() + "-" + this.appendLeadingZeroes( ( this.birth_date.getMonth() + 1 ) ) + "-" + this.appendLeadingZeroes( this.birth_date.getDate() );
       this.harvestedMouse.end_date = this.end_date.getFullYear() + "-" + this.appendLeadingZeroes( ( this.end_date.getMonth() + 1 ) ) + "-" + this.appendLeadingZeroes( this.end_date.getDate() );
-      
       let origJSONObj = JSON.stringify(this.origHarvestedMouse);
       let JSONObj = JSON.stringify(this.harvestedMouse);
       console.log(origJSONObj);

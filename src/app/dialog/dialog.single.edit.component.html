@@ -83,13 +83,13 @@
          </mat-expansion-panel-header>
          <mat-form-field appearance="outline">
             <mat-label>BirthDate</mat-label>
-            <input matInput [matDatepicker]="birthDatePicker" [(ngModel)]="this.birth_date">
+            <input matInput [matDatepicker]="birthDatePicker" [(ngModel)]="harvestedMouse.birth_date">
             <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #birthDatePicker></mat-datepicker>
          </mat-form-field>
          <mat-form-field appearance="outline">
             <mat-label>EndDate</mat-label>
-            <input matInput [min]="this.birth_date" [matDatepicker]="endDatePicker" [(ngModel)]="this.end_date">
+            <input matInput [min]="harvestedMouse.birth_date" [matDatepicker]="endDatePicker" [(ngModel)]="harvestedMouse.end_date">
             <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #endDatePicker></mat-datepicker>
          </mat-form-field>

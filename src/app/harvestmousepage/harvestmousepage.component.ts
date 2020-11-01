@@ -232,6 +232,13 @@ export class HarvestmousepageComponent implements OnInit {
       }
    }
 
+   appendLeadingZeroes(n){
+      if(n <= 9){
+        return "0" + n;
+      }
+      return n
+    }
+
    /*
    Function name: editOnClick
    Description: This function will be called when the edit button is clicked
@@ -242,6 +249,16 @@ export class HarvestmousepageComponent implements OnInit {
          this.expandedElement).subscribe(
             result => {
                if (result) {
+                  var birth_date = new Date(result.harvestedMouse.birth_date);
+                  var end_date = new Date(result.harvestedMouse.end_date);
+                  console.log(birth_date);
+                  console.log(end_date);
+                  result.harvestedMouse.birth_date = birth_date.getFullYear() + "-" + 
+                                                      this.appendLeadingZeroes( ( birth_date.getMonth() + 1 ) ) + "-" + 
+                                                      this.appendLeadingZeroes( birth_date.getDate() );
+                  result.harvestedMouse.end_date = end_date.getFullYear() + "-" + 
+                                                      this.appendLeadingZeroes( ( end_date.getMonth() + 1 ) ) + "-" + 
+                                                      this.appendLeadingZeroes( end_date.getDate() );
                   let harvestMouseList: HarvestMouse[] = [];
                   harvestMouseList.push(result.harvestedMouse);
                   this.dataprovider.updateHarvestedMouseRequest(

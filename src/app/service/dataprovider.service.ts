@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 
-let serverBaseUrl: string = 'https://mousemanagement.herokuapp.com/harvestedmouse/';
+let serverBaseUrl: string = 'http://127.0.0.1:8000/harvestedmouse/';
 export let harvestMouseListUrl: string = serverBaseUrl + 'list';
 export let harvestMouseFileUploadUrl: string = serverBaseUrl + 'import';
 export let harvestMouseDeleteUrl: string = serverBaseUrl + 'delete';
@@ -38,7 +38,6 @@ export class DataproviderService {
    httpGetRequest(url: string, params?: string[]) {
       let httpParams = new HttpParams();
       if (params) {
-         httpParams = httpParams.set('Cache-Control', "no-cache");
          httpParams = httpParams.set('filter', params[0]);
       }
       else {
