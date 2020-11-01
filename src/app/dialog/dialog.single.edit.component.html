@@ -12,7 +12,7 @@
           <mat-grid-tile colspan="1">
             <mat-form-field appearance="outline">
               <mat-label>Physical ID</mat-label>
-              <input matInput required value="harvestedMouse.physicalId" [(ngModel)]="harvestedMouse.physicalId">
+              <input matInput required value="harvestedMouse.physical_id" [(ngModel)]="harvestedMouse.physical_id">
            </mat-form-field>
           </mat-grid-tile>
           <mat-grid-tile colspan="1">
@@ -50,8 +50,8 @@
           <mat-grid-tile colspan="1">
             <mat-form-field class="mouselineInput" appearance="outline">
               <mat-label>MouseLine</mat-label>
-              <input matInput required [matAutocomplete]="automouseline" value="harvestedMouse.mouseLine"
-                 [(ngModel)]="harvestedMouse.mouseLine" [formControl]="getDataOptionByName('MouseLine').control">
+              <input matInput required [matAutocomplete]="automouseline" value="harvestedMouse.mouseline"
+                 [(ngModel)]="harvestedMouse.mouseline" [formControl]="getDataOptionByName('MouseLine').control">
               <mat-autocomplete autoActiveFirstOption #automouseline="matAutocomplete">
                  <mat-option *ngFor="let option of getDataOptionByName('MouseLine').filteredOptions | async"
                     [value]="option">
@@ -63,8 +63,8 @@
           <mat-grid-tile colspan="1">
             <mat-form-field class="genotypeInput" appearance="outline">
               <mat-label>GenoType</mat-label>
-              <input matInput required [matAutocomplete]="autogenotype" value="harvestedMouse.genoType"
-                 [(ngModel)]="harvestedMouse.genoType" [formControl]="getDataOptionByName('GenoType').control">
+              <input matInput required [matAutocomplete]="autogenotype" value="harvestedMouse.genotype"
+                 [(ngModel)]="harvestedMouse.genotype" [formControl]="getDataOptionByName('GenoType').control">
               <mat-autocomplete autoActiveFirstOption #autogenotype="matAutocomplete">
                  <mat-option *ngFor="let option of getDataOptionByName('GenoType').filteredOptions | async"
                     [value]="option">
@@ -76,8 +76,8 @@
           <mat-grid-tile colspan="1">
             <mat-form-field appearance="outline">
               <mat-label>PhenoType</mat-label>
-              <input matInput required [matAutocomplete]="autophenotype" value="harvestedMouse.phenoType"
-                 [(ngModel)]="harvestedMouse.phenoType" [formControl]="getDataOptionByName('PhenoType').control">
+              <input matInput required [matAutocomplete]="autophenotype" value="harvestedMouse.phenotype"
+                 [(ngModel)]="harvestedMouse.phenotype" [formControl]="getDataOptionByName('PhenoType').control">
               <mat-autocomplete autoActiveFirstOption #autophenotype="matAutocomplete">
                  <mat-option *ngFor="let option of getDataOptionByName('PhenoType').filteredOptions | async"
                     [value]="option">
@@ -89,7 +89,7 @@
           <mat-grid-tile colspan="1">
             <mat-form-field appearance="outline">
               <mat-label>Confirmation of GenoType</mat-label>
-              <input matInput required value="harvestedMouse.confirmationOfGenoType" [(ngModel)]="harvestedMouse.confirmationOfGenoType">
+              <input matInput required value="harvestedMouse.cog" [(ngModel)]="harvestedMouse.cog">
            </mat-form-field>
           </mat-grid-tile>
         </mat-grid-list>
@@ -105,7 +105,7 @@
           <mat-grid-tile colspan="1">
             <mat-form-field appearance="outline">
               <mat-label>BirthDate</mat-label>
-              <input matInput [matDatepicker]="birthDatePicker" [(ngModel)]="this.birthDate">
+              <input matInput [matDatepicker]="birthDatePicker" [(ngModel)]="this.birth_date">
               <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
               <mat-datepicker #birthDatePicker></mat-datepicker>
            </mat-form-field>
@@ -113,7 +113,7 @@
           <mat-grid-tile colspan="1">
             <mat-form-field appearance="outline">
               <mat-label>EndDate</mat-label>
-              <input matInput [min]="this.birthDate" [matDatepicker]="endDatePicker" [(ngModel)]="this.endDate">
+              <input matInput [min]="this.birth_date" [matDatepicker]="endDatePicker" [(ngModel)]="this.end_date">
               <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
               <mat-datepicker #endDatePicker></mat-datepicker>
            </mat-form-field>
@@ -131,8 +131,8 @@
           <mat-grid-tile colspan="1" rowspan="1">
             <mat-form-field class="projectInput" appearance="outline">
                <mat-label>Project Title</mat-label>
-               <input matInput required [matAutocomplete]="autoprojectitle" value="harvestedMouse.projectTitle"
-                  [(ngModel)]="harvestedMouse.projectTitle" [formControl]="getDataOptionByName('ProjectTitle').control">
+               <input matInput required [matAutocomplete]="autoprojectitle" value="harvestedMouse.project_title"
+                  [(ngModel)]="harvestedMouse.project_title" [formControl]="getDataOptionByName('ProjectTitle').control">
                <mat-autocomplete autoActiveFirstOption #autoprojectitle="matAutocomplete">
                   <mat-option *ngFor="let option of getDataOptionByName('ProjectTitle').filteredOptions | async"
                      [value]="option">
