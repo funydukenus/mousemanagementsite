@@ -1,15 +1,15 @@
 export interface HarvestMouse{
    id: number,
    handler: string,
-   physicalId: string,
+   physical_id: string,
    gender: string,
-   mouseLine: string,
-   genoType: string,
-   birthDate: string,
-   endDate: string,
-   confirmationOfGenoType: string,
-   phenoType: string,
-   projectTitle: string,
+   mouseline: string,
+   genotype: string,
+   birth_date: string,
+   end_date: string,
+   cog: string,
+   phenotype: string,
+   project_title: string,
    experiment: string,
    comment: string
 }

@@ -19,11 +19,11 @@ export class TableHeaderConverter implements PipeTransform {
          display: 'Handled By'
       },
       {
-         key: 'physicalId',
+         key: 'physical_id',
          display: 'Physical ID'
       },
       {
-         key: 'mouseLine',
+         key: 'mouseline',
          display: 'MouseLine'
       },
       {
@@ -31,27 +31,27 @@ export class TableHeaderConverter implements PipeTransform {
          display: 'Gender'
       },
       {
-         key: 'genoType',
+         key: 'genotype',
          display: 'GenoType'
       },
       {
-         key: 'birthDate',
+         key: 'birth_date',
          display: 'BirthDate'
       },
       {
-         key: 'endDate',
+         key: 'end_date',
          display: 'EndDate'
       },
       {
-         key: 'confirmationOfGenoType',
+         key: 'cog',
          display: 'COG'
       },
       {
-         key: 'phenoType',
+         key: 'phenotype',
          display: 'PhenoType'
       },
       {
-         key: 'projectTitle',
+         key: 'project_title',
          display: 'ProjectTitle'
       },
       {

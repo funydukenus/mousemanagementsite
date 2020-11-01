@@ -42,14 +42,14 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
       [
          {
             tabName: 'Male',
-            filterString: ['gender,4:M'],
+            filterString: ['gender@M@4'],
             datasource: new MatTableDataSource<HarvestMouse>(),
             harvestMouseList: [],
             tabComponent: null
          },
          {
             tabName: 'Female',
-            filterString: ['gender,4:F'],
+            filterString: ['gender@F@4'],
             datasource: new MatTableDataSource<HarvestMouse>(),
             harvestMouseList: [],
             tabComponent: null
@@ -179,7 +179,8 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
          tabConfig.filterString
       ).subscribe(
          data => {
-            let the_data = <HarvestMouse[]>data;
+            let the_data = <HarvestMouse[]>JSON.parse(<string>data)['mouse_list'];
+            console.log(the_data);
             tabConfig.harvestMouseList = the_data;
             tabConfig.datasource = new MatTableDataSource<HarvestMouse>(
                tabConfig.harvestMouseList);

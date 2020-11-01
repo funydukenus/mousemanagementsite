@@ -78,8 +78,8 @@ export class DialogSingleEditComponent implements OnInit {
       filteredOptions: new Observable<string[]>(),
       control: new FormControl()
    }
-   endDate: Date;
-   birthDate: Date;
+   end_date: Date;
+   birth_date: Date;
 
    @ViewChild("accordion", { static: true }) accordion: MatAccordion;
    // Workaround for angular component issue #13870
@@ -92,8 +92,8 @@ export class DialogSingleEditComponent implements OnInit {
       public dataproviderService: DataproviderService) {
       this.origHarvestedMouse = data.harvestedMouse;
       this.harvestedMouse = Object.assign({}, data.harvestedMouse);
-      this.birthDate = new Date(this.harvestedMouse.birthDate);
-      this.endDate = new Date(this.harvestedMouse.endDate);
+      this.birth_date = new Date(this.harvestedMouse.birth_date);
+      this.end_date = new Date(this.harvestedMouse.end_date);
 
    }
    ngOnInit(): void {
@@ -199,8 +199,8 @@ export class DialogSingleEditComponent implements OnInit {
     }
 
    checkDataModifed(){
-      this.harvestedMouse.birthDate = this.birthDate.getFullYear() + "-" + this.appendLeadingZeroes( ( this.birthDate.getMonth() + 1 ) ) + "-" + this.appendLeadingZeroes( this.birthDate.getDate() );
-      this.harvestedMouse.endDate = this.endDate.getFullYear() + "-" + this.appendLeadingZeroes( ( this.endDate.getMonth() + 1 ) ) + "-" + this.appendLeadingZeroes( this.endDate.getDate() );
+      this.harvestedMouse.birth_date = this.birth_date.getFullYear() + "-" + this.appendLeadingZeroes( ( this.birth_date.getMonth() + 1 ) ) + "-" + this.appendLeadingZeroes( this.birth_date.getDate() );
+      this.harvestedMouse.end_date = this.end_date.getFullYear() + "-" + this.appendLeadingZeroes( ( this.end_date.getMonth() + 1 ) ) + "-" + this.appendLeadingZeroes( this.end_date.getDate() );
       
       let origJSONObj = JSON.stringify(this.origHarvestedMouse);
       let JSONObj = JSON.stringify(this.harvestedMouse);
