@@ -20,7 +20,7 @@
 <!-- buttons that fixed at the bottom so not belongs to the button group-->
 <button type="button" class="btn btn-info btn-bottomSheet" (click)="openBottomSheetClick()">Open column editor</button>
 
-<!-- <mat-progress-bar *ngIf="loaded" mode="buffer"></mat-progress-bar> -->
+<mat-progress-bar *ngIf="loaded" mode="buffer"></mat-progress-bar>
 
 <mat-tab-group [backgroundColor]="'primary'" (selectedTabChange)="selectedTabChange($event)">
   <mat-tab *ngFor="let tab of tabConfig; let i = index" label="{{tab.tabName}}">
