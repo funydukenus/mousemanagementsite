@@ -1,6 +1,5 @@
 .table-container{
-  height: 75vh;   // set to the 75% of view height
-  width: 95vw;
+  height: calc(100vh - 112px);   // set to the 75% of view height
   margin: 0 auto;
   overflow: auto;
 
@@ -10,6 +9,7 @@
 
   tr.element-detail-row {
     height: 0;
+    background-color: white;
   }
 
   .element-row td {
@@ -33,12 +33,18 @@
     }
   }
 
-  .mat-row:nth-child(even){
-    background-color:white;
+  .element-row {
+    &:nth-child(4n+1) {
+      background-color:whitesmoke;
+    }
+
+    &:nth-child(4n+3) {
+      background-color:lightgray;
+    }
   }
 
-  .mat-row:nth-child(odd){
-    background-color:lightgray;
+  th, td {
+    padding: 0 0.25rem;
   }
 }
 
