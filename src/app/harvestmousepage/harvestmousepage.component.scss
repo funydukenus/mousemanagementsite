@@ -1,62 +1,55 @@
 .table-container{
-  height: 75vh;   // set to the 75% of view height
-  width: 95vw;
+  height: calc(100vh - 112px);   // set to the 75% of view height
   margin: 0 auto;
   overflow: auto;
-}
 
-.mat-form-field {
-  font-size: 14px;
-  width: 100%;
-  color:white;
+  .mat-table {
+    width:  100%;
+  }
+
+  tr.element-detail-row {
+    height: 0;
+    background-color: white;
+  }
+
+  .element-row td {
+    border-bottom-width: 0;
+  }
+
+  .element-detail {
+    overflow: hidden;
+
+    > div {
+      padding: 1rem  0;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 0.5rem;
+    }
+
+    .btn-group {
+      padding-top: 0;
+    }
+  }
+
+  .element-row {
+    &:nth-child(4n+1) {
+      background-color:whitesmoke;
+    }
+
+    &:nth-child(4n+3) {
+      background-color:lightgray;
+    }
+  }
+
+  th, td {
+    padding: 0 0.25rem;
+  }
 }
 
 .mat-cell {
    color: black;
-}
-
-.mat-row:nth-child(4n+1){
-   background-color: white;
-   font-size: small;
-}
-
-.mat-row:nth-child(4n+3){
-   background-color: gray;
-   font-size: small;
-}
-
-.mat-row:nth-child(2n+2){
-   background-color: lightgray;
-   font-size: small;
-}
-
-tr.element-row:nth-child(4n+3):hover{
-   background: rgb(180, 231, 255);
-   font-weight: bold;
-}
-
-tr.element-detail-row:nth-child(4n+3):hover{
-   background: rgb(180, 231, 255);
-   font-weight: bold;
-}
-
-tr.element-row:nth-child(4n+1):hover{
-   background: rgb(180, 231, 255);
-   font-weight: bold;
-}
-
-tr.element-detail-row:nth-child(4n+1):hover{
-   background: rgb(180, 231, 255);
-   font-weight: bold;
-}
-
-.element-detail {
-   height: 100%;
-   overflow: hidden;
-}
-
-tr.element-detail-row {
-   height: 0;
 }
 
 :host ::ng-deep .mat-sort-header-container {
@@ -66,17 +59,6 @@ tr.element-detail-row {
    font-weight: bold;
  }
 
-.functional-button-group{
-   margin-top: 2%;
-   margin-bottom: 2%;
-   width: 40%;
-   margin-left:60%;
-}
-
-.functional-button{
-   display: block; text-align: center;
-}
-
 /** No CSS for this example */
 ::ng-deep .mat-checkbox .mat-checkbox-frame {
    border-color: black;
@@ -85,37 +67,3 @@ tr.element-detail-row {
  ::ng-deep .mat-checkbox-checked .mat-checkbox-background {
    background-color: rgb(50, 211, 157) !important;
  }
-
-.th-center{
-   text-align: center;
-}
-.th-left{
-   text-align: left;
-}
-.th-right{
-   text-align: right;
-}
-
-.w-10{
-   width: 10%;
-}
-
-.w-15{
-   width: 15%;
-}
-
-.w-25{
-   width: 25%;
-}
-
-.w-50{
-   width: 50%;
-}
-
-.w-75{
-   width: 75%;
-}
-
-.w-100{
-   width: 100%;
-}

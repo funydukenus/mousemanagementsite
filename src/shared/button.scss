@@ -12,8 +12,13 @@
 .btn-basic {
   background-color: white;
   color: black;
+  border-color: grey;
 
   &:hover {
     color: black;
   }
+}
+
+.btn.medium {
+  padding: 0.375rem 2rem;
 }

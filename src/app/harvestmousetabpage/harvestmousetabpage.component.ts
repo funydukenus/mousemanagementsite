@@ -77,7 +77,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                   );
                }
             )
-            
+
             this.cdr.detectChanges();
 
             // Convert view children query set to array
