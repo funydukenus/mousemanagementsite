@@ -1,6 +1,6 @@
-<!-- <input type="file" accept="" #fileInput style="display:none;" (change)="fileInputChange($event)" accept=".csv"> -->
+<input type="file" accept="" #fileInput style="display:none;" (change)="fileInputChange($event)" accept=".csv">
 
-<!-- <button type="button" class="btn btn-info functional-button" (click)="uploadButtonClick()">Upload CSV File</button> -->
+<button type="button" class="btn btn-info functional-button hide-button" (click)="uploadButtonClick()">Upload CSV File</button>
 <!-- <button
    *ngIf="groupSelectedEnabled"
    type="button"
@@ -24,7 +24,7 @@
 
 <mat-tab-group [backgroundColor]="'primary'" (selectedTabChange)="selectedTabChange($event)">
   <mat-tab *ngFor="let tab of tabConfig; let i = index" label="{{tab.tabName}}">
-    <app-harvestmousepage (dataFreshEventRequired)="refreshMouseListsAllTabs()"
+    <app-harvestmousepage (dataFreshEventRequired)="refreshTabAndData()"
       (selectionEvent)="selectionEventTrigger($event)" #tab [tabName]='tab.tabName'></app-harvestmousepage>
   </mat-tab>
 </mat-tab-group>

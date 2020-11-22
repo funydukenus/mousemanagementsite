@@ -11,6 +11,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { DiagService } from '../service/diag.service';
 import { MatDialog } from '@angular/material/dialog';
+import { EventEmiterService } from '../service/event.emmiter.service';
 
 interface TabConfig {
    filterString: string[],
@@ -45,6 +46,8 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
    // selected harvested mouse
    selectedHarvestedMouse: HarvestMouse[];
 
+   loading_twice_or_more:boolean;
+
    constructor(
       private dataprovider: DataproviderService,
       private toastservice: ToastmessageService,
@@ -53,19 +56,53 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
       private bottomsheetservice: BottomsheetService,
       private bottomSheet: MatBottomSheet,
       private diaglog: MatDialog,
-      private cdr: ChangeDetectorRef
+      private cdr: ChangeDetectorRef,
+      private _eventEmiter: EventEmiterService
    ) {
       this.showInProgress();
+      this._eventEmiter.dataStr.subscribe(
+         data=>{
+            this.uploadButtonClick();
+         }
+      )
    }
 
-   ngOnInit(): void {
+   refreshTabAndData():void{
       let project_list:string[];
+      this.loading_twice_or_more = true;
       this.dataprovider.getDataList().subscribe(
          data => {
             project_list = data['projectTitleList'];
             project_list.forEach(
                tab_cri => {
                   let filterInputString = "project_title@" + tab_cri + "@4";
+                  let existed:boolean = false;
+                  let not_existed:boolean = true;
+                  // Checks if exists
+                  this.tabConfig.forEach(
+                     data=>{
+                        if(data.tabName == tab_cri){
+                           existed = true;
+                           return;
+                        }
+                     }
+                  )
+
+                  // Checks if exists
+                  this.tabConfig.forEach(
+                     data=>{
+                        if(!(project_list.includes(data.tabName))){
+                           this.removeFromTab(data);
+                           not_existed = true;
+                           return;
+                        }
+                     }
+                  )
+
+                  if(not_existed && existed){
+                     return;
+                  }
+                  
                   this.tabConfig.push(
                      {
                         tabName: tab_cri,
@@ -108,6 +145,18 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
       );
    }
 
+   removeFromTab(value){
+      const index = this.tabConfig.indexOf(value);
+      if (index > -1) {
+         this.tabConfig.splice(index, 1);
+       }
+       
+   }
+
+   ngOnInit(): void {
+      this.refreshTabAndData();
+   }
+
    /*
    Funtion name: ngAfterViewInit
    Description: Based on the document,Respond after Angular checks the component's
@@ -124,29 +173,28 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
    Description: This is the callback function when the input file event
                 changed is triggered
    */
-   fileInputChange(event: any) {
-      let file: File = event.target.files[0];
-      this.showInProgress();
-      this.dataprovider.fileUploadRequest(file, harvestMouseFileUploadUrl).subscribe(
-         data => {
-            this.toastservice.openSnackBar(
-               this._snackBar, 'Imported Success', 'Dismiss', SuccessColor
-            )
-            // Fresh All the mouse lists in each of the tabs
-            this.refreshMouseListsAllTabs();
-            // clear the file cache
-            this.fileInputButton.nativeElement.value = "";
-            this.InProgressDone();
-         },
-         error => {
-            this.toastservice.openSnackBar(
-               this._snackBar, 'Something wrong', 'Dismiss', ErrorColor
-            )
-            // clear the file cache
-            this.fileInputButton.nativeElement.value = "";
-            this.InProgressDone();
-         }
-      );
+  fileInputChange(event: any) {
+   let file: File = event.target.files[0];
+   this.showInProgress();
+   this.dataprovider.fileUploadRequest(file, harvestMouseFileUploadUrl).subscribe(
+      data => {
+         this.toastservice.openSnackBar(
+            this._snackBar, 'Imported Success', 'Dismiss', SuccessColor
+         )
+         // Fresh All the mouse lists in each of the tabs
+         this.refreshTabAndData();
+         // clear the file cache
+         this.fileInputButton.nativeElement.value = "";
+         this.InProgressDone();
+      },
+      error => {
+         this.toastservice.openSnackBar(
+            this._snackBar, 'Something wrong', 'Dismiss', ErrorColor
+         )
+         // clear the file cache
+         this.fileInputButton.nativeElement.value = "";
+         this.InProgressDone();
+      });
    }
 
    /*
@@ -164,6 +212,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                 datasource assign to the tabConfig
    */
    refreshMouseListsAllTabs() {
+      console.log(this.tabConfig);
       this.tabConfig.forEach(
          tabConfig => {
             this.GetMouseTabList(
@@ -189,6 +238,12 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
          data => {
             let the_data = <HarvestMouse[]>JSON.parse(<string>data)['mouse_list'];
             tabConfig.harvestMouseList = the_data;
+            if(!tabConfig.harvestMouseList){
+               let the_data:HarvestMouse = <HarvestMouse>JSON.parse(<string>data);
+               tabConfig.harvestMouseList = [];
+               tabConfig.harvestMouseList.push(the_data);
+            }
+            
             tabConfig.datasource = new MatTableDataSource<HarvestMouse>(
                tabConfig.harvestMouseList);
             tabConfig.tabComponent.InsertDataSource(tabConfig.datasource);
@@ -216,17 +271,20 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
    Description: This function will be triggered when the switching to the new tab
    */
    selectedTabChange(event: MatTabChangeEvent){
-      let tabName = event.tab.textLabel;
-      this.tabConfig.forEach(
-         tabConfigEle => {
-            if(tabConfigEle.tabName == tabName)
-            {
-               this.activeTabConfig = tabConfigEle;
-               this.selectionEventTrigger(this.activeTabConfig.tabComponent.getSelectedRows());
-               this.activeTabConfig.tabComponent.refreshSelected();
+      if(event.tab){
+         let tabName = event.tab.textLabel;
+         this.tabConfig.forEach(
+            tabConfigEle => {
+               if(tabConfigEle.tabName == tabName)
+               {
+                  this.activeTabConfig = tabConfigEle;
+                  this.selectionEventTrigger(this.activeTabConfig.tabComponent.getSelectedRows());
+                  this.activeTabConfig.tabComponent.refreshSelected();
+               }
             }
-         }
-      )
+         )
+      }
+
    }
 
    /*

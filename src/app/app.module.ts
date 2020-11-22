@@ -39,6 +39,8 @@ import { BottomSheetColSelComponent } from './service/bottomsheet.service';
 import { DialogConfirmationComponent, DialogSimpleConfirmationComponent, DialogSingleEditComponent } from './dialog/dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { EventEmiterService } from './service/event.emmiter.service';
+
 @NgModule({
    declarations: [
       AppComponent,
@@ -82,7 +84,7 @@ import { ReactiveFormsModule } from '@angular/forms';
       MatListModule,
       ReactiveFormsModule
    ],
-   providers: [],
+   providers: [EventEmiterService],
    bootstrap: [AppComponent]
 })
 export class AppModule { }
