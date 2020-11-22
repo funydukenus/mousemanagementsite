@@ -1,10 +1,10 @@
-.table-container{
-  height: calc(100vh - 112px);   // set to the 75% of view height
+.table-container {
+  height: calc(100vh - 112px); // set to the 75% of view height
   margin: 0 auto;
   overflow: auto;
 
   .mat-table {
-    width:  100%;
+    width: 100%;
   }
 
   tr.element-detail-row {
@@ -19,8 +19,8 @@
   .element-detail {
     overflow: hidden;
 
-    > div {
-      padding: 1rem  0;
+    >div {
+      padding: 1rem 0;
     }
 
     textarea {
@@ -35,35 +35,36 @@
 
   .element-row {
     &:nth-child(4n+1) {
-      background-color:whitesmoke;
+      background-color: whitesmoke;
     }
 
     &:nth-child(4n+3) {
-      background-color:lightgray;
+      background-color: lightgray;
     }
   }
 
-  th, td {
+  th,
+  td {
     padding: 0 0.25rem;
   }
 }
 
 .mat-cell {
-   color: black;
+  color: black;
 }
 
 :host ::ng-deep .mat-sort-header-container {
-   display: flex;
-   justify-content: left;
-   font-size: small;
-   font-weight: bold;
- }
+  display: flex;
+  justify-content: left;
+  font-size: small;
+  font-weight: bold;
+}
 
 /** No CSS for this example */
 ::ng-deep .mat-checkbox .mat-checkbox-frame {
-   border-color: black;
- }
+  border-color: black;
+}
 
- ::ng-deep .mat-checkbox-checked .mat-checkbox-background {
-   background-color: rgb(50, 211, 157) !important;
- }
+::ng-deep .mat-checkbox-checked .mat-checkbox-background {
+  background-color: rgb(50, 211, 157) !important;
+}
