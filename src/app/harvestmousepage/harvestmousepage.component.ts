@@ -69,9 +69,9 @@ export class HarvestmousepageComponent implements OnInit {
    displayedColumns: string[] = [
       //'id',
       'position',
+      'physical_id',
       'handler',
       'gender',
-      'physical_id',
       'mouseline',
       'genotype',
       'birth_date',
