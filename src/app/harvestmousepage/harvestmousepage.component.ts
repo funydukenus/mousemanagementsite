@@ -164,7 +164,12 @@ export class HarvestmousepageComponent implements OnInit {
                 event trigger
    */
    drop(event: CdkDragDrop<string[]>) {
+      // remove the first selection column
+      let positionColumnName = this.displayedColumns.shift();
       moveItemInArray(this.displayedColumns, event.previousIndex, event.currentIndex);
+      // add back the first selection column
+      this.displayedColumns.unshift(positionColumnName);
+      // Render the rows based on the new column order
       this.table.renderRows();
    }
 
