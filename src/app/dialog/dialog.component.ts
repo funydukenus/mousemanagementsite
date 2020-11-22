@@ -114,6 +114,7 @@ export class DialogSingleEditComponent implements OnInit {
                      map(value => this._filter(value, optionElement))
                   )
                });
+               this.getDataOptionByName('ProjectTitle').control.disable();
          },
          error => {
             console.log(error);

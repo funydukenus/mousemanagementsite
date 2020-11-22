@@ -12,7 +12,7 @@
           <mat-grid-tile colspan="1">
             <mat-form-field appearance="outline">
               <mat-label>Physical ID</mat-label>
-              <input matInput required value="harvestedMouse.physical_id" [(ngModel)]="harvestedMouse.physical_id" readonly>
+              <input matInput required value="harvestedMouse.physical_id" [(ngModel)]="harvestedMouse.physical_id" [disabled]="true">
            </mat-form-field>
           </mat-grid-tile>
           <mat-grid-tile colspan="1">
@@ -132,7 +132,7 @@
             <mat-form-field class="projectInput" appearance="outline" >
                <mat-label>Project Title</mat-label>
                <input matInput required [matAutocomplete]="autoprojectitle" value="harvestedMouse.project_title"
-                  [(ngModel)]="harvestedMouse.project_title" [formControl]="getDataOptionByName('ProjectTitle').control" readonly>
+                  [(ngModel)]="harvestedMouse.project_title" [formControl]="getDataOptionByName('ProjectTitle').control">
                <mat-autocomplete autoActiveFirstOption #autoprojectitle="matAutocomplete">
                   <mat-option *ngFor="let option of getDataOptionByName('ProjectTitle').filteredOptions | async"
                      [value]="option">
