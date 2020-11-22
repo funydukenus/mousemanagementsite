@@ -178,7 +178,6 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
       ).subscribe(
          data => {
             let the_data = <HarvestMouse[]>JSON.parse(<string>data)['mouse_list'];
-            console.log(the_data);
             tabConfig.harvestMouseList = the_data;
             tabConfig.datasource = new MatTableDataSource<HarvestMouse>(
                tabConfig.harvestMouseList);

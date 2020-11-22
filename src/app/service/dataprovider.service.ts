@@ -3,7 +3,8 @@ import { HarvestMouse } from '../interface/harvestmouse';
 import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 
 let serverBaseUrl: string = 'https://mousemanagement.herokuapp.com/harvestedmouse/';
-export let harvestMouseListUrl: string = serverBaseUrl + 'list';
+// let serverBaseUrl: string = 'http://127.0.0.1:8000/harvestedmouse/';
+export let harvestMouseListUrl: string = serverBaseUrl + 'force_list';
 export let harvestMouseFileUploadUrl: string = serverBaseUrl + 'import';
 export let harvestMouseDeleteUrl: string = serverBaseUrl + 'delete';
 export let harvestMouseUpdateUrl: string = serverBaseUrl + 'update';
@@ -15,7 +16,10 @@ export let getDataListUrl: string = serverBaseUrl + 'getdatalist';
 export class DataproviderService {
 
    harvestMouseList: HarvestMouse[];
-   constructor(private http: HttpClient) { }
+   last_random_symbol: string = '';
+   constructor(private http: HttpClient) {
+
+   }
 
    /*
    Function name: httpPostRequest
@@ -37,13 +41,28 @@ export class DataproviderService {
    */
    httpGetRequest(url: string, params?: string[]) {
       let httpParams = new HttpParams();
+      let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let charactersLength = characters.length;
+      let localresult           = '';
+      for ( var i = 0; i < 30; i++ ) {
+         localresult += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+
+      this.last_random_symbol = localresult;
+
+      while( this.last_random_symbol === localresult ){
+         localresult           = '';
+         for ( var i = 0; i < 10; i++ ) {
+            localresult += characters.charAt(Math.floor(Math.random() * charactersLength));
+         }
+      }
+
+      this.last_random_symbol = localresult;
+
       if (params) {
-         httpParams = httpParams.set('Cache-Control', "no-cache");
          httpParams = httpParams.set('filter', params[0]);
       }
-      else {
-         httpParams = undefined;
-      }
+      httpParams = httpParams.set('symbol', this.last_random_symbol);
       return this.http.get(url, { params: httpParams });
    }
 
