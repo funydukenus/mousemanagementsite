@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChildren, ViewChild, ElementRef, QueryList } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChildren, ViewChild, ElementRef, QueryList, ChangeDetectorRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DataproviderService } from '../service/dataprovider.service';
 import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastmessage.service';
@@ -36,23 +36,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
    loaded: boolean;
    trackedLoadedTabCom: number = 0;
 
-   tabConfig: TabConfig[] =
-      [
-         {
-            tabName: 'Male',
-            filterString: ['gender@M@4'],
-            datasource: new MatTableDataSource<HarvestMouse>(),
-            harvestMouseList: [],
-            tabComponent: null
-         },
-         {
-            tabName: 'Female',
-            filterString: ['gender@F@4'],
-            datasource: new MatTableDataSource<HarvestMouse>(),
-            harvestMouseList: [],
-            tabComponent: null
-         },
-      ]
+   tabConfig: TabConfig[] =[ ];
 
    activeTabConfig: TabConfig;
 
@@ -68,12 +52,61 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
       private _snackBar: MatSnackBar,
       private bottomsheetservice: BottomsheetService,
       private bottomSheet: MatBottomSheet,
-      private diaglog: MatDialog
+      private diaglog: MatDialog,
+      private cdr: ChangeDetectorRef
    ) {
       this.showInProgress();
    }
 
-   ngOnInit(): void {}
+   ngOnInit(): void {
+      let project_list:string[];
+      this.dataprovider.getDataList().subscribe(
+         data => {
+            project_list = data['projectTitleList'];
+            project_list.forEach(
+               tab_cri => {
+                  let filterInputString = "project_title@" + tab_cri + "@4";
+                  this.tabConfig.push(
+                     {
+                        tabName: tab_cri,
+                        filterString: [filterInputString],
+                        datasource: new MatTableDataSource<HarvestMouse>(),
+                        harvestMouseList: [],
+                        tabComponent: null
+                     }
+                  );
+               }
+            )
+            
+            this.cdr.detectChanges();
+
+            // Convert view children query set to array
+            this.tabList.toArray().forEach(
+               // For each of found HarvestedMouse Component
+               curTabCom =>
+               {
+                  // For each of the tab config
+                  this.tabConfig.forEach(
+                     tabConfigEle => {
+                        let tabNameFromTabConfig:string = tabConfigEle.tabName;
+
+                        // If the found HarvestedMouse has the same tabName
+                        // as the tabConfig, assign the tabComponent
+                        // to this tabConfig
+                        if( tabNameFromTabConfig == curTabCom.tabName )
+                        {
+                           tabConfigEle.tabComponent = curTabCom;
+                        }
+                     }
+                  )
+               }
+            )
+
+            // Fresh All the mouse lists in each of the tabs
+            this.refreshMouseListsAllTabs();
+         }
+      );
+   }
 
    /*
    Funtion name: ngAfterViewInit
@@ -83,30 +116,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                 ngAfterContentChecked().
    */
    ngAfterViewInit(): void{
-      // Convert view children query set to array
-      this.tabList.toArray().forEach(
-         // For each of found HarvestedMouse Component
-         curTabCom =>
-         {
-            // For each of the tab config
-            this.tabConfig.forEach(
-               tabConfigEle => {
-                  let tabNameFromTabConfig:string = tabConfigEle.tabName;
-
-                  // If the found HarvestedMouse has the same tabName
-                  // as the tabConfig, assign the tabComponent
-                  // to this tabConfig
-                  if( tabNameFromTabConfig == curTabCom.tabName )
-                  {
-                     tabConfigEle.tabComponent = curTabCom;
-                  }
-               }
-            )
-         }
-      )
-
-      // Fresh All the mouse lists in each of the tabs
-      this.refreshMouseListsAllTabs();
+      // Placeholder for other actions if needed
    }
 
    /*

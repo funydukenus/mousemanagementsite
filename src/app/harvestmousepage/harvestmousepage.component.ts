@@ -78,7 +78,7 @@ export class HarvestmousepageComponent implements OnInit {
       'end_date',
       'cog',
       'phenotype',
-      'project_title',
+      // 'project_title',
       'experiment',
       // 'comment'
    ]
