@@ -88,6 +88,9 @@ export class HarvestmousepageComponent implements OnInit {
 
    ]
 
+   // Used to control accessbility of the button
+   submitDisabled: boolean = false;
+
    constructor(
       private dataprovider: DataproviderService,
       private toastservice: ToastmessageService,
@@ -170,6 +173,7 @@ export class HarvestmousepageComponent implements OnInit {
    Description: This function will be called when the row is clicked
    */
    onRowClicked(element: HarvestMouse) {
+      this.submitDisabled = false;
       if (this.expandedElement === element) {
          if (this.originalText) {
             if (this.originalText != this.expandedElement.comment) {
@@ -261,10 +265,12 @@ export class HarvestmousepageComponent implements OnInit {
                                                       this.appendLeadingZeroes( end_date.getDate() );
                   let harvestMouseList: HarvestMouse[] = [];
                   harvestMouseList.push(result.harvestedMouse);
+                  this.submitDisabled = true;
                   this.dataprovider.updateHarvestedMouseRequest(
                      harvestMouseList
                   ).subscribe(
                      data => {
+                        
                         console.log(data);
                         this.toastservice.openSnackBar(
                            this._snackBar,
@@ -275,6 +281,7 @@ export class HarvestmousepageComponent implements OnInit {
                         this.dataFreshEventRequired.emit();
                      },
                      error => {
+                        this.submitDisabled = false;
                         console.log(error);
                         this.toastservice.openSnackBar(
                            this._snackBar,
@@ -357,11 +364,13 @@ export class HarvestmousepageComponent implements OnInit {
    deleteOnClick() {
       let harvestMouseList: HarvestMouse[] = [];
       harvestMouseList.push(this.expandedElement);
+      
       this.diagservice.openConfirmationDialog(
          this.diaglog,
          harvestMouseList
       ).subscribe(result => {
          if (result) {
+            this.submitDisabled = true;
             this.dataprovider.deleteHarvestedMouseRequest(
                harvestMouseList
             ).subscribe(
@@ -376,6 +385,7 @@ export class HarvestmousepageComponent implements OnInit {
                   )
                },
                error => {
+                  this.submitDisabled = false;
                   console.log(error);
                   this.toastservice.openSnackBar(
                      this._snackBar,
@@ -404,10 +414,12 @@ export class HarvestmousepageComponent implements OnInit {
    confirmOnClick() {
       let harvestMouseList: HarvestMouse[] = [];
       harvestMouseList.push(this.expandedElement);
+      this.submitDisabled = true;
       this.dataprovider.updateHarvestedMouseRequest(
          harvestMouseList
       ).subscribe(
          data => {
+            this.submitDisabled = false;
             console.log(data);
             this.toastservice.openSnackBar(
                this._snackBar,
@@ -419,6 +431,7 @@ export class HarvestmousepageComponent implements OnInit {
             this.originalText = this.expandedElement.comment;
          },
          error => {
+            this.submitDisabled = false;
             console.log(error);
             this.toastservice.openSnackBar(
                this._snackBar,
