@@ -77,7 +77,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                   );
                }
             )
-            
+
             this.cdr.detectChanges();
 
             // Convert view children query set to array
@@ -205,7 +205,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
         },
         error => {
           this.toastservice.openSnackBar(
-              this._snackBar, 'Loaded list completed', 'Dismiss', ErrorColor
+              this._snackBar, 'Loading list failed', 'Dismiss', ErrorColor
           )
         }
       );
