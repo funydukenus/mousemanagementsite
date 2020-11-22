@@ -1,8 +1,8 @@
 .table-container{
-  height: 350px;
+  height: 75vh;   // set to the 75% of view height
+  width: 95vw;
+  margin: 0 auto;
   overflow: auto;
-  width: 95%;
-  margin-left: 2.5%;
 }
 
 .mat-form-field {

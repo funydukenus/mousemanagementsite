@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 
-let serverBaseUrl: string = 'http://127.0.0.1:8000/harvestedmouse/';
-export let harvestMouseListUrl: string = serverBaseUrl + 'list';
+let serverBaseUrl: string = 'https://mousemanagement.herokuapp.com/harvestedmouse/';
+// let serverBaseUrl: string = 'http://127.0.0.1:8000/harvestedmouse/';
+export let harvestMouseListUrl: string = serverBaseUrl + 'force_list';
 export let harvestMouseFileUploadUrl: string = serverBaseUrl + 'import';
 export let harvestMouseDeleteUrl: string = serverBaseUrl + 'delete';
 export let harvestMouseUpdateUrl: string = serverBaseUrl + 'update';
@@ -15,7 +16,10 @@ export let getDataListUrl: string = serverBaseUrl + 'getdatalist';
 export class DataproviderService {
 
    harvestMouseList: HarvestMouse[];
-   constructor(private http: HttpClient) { }
+   last_random_symbol: string = '';
+   constructor(private http: HttpClient) {
+
+   }
 
    /*
    Function name: httpPostRequest
@@ -37,36 +41,28 @@ export class DataproviderService {
    */
    httpGetRequest(url: string, params?: string[]) {
       let httpParams = new HttpParams();
-      if (params) {
-         for (var idx = 0; idx < params.length; idx++) {
-            let para = params[idx];
-            let splitedArray = para.split(':');
+      let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let charactersLength = characters.length;
+      let localresult           = '';
+      for ( var i = 0; i < 30; i++ ) {
+         localresult += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
 
-            // The param must in key : value pair
-            if (splitedArray.length == 2) {
-               let keyword = splitedArray[0];
-               let keywordSplitCheck = para.split(',');
+      this.last_random_symbol = localresult;
 
-               // The keyword must be colName, operation_ID pair
-               if (keywordSplitCheck.length == 2) {
-                  let value = splitedArray[1];
-                  // adding parameter to the urlParams array
-                  httpParams = httpParams.set(keyword, value);
-               }
-               else {
-                  // skip current loop since the value is invalid
-                  continue;
-               }
-            }
-            else {
-               // skip current loop since the value is invalid
-               continue;
-            }
+      while( this.last_random_symbol === localresult ){
+         localresult           = '';
+         for ( var i = 0; i < 10; i++ ) {
+            localresult += characters.charAt(Math.floor(Math.random() * charactersLength));
          }
       }
-      else {
-         httpParams = undefined;
+
+      this.last_random_symbol = localresult;
+
+      if (params) {
+         httpParams = httpParams.set('filter', params[0]);
       }
+      httpParams = httpParams.set('symbol', this.last_random_symbol);
       return this.http.get(url, { params: httpParams });
    }
 
@@ -76,9 +72,12 @@ export class DataproviderService {
                       optional parameters
    */
    httpDeleteRequest(harvestedMouseArray: HarvestMouse[], httpHeader: HttpHeaders, url: string) {
+      let mouse_list_obj = {
+         'mouse_list': harvestedMouseArray
+      }
       let options = {
          headers: httpHeader,
-         body: harvestedMouseArray
+         body: mouse_list_obj
       }
 
       return this.http.request('DELETE', url, options);
@@ -90,9 +89,12 @@ export class DataproviderService {
                       optional parameters
    */
    httpPutRequest(harvestedMouseArray: HarvestMouse[], httpHeader: HttpHeaders, url: string) {
+      let mouse_list_obj = {
+         'mouse_list': harvestedMouseArray
+      }
       let options = {
          headers: httpHeader,
-         body: harvestedMouseArray
+         body: mouse_list_obj
       }
 
       return this.http.request('PUT', url, options);
