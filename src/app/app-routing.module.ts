@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MainpageComponent } from './mainpage/mainpage.component';
 import { HarvestmousetabpageComponent } from './harvestmousetabpage/harvestmousetabpage.component';
+import { LoginpageComponent } from './loginpage/loginpage.component';
+
 const routes: Routes = [
   {
     path: 'home',
@@ -12,8 +14,12 @@ const routes: Routes = [
     component: HarvestmousetabpageComponent
   },
   {
+   path: 'login',
+   component: LoginpageComponent
+  },
+  {
       path: '',
-      redirectTo: '/home',
+      redirectTo: '/login',
       pathMatch: 'full'
   }
 ];

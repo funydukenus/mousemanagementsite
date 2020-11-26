@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { interval, Observable } from 'rxjs';
 
+import { EventEmiterService } from '../service/event.emmiter.service';
+
 @Component({
    selector: 'app-mainpage',
    templateUrl: './mainpage.component.html',
@@ -14,9 +16,9 @@ export class MainpageComponent implements OnInit {
 
    todayDate = new Date().toLocaleString();
 
-   constructor(private _router: Router) {
-      
-   }
+   constructor(
+      private _router: Router,
+      private _eventEmiter: EventEmiterService) {}
 
    ngOnInit(): void {
       
@@ -24,6 +26,9 @@ export class MainpageComponent implements OnInit {
       let sub = interval(1000).subscribe(x => {
          this.todayDate = new Date().toLocaleString();
       });
+
+      this._eventEmiter.informPageLoc('main');
+
    }
 
    harvestMouseTableDirect()

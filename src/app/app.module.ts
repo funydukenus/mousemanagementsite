@@ -40,6 +40,7 @@ import { DialogConfirmationComponent, DialogSimpleConfirmationComponent, DialogS
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { EventEmiterService } from './service/event.emmiter.service';
+import { LoginpageComponent } from './loginpage/loginpage.component';
 
 @NgModule({
    declarations: [
@@ -52,7 +53,8 @@ import { EventEmiterService } from './service/event.emmiter.service';
       TableHeaderConverter,
       DialogConfirmationComponent,
       DialogSimpleConfirmationComponent,
-      DialogSingleEditComponent
+      DialogSingleEditComponent,
+      LoginpageComponent
    ],
    imports: [
       BrowserModule,

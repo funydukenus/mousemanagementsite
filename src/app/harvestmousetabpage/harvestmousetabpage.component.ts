@@ -65,6 +65,9 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
             this.uploadButtonClick();
          }
       )
+      this._eventEmiter.informPageLoc(
+         'mousetable'
+      );
    }
 
    refreshTabAndData():void{
