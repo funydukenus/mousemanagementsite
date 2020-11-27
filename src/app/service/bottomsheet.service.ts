@@ -36,7 +36,7 @@ export class BottomSheetColSelComponent {
       @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {
       console.log(data.colInfoList);
       this.colInfoList = data.colInfoList;
-      this.colList     = data.colList;
+      this.colList = data.colList;
    }
 
    /*
@@ -47,18 +47,15 @@ export class BottomSheetColSelComponent {
       let hiddenColList: string[] = []
       this.colInfoList.forEach(
          colInfo => {
-            if(!colInfo.display)
-            {
+            if (!colInfo.display) {
                const index = this.colList.indexOf(colInfo.columnaName);
                if (index > -1) {
                   this.colList.splice(index, 1);
                }
             }
-            else
-            {
+            else {
                const index = this.colList.indexOf(colInfo.columnaName);
-               if(index == -1)
-               {
+               if (index == -1) {
                   this.colList.push(colInfo.columnaName);
                }
             }

@@ -9,11 +9,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { MatTable } from '@angular/material/table';
 import { ColumnInfo } from '../interface/columninfo';
-import { TableHeaderConverter } from '../pipe/tableheader.pipe';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { SelectionModel } from '@angular/cdk/collections';
-
 import { DiagService } from '../service/diag.service';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -95,7 +92,6 @@ export class HarvestmousepageComponent implements OnInit {
       private dataprovider: DataproviderService,
       private toastservice: ToastmessageService,
       private diagservice: DiagService,
-      private cdr: ChangeDetectorRef,
       private _snackBar: MatSnackBar,
       private diaglog: MatDialog
    ) {
@@ -241,12 +237,12 @@ export class HarvestmousepageComponent implements OnInit {
       }
    }
 
-   appendLeadingZeroes(n){
-      if(n <= 9){
-        return "0" + n;
+   appendLeadingZeroes(n) {
+      if (n <= 9) {
+         return "0" + n;
       }
       return n
-    }
+   }
 
    /*
    Function name: editOnClick
@@ -262,12 +258,12 @@ export class HarvestmousepageComponent implements OnInit {
                   var end_date = new Date(result.harvestedMouse.end_date);
                   console.log(birth_date);
                   console.log(end_date);
-                  result.harvestedMouse.birth_date = birth_date.getFullYear() + "-" + 
-                                                      this.appendLeadingZeroes( ( birth_date.getMonth() + 1 ) ) + "-" + 
-                                                      this.appendLeadingZeroes( birth_date.getDate() );
-                  result.harvestedMouse.end_date = end_date.getFullYear() + "-" + 
-                                                      this.appendLeadingZeroes( ( end_date.getMonth() + 1 ) ) + "-" + 
-                                                      this.appendLeadingZeroes( end_date.getDate() );
+                  result.harvestedMouse.birth_date = birth_date.getFullYear() + "-" +
+                     this.appendLeadingZeroes((birth_date.getMonth() + 1)) + "-" +
+                     this.appendLeadingZeroes(birth_date.getDate());
+                  result.harvestedMouse.end_date = end_date.getFullYear() + "-" +
+                     this.appendLeadingZeroes((end_date.getMonth() + 1)) + "-" +
+                     this.appendLeadingZeroes(end_date.getDate());
                   let harvestMouseList: HarvestMouse[] = [];
                   harvestMouseList.push(result.harvestedMouse);
                   this.submitDisabled = true;
@@ -275,7 +271,7 @@ export class HarvestmousepageComponent implements OnInit {
                      harvestMouseList
                   ).subscribe(
                      data => {
-                        
+
                         console.log(data);
                         this.toastservice.openSnackBar(
                            this._snackBar,
@@ -369,7 +365,7 @@ export class HarvestmousepageComponent implements OnInit {
    deleteOnClick() {
       let harvestMouseList: HarvestMouse[] = [];
       harvestMouseList.push(this.expandedElement);
-      
+
       this.diagservice.openConfirmationDialog(
          this.diaglog,
          harvestMouseList

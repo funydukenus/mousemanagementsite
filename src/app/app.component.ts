@@ -1,41 +1,100 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { EventEmiterService } from './service/event.emmiter.service';
 import { MatDrawer } from '@angular/material/sidenav';
+import { DataproviderService } from './service/dataprovider.service';
+import { Router, NavigationEnd } from '@angular/router';
+
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+   selector: 'app-root',
+   templateUrl: './app.component.html',
+   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'mousemanagementsite';
-  type:string = 'main';
-  @ViewChild('sidenav') sideNav: MatDrawer;
+   title = 'mousemanagementsite';
 
-  constructor(
-   private _eventEmiter: EventEmiterService
-  ){
-     this._eventEmiter.pageLocIndicator.subscribe(
-        data => {
-          this.ModifySideBarChoice(data);
-        }
-     )
-  }
+   // Indicate which page it is
+   // it will be signal when the target page is reached
+   type: string = 'login';
 
-  UploadClick(){
-     this._eventEmiter.sendMessage();
-     this.sideNav.close();
-  }
+   // Reference to the side bar of the html page
+   @ViewChild('sidenav') sideNav: MatDrawer;
 
-  ModifySideBarChoice(inputType){
-   this.type = inputType;
-  }
+   // Indicate that the user account validation has done
+   ValidationDone: Boolean = false;
 
-  IsMainPage(){
-     return this.type === 'main';
-  }
+   constructor(
+      private _eventEmiter: EventEmiterService,
+      private dataprovider: DataproviderService,
+      private _router: Router
+   ) {
+      this._router.events.subscribe(
+         (event) => {
+            // Checks validation each time the router event occurs
+            if (event instanceof NavigationEnd) {
+               if (localStorage.getItem('username')) {
+                  this.dataprovider.CheckIsLogin(localStorage.getItem('username')).subscribe(
+                     result => {
+                        this.ValidationDone = true;
+                     },
+                     error => {
+                        this.returnToLoginPage();
+                     }
+                  )
+               }
+               else {
+                  this.returnToLoginPage();
+               }
+            }
+         });
+      
+      // Setup the call back function
+      // to each to the page indicator source
+      this._eventEmiter.pageLocIndicator.subscribe(
+         data => {
+            this.ModifySideBarChoice(data);
+         }
+      )
+   }
 
-  IsHarvestMousePage(){
-     return this.type === 'mousetable'
-  }
+   returnToLoginPage(){
+      this.ValidationDone = false;
+      this._router.navigate(['/login']);
+   }
+
+   UploadClick() {
+      this._eventEmiter.sendMessage();
+      this.sideNav.close();
+   }
+
+   Logout() {
+      this.dataprovider.UserLoggout().subscribe(
+         result => {
+            localStorage.setItem('username', '');
+            this.ValidationDone = false;
+            this._router.navigate(['/login']);
+         },
+         error => {
+            console.log(error);
+         }
+      )
+   }
+
+   ModifySideBarChoice(inputType) {
+      if (this.type !== inputType) {
+         this.type = inputType;
+      }
+   }
+
+   IsMainPage() {
+      return this.type === 'main';
+   }
+
+   IsHarvestMousePage() {
+      return this.type === 'mousetable';
+   }
+
+   IsLoginPage() {
+      return this.type === 'login';
+   }
 }

@@ -1,4 +1,4 @@
-<mat-sidenav-container>
+<mat-sidenav-container *ngIf="!IsLoginPage()">
   <mat-sidenav #sidenav mode="over">
     <div class="top">
       <img src='/assets/images/dukenus-logo.png'/>
@@ -6,6 +6,9 @@
     <mat-list>
       <a *ngIf="IsHarvestMousePage()" mat-list-item (click)="UploadClick()">
         Upload CSV File
+      </a>
+      <a mat-list-item (click)="Logout()">
+        Log Out
       </a>
      </mat-list>
   </mat-sidenav>
@@ -16,8 +19,11 @@
       </a>
       <span>FNY Lab</span>
     </mat-toolbar>
-    <div class="root-container">
+    <div *ngIf="ValidationDone" class="root-container">
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
+<div *ngIf="IsLoginPage()" class="root-container">
+  <router-outlet></router-outlet>
+</div>

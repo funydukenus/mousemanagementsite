@@ -14,13 +14,13 @@ const routes: Routes = [
     component: HarvestmousetabpageComponent
   },
   {
-   path: 'login',
-   component: LoginpageComponent
+    path: 'login',
+    component: LoginpageComponent
   },
   {
-      path: '',
-      redirectTo: '/login',
-      pathMatch: 'full'
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full'
   }
 ];
 

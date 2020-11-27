@@ -18,21 +18,21 @@ export class MainpageComponent implements OnInit {
 
    constructor(
       private _router: Router,
-      private _eventEmiter: EventEmiterService) {}
+      private _eventEmiter: EventEmiterService) {
+      this._eventEmiter.informPageLoc(
+         'main'
+      );
+
+   }
 
    ngOnInit(): void {
-      
       // Creates a timer to update the current datetime
       let sub = interval(1000).subscribe(x => {
          this.todayDate = new Date().toLocaleString();
       });
-
-      this._eventEmiter.informPageLoc('main');
-
    }
 
-   harvestMouseTableDirect()
-   {
+   harvestMouseTableDirect() {
       this._router.navigate(['/harvestmouse']);
    }
 

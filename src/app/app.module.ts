@@ -84,7 +84,7 @@ import { LoginpageComponent } from './loginpage/loginpage.component';
       MatIconModule,
       MatSidenavModule,
       MatListModule,
-      ReactiveFormsModule
+      ReactiveFormsModule,
    ],
    providers: [EventEmiterService],
    bootstrap: [AppComponent]
