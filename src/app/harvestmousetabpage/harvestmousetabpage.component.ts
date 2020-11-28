@@ -1,8 +1,7 @@
-import { Component, OnInit, AfterViewInit, ViewChildren, ViewChild, ElementRef, QueryList, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChildren, ViewChild, QueryList, ChangeDetectorRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DataproviderService } from '../service/dataprovider.service';
 import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastmessage.service';
-import { harvestMouseFileUploadUrl } from '../service/dataprovider.service';
 import { HarvestmousepageComponent } from '../harvestmousepage/harvestmousepage.component';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { MatTableDataSource } from '@angular/material/table';
@@ -28,9 +27,6 @@ interface TabConfig {
    styleUrls: ['./harvestmousetabpage.component.scss']
 })
 export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
-   // Reference the fileInput html element in the template
-   @ViewChild('fileInput') fileInputButton: ElementRef;
-
    // Qeury set for all the HarvestmousepageComponent directives
    // with tab id
    @ViewChildren('tab') tabList: QueryList<HarvestmousepageComponent>;
@@ -66,12 +62,6 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
       this._eventEmiter.informPageLoc(
          'mousetable'
       );
-
-      this._eventEmiter.dataStr.subscribe(
-         data => {
-            this.uploadButtonClick();
-         }
-      );
    }
 
    refreshTabAndData(): void {
@@ -105,7 +95,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                         }
                      }
                   )
-                     
+
                   if (not_existed && existed) {
                      return;
                   }
@@ -172,47 +162,6 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
    */
    ngAfterViewInit(): void {
       // Placeholder for other actions if needed
-   }
-
-   /*
-   Function name: fileInputChange
-   Description: This is the callback function when the input file event
-                changed is triggered
-   */
-   fileInputChange(event: any) {
-      let file: File = event.target.files[0];
-      this.showInProgress();
-      this.dataprovider.fileUploadRequest(file, harvestMouseFileUploadUrl).subscribe(
-         data => {
-            this.toastservice.openSnackBar(
-               this._snackBar, 'Imported Success', 'Dismiss', SuccessColor
-            )
-            // Fresh All the mouse lists in each of the tabs
-            this.refreshTabAndData();
-            // clear the file cache
-            this.fileInputButton.nativeElement.value = "";
-            this.InProgressDone();
-         },
-         error => {
-            this.toastservice.openSnackBar(
-               this._snackBar, 'Something wrong', 'Dismiss', ErrorColor
-            )
-            // clear the file cache
-            this.fileInputButton.nativeElement.value = "";
-            this.InProgressDone();
-         });
-   }
-
-   /*
-   Function name: uploadButtonClick
-   Description: This is the callback function when the button is clicked
-                to mimic the file upload input event
-   */
-   uploadButtonClick() {
-      if(this.fileInputButton)
-      {
-         this.fileInputButton.nativeElement.click();
-      }
    }
 
    /*

@@ -5,6 +5,7 @@ import { HarvestmousetabpageComponent } from './harvestmousetabpage/harvestmouse
 import { LoginpageComponent } from './loginpage/loginpage.component';
 import { UpdatepwdnewuserComponent } from './updatepwdnewuser/updatepwdnewuser.component';
 import { PageNotFoundComponentComponent } from './page-not-found-component/page-not-found-component.component';
+import { UploadcsvpageComponent } from './uploadcsvpage/uploadcsvpage.component';
 
 const routes: Routes = [
    {
@@ -12,8 +13,12 @@ const routes: Routes = [
       component: MainpageComponent
    },
    {
-      path: 'harvestmouse',
-      component: HarvestmousetabpageComponent
+    path: 'harvest-mouse',
+    component: HarvestmousetabpageComponent
+   },
+   {
+    path: 'upload-csv',
+    component: UploadcsvpageComponent
    },
    {
       path: 'login',

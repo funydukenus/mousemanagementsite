@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { MatAccordion } from '@angular/material/expansion';
 import { DataproviderService } from '../service/dataprovider.service';
-import { FormControl, Form } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';

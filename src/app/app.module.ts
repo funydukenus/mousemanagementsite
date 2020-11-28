@@ -43,6 +43,7 @@ import { EventEmiterService } from './service/event.emmiter.service';
 import { LoginpageComponent } from './loginpage/loginpage.component';
 import { UpdatepwdnewuserComponent } from './updatepwdnewuser/updatepwdnewuser.component';
 import { PageNotFoundComponentComponent } from './page-not-found-component/page-not-found-component.component';
+import { UploadcsvpageComponent } from './uploadcsvpage/uploadcsvpage.component';
 
 @NgModule({
    declarations: [
@@ -58,7 +59,8 @@ import { PageNotFoundComponentComponent } from './page-not-found-component/page-
       DialogSingleEditComponent,
       LoginpageComponent,
       UpdatepwdnewuserComponent,
-      PageNotFoundComponentComponent
+      PageNotFoundComponentComponent,
+      UploadcsvpageComponent
    ],
    imports: [
       BrowserModule,
