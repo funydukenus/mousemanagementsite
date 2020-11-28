@@ -1,4 +1,4 @@
-<mat-sidenav-container *ngIf="!IsLoginPage()">
+<mat-sidenav-container *ngIf="ShowSideBar()">
   <mat-sidenav #sidenav mode="over">
     <div class="top">
       <img src='/assets/images/dukenus-logo.png'/>
@@ -24,6 +24,6 @@
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
-<div *ngIf="IsLoginPage()" class="root-container">
+<div *ngIf="!ShowSideBar()" class="root-container">
   <router-outlet></router-outlet>
 </div>

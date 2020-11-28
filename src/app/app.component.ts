@@ -32,18 +32,33 @@ export class AppComponent {
          (event) => {
             // Checks validation each time the router event occurs
             if (event instanceof NavigationEnd) {
-               if (localStorage.getItem('username')) {
-                  this.dataprovider.CheckIsLogin(localStorage.getItem('username')).subscribe(
-                     result => {
-                        this.ValidationDone = true;
-                     },
-                     error => {
-                        this.returnToLoginPage();
-                     }
-                  )
+               let NeedChecking:Boolean = true;
+               if(event.url.includes('secret_key')){
+                  let s = event.url.substr(0, event.url.indexOf('?secret_key'));
+                  if(s === '/updatepwdnewuser'){
+                     NeedChecking = false;
+                  }
                }
-               else {
-                  this.returnToLoginPage();
+
+               if(event.url.includes('pagenotfound')){
+                  NeedChecking = false;
+               }
+               
+               if(NeedChecking)
+               {
+                  if (localStorage.getItem('username')) {
+                     this.dataprovider.CheckIsLogin(localStorage.getItem('username')).subscribe(
+                        result => {
+                           this.ValidationDone = true;
+                        },
+                        error => {
+                           this.returnToLoginPage();
+                        }
+                     )
+                  }
+                  else {
+                     this.returnToLoginPage();
+                  }
                }
             }
          });
@@ -96,5 +111,13 @@ export class AppComponent {
 
    IsLoginPage() {
       return this.type === 'login';
+   }
+
+   IsUpdateNewUser(){
+      return this.type === 'updatenewuser';
+   }
+
+   ShowSideBar(){
+      return !(this.IsLoginPage() || this.IsUpdateNewUser())
    }
 }
