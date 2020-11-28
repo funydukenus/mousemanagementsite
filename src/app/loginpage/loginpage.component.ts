@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { EventEmiterService } from '../service/event.emmiter.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DataproviderService } from '../service/dataprovider.service';
-import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastmessage.service';
+import { ToastmessageService, ErrorColor } from '../service/toastmessage.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 

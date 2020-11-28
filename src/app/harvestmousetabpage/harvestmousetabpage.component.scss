@@ -6,6 +6,16 @@
    z-index: 100;
 }
 
-.hide-button{
-   display: none;
+.actions {
+  display: block;
+  background: white;
+  opacity: 0.8;
+}
+
+.delete-button {
+  color: #dc3545;
+
+  &:disabled {
+    color: grey;
+  }
 }
