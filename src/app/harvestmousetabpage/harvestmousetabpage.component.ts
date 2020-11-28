@@ -280,7 +280,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
             ).subscribe(
                data => {
                   console.log(data);
-                  this.refreshMouseListsAllTabs();
+                  this.refreshTabAndData();
                   this.toastservice.openSnackBar(
                      this._snackBar,
                      "Deleted successfully",
