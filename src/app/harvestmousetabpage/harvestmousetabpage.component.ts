@@ -66,6 +66,12 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
       this._eventEmiter.informPageLoc(
          'mousetable'
       );
+
+      this._eventEmiter.dataStr.subscribe(
+         data => {
+            this.uploadButtonClick();
+         }
+      );
    }
 
    refreshTabAndData(): void {
@@ -203,8 +209,10 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                 to mimic the file upload input event
    */
    uploadButtonClick() {
-      this.fileInputButton.nativeElement.click();
-      this.sideNav.close();
+      if(this.fileInputButton)
+      {
+         this.fileInputButton.nativeElement.click();
+      }
    }
 
    /*
