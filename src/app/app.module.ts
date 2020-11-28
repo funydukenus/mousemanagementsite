@@ -41,6 +41,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { EventEmiterService } from './service/event.emmiter.service';
 import { LoginpageComponent } from './loginpage/loginpage.component';
+import { UpdatepwdnewuserComponent } from './updatepwdnewuser/updatepwdnewuser.component';
+import { PageNotFoundComponentComponent } from './page-not-found-component/page-not-found-component.component';
 
 @NgModule({
    declarations: [
@@ -54,7 +56,9 @@ import { LoginpageComponent } from './loginpage/loginpage.component';
       DialogConfirmationComponent,
       DialogSimpleConfirmationComponent,
       DialogSingleEditComponent,
-      LoginpageComponent
+      LoginpageComponent,
+      UpdatepwdnewuserComponent,
+      PageNotFoundComponentComponent
    ],
    imports: [
       BrowserModule,

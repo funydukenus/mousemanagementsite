@@ -3,8 +3,8 @@ import { HarvestMouse } from '../interface/harvestmouse';
 import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 
 
-//let baseUrl: string = 'http://192.168.50.194:8000/';
-let baseUrl: string = 'https://mousemanagement.herokuapp.com/';
+let baseUrl: string = 'http://localhost:8000/';
+//let baseUrl: string = 'https://mousemanagement.herokuapp.com/';
 let serverHarvestAppBaseUrl: string = baseUrl + 'harvestedmouse/';
 let serverAccountAppBaseUrl: string = baseUrl + 'accounts/';
 export let harvestMouseListUrl: string = serverHarvestAppBaseUrl + 'force_list';
@@ -16,6 +16,10 @@ export let getDataListUrl: string = serverHarvestAppBaseUrl + 'getdatalist';
 export let accountLoginUrl: string = serverAccountAppBaseUrl + 'login';
 export let accountLoggoutUrl: string = serverAccountAppBaseUrl + 'logout';
 export let accountIsLoginUrl: string = serverAccountAppBaseUrl + 'islogin';
+
+export let accountCheckSecretKeyUrl: string = serverAccountAppBaseUrl + 'checksecretuser';
+export let accountNewUserPwdKeyUrl: string = serverAccountAppBaseUrl + 'newuserpwdchange';
+
 
 @Injectable({
    providedIn: 'root'
@@ -245,4 +249,52 @@ export class DataproviderService {
 
       return this.httpPostRequest(formData, headers, accountIsLoginUrl);
    }
+
+   /*
+   Function name: CheckSecretKey
+   Description: This function checks the secret is valid
+   */
+   CheckSecretKey(secret_key, username) {
+      let formData: FormData = new FormData();
+      formData.append('secret_key', secret_key);
+      formData.append('username', username);
+
+      // Setting up http headers for the file uploading
+      let headers = new HttpHeaders({
+         'enctype': 'multipart/form-data',
+         'Accept': 'application/json'
+      });
+
+      // Insert into the option field
+      let options = {
+         headers: headers
+      }
+
+      return this.httpPostRequest(formData, headers, accountCheckSecretKeyUrl);
+   }
+
+   /*
+   Function name: NewUserChangePassword
+   Description: This function change the password for new user
+   */
+   NewUserChangePassword(secret_key, username, newpassword) {
+      let formData: FormData = new FormData();
+      formData.append('secret_key', secret_key);
+      formData.append('username', username);
+      formData.append('password', newpassword);
+
+      // Setting up http headers for the file uploading
+      let headers = new HttpHeaders({
+         'enctype': 'multipart/form-data',
+         'Accept': 'application/json'
+      });
+
+      // Insert into the option field
+      let options = {
+         headers: headers
+      }
+
+      return this.httpPostRequest(formData, headers, accountNewUserPwdKeyUrl);
+   }
+
 }
