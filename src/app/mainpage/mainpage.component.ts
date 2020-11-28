@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Import UI Related module
-import { MatGridListModule } from '@angular/material/grid-list';
-import { interval, Observable } from 'rxjs';
+import { interval } from 'rxjs';
 
 import { EventEmiterService } from '../service/event.emmiter.service';
 
@@ -33,7 +32,7 @@ export class MainpageComponent implements OnInit {
    }
 
    harvestMouseTableDirect() {
-      this._router.navigate(['/harvestmouse']);
+      this._router.navigate(['/harvest-mouse']);
    }
 
    /*

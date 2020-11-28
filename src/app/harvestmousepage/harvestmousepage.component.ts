@@ -1,12 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, EventEmitter, Output } from '@angular/core';
 import { DataproviderService } from '../service/dataprovider.service';
-import { ToastmessageService, SuccessColor, ErrorColor, InProgressColor } from '../service/toastmessage.service';
+import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastmessage.service';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatTable } from '@angular/material/table';
 import { ColumnInfo } from '../interface/columninfo';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -327,7 +327,7 @@ export class HarvestmousepageComponent implements OnInit {
 
    /*
    Function name: isAllSelected
-   Description: Whether the number of selected elements matches the total number of rows. 
+   Description: Whether the number of selected elements matches the total number of rows.
    */
    isAllSelected() {
       const numSelected = this.selection.selected.length;

@@ -4,7 +4,10 @@
       <img src='/assets/images/dukenus-logo.png'/>
     </div>
     <mat-list>
-      <a *ngIf="IsHarvestMousePage()" mat-list-item (click)="UploadClick()">
+      <a mat-list-item href='/harvest-mouse'>
+        Havest Mouse
+      </a>
+      <a mat-list-item href='/upload-csv'>
         Upload CSV File
       </a>
       <a mat-list-item (click)="Logout()">
