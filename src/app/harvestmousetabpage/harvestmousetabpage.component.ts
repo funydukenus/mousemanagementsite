@@ -279,8 +279,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                this.selectedHarvestedMouse
             ).subscribe(
                data => {
-                  console.log(data);
-                  this.refreshMouseListsAllTabs();
+                  this.refreshTabAndData();
                   this.toastservice.openSnackBar(
                      this._snackBar,
                      "Deleted successfully",
@@ -291,7 +290,6 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                   this.InProgressDone();
                },
                error => {
-                  console.log(error);
                   this.toastservice.openSnackBar(
                      this._snackBar,
                      "Encountered Error",
