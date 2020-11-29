@@ -106,7 +106,6 @@ export class DialogSingleEditComponent implements OnInit {
             this.getDataOptionByName('Handler').listOfData = JSON.parse(JSON.stringify(data['handlerList']));
             this.getDataOptionByName('ProjectTitle').listOfData = JSON.parse(JSON.stringify(data['projectTitleList']));
             // this.getDataOptionByName('Experiement').listOfData = JSON.parse(JSON.stringify(data['ExperiementList']));
-            console.log(this.dataOptionList);
             this.dataOptionList.forEach(
                optionElement => {
                   optionElement.filteredOptions = optionElement.control.valueChanges.pipe(
@@ -179,7 +178,6 @@ export class DialogSingleEditComponent implements OnInit {
 
          dialogRef.afterClosed().subscribe(
             result => {
-               console.log(result);
                if(result)
                {
                   this.diaglog.closeAll();
@@ -203,8 +201,6 @@ export class DialogSingleEditComponent implements OnInit {
       this.harvestedMouse.end_date = this.end_date.getFullYear() + "-" + this.appendLeadingZeroes( ( this.end_date.getMonth() + 1 ) ) + "-" + this.appendLeadingZeroes( this.end_date.getDate() );
       let origJSONObj = JSON.stringify(this.origHarvestedMouse);
       let JSONObj = JSON.stringify(this.harvestedMouse);
-      console.log(origJSONObj);
-      console.log(JSONObj);
       return origJSONObj !== JSONObj;
    }
 }

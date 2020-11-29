@@ -88,6 +88,8 @@ export class HarvestmousepageComponent implements OnInit {
    // Used to control accessbility of the button
    submitDisabled: boolean = false;
 
+   columnSelectOptions: JSON;
+
    constructor(
       private dataprovider: DataproviderService,
       private toastservice: ToastmessageService,
@@ -112,20 +114,6 @@ export class HarvestmousepageComponent implements OnInit {
    }
 
    /*
-   Function name: applyFilter
-   Description: This is the callback function when the filter text input
-                event changed trigger
-   */
-   applyFilter(event: Event) {
-      const filterValue = (event.target as HTMLInputElement).value;
-      this.dataSource.filter = filterValue;
-
-      if (this.dataSource.paginator) {
-         this.dataSource.paginator.firstPage();
-      }
-   }
-
-   /*
    Function name: InsertDataSource
    Description: This function allows the external data source insert into
                 table in this component
@@ -134,7 +122,76 @@ export class HarvestmousepageComponent implements OnInit {
       this.dataSource = dataSource;
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
+
+      this.dataSource.filterPredicate = (data: any, filter: string) => {
+        let filters = JSON.parse(filter);
+        let matchFound = true;
+
+        if (Object.keys(filters).length <= 0) {
+          return matchFound;
+        }
+
+        for (let key in filters) {
+          matchFound = (matchFound && filters[key].includes(data[key]));
+        }
+        return matchFound;
+      }
+      this.columnSelectOptions = this.prepareColumnSelectOptions(dataSource);
    }
+
+  /*
+  Function name: prepareColumnSelectOptions
+  Description: This function prepares column select options
+  */
+  prepareColumnSelectOptions(dataSource) {
+    let result:any = {};
+    dataSource.data.forEach(row => {
+      Object.keys(row).forEach(key => {
+        if (typeof row[key] !== 'string'){
+          return;
+        }
+
+        if (typeof result[key] == 'undefined') {
+          result[key] = [];
+        }
+        if (!result[key].includes(row[key])) {
+          result[key].push(row[key]);
+        }
+      })
+    })
+
+    return result;
+  }
+
+  /*
+  Function name: columnOptions
+  Description: This function returns select options based on column
+  */
+  columnOptions(key: string) {
+    if (typeof this.columnSelectOptions == 'undefined') {
+      return [];
+    }
+    return this.columnSelectOptions[key];
+  }
+
+  isOptionSelected(key: string, value: string) {
+    let selectedOptions = JSON.parse(this.dataSource.filter || "{}");
+    if (typeof selectedOptions == 'undefined') {
+      return false;
+    }
+    return selectedOptions[key].contains(value);
+  }
+
+  updateSelectedOptions(event, key) {
+    let selectedOptions = JSON.parse(this.dataSource.filter || "{}");
+    if (event.value.length > 0) {
+      selectedOptions[key] = event.value;
+    } else {
+      delete selectedOptions[key];
+    }
+
+    this.dataSource.filter = JSON.stringify(selectedOptions);
+  }
 
    /*
    Function name: refreshSelected
@@ -256,8 +313,6 @@ export class HarvestmousepageComponent implements OnInit {
                if (result) {
                   var birth_date = new Date(result.harvestedMouse.birth_date);
                   var end_date = new Date(result.harvestedMouse.end_date);
-                  console.log(birth_date);
-                  console.log(end_date);
                   result.harvestedMouse.birth_date = birth_date.getFullYear() + "-" +
                      this.appendLeadingZeroes((birth_date.getMonth() + 1)) + "-" +
                      this.appendLeadingZeroes(birth_date.getDate());
@@ -271,8 +326,6 @@ export class HarvestmousepageComponent implements OnInit {
                      harvestMouseList
                   ).subscribe(
                      data => {
-
-                        console.log(data);
                         this.toastservice.openSnackBar(
                            this._snackBar,
                            "Mouse updated successfully",
@@ -283,7 +336,6 @@ export class HarvestmousepageComponent implements OnInit {
                      },
                      error => {
                         this.submitDisabled = false;
-                        console.log(error);
                         this.toastservice.openSnackBar(
                            this._snackBar,
                            "Mouse updated failed",
@@ -376,7 +428,6 @@ export class HarvestmousepageComponent implements OnInit {
                harvestMouseList
             ).subscribe(
                data => {
-                  console.log(data);
                   this.dataFreshEventRequired.emit();
                   this.toastservice.openSnackBar(
                      this._snackBar,
@@ -421,7 +472,6 @@ export class HarvestmousepageComponent implements OnInit {
       ).subscribe(
          data => {
             this.submitDisabled = false;
-            console.log(data);
             this.toastservice.openSnackBar(
                this._snackBar,
                "Comment updated successfully",

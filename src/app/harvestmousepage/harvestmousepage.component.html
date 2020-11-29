@@ -4,7 +4,21 @@
 
       <ng-container [matColumnDef]="column.key" *ngFor="let column of ( displayedColumns | tableheaderconverter )">
          <div *ngIf="column.key !== 'position'">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag> {{column.display}} </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag>
+              <mat-form-field appearance="standard">
+                <mat-label>{{column.display}}</mat-label>
+
+                <mat-select multiple (selectionChange)="updateSelectedOptions($event, column.key)">
+                  <mat-option
+                    *ngFor="let value of columnOptions(column.key)"
+                    value={{value}}
+                    selected="isOptionSelected(column.key, value)"
+                  >
+                    {{value}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </th>
             <td mat-cell *matCellDef="let element">
                <span>{{element[column.key]}}</span>
             </td>

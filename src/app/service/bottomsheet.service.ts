@@ -34,7 +34,6 @@ export class BottomSheetColSelComponent {
    constructor(
       private _bottomSheetRef: MatBottomSheetRef<BottomSheetColSelComponent>,
       @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {
-      console.log(data.colInfoList);
       this.colInfoList = data.colInfoList;
       this.colList = data.colList;
    }

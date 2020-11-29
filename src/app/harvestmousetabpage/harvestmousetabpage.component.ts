@@ -170,7 +170,6 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                 datasource assign to the tabConfig
    */
    refreshMouseListsAllTabs() {
-      console.log(this.tabConfig);
       this.tabConfig.forEach(
          tabConfig => {
             this.GetMouseTabList(
