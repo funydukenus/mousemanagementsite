@@ -31,8 +31,8 @@ export class MainpageComponent implements OnInit {
       });
    }
 
-   harvestMouseTableDirect() {
-      this._router.navigate(['/harvest-mouse']);
+   PageDirect(target){
+      this._router.navigate([target]);
    }
 
    /*

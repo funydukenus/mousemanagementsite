@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit,OnChanges, ViewEncapsulation } from '@angular/core';
 import { EventEmiterService } from '../service/event.emmiter.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DataproviderService } from '../service/dataprovider.service';
 import { ToastmessageService, ErrorColor } from '../service/toastmessage.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs/operators';
 
 @Component({
    selector: 'app-loginpage',
@@ -60,9 +61,8 @@ export class LoginpageComponent implements OnInit {
             this.passwordValue = userForm.password;
          }
       )
-
    }
-
+   
    /*
    Function name: OnClickSubmit
    Description: This function trigger when the sumbit button is clicked
@@ -75,14 +75,17 @@ export class LoginpageComponent implements OnInit {
          this.dataprovider.ValidateUserInfo(
             this.usernameValue,
             this.passwordValue
-         ).subscribe(
-            result => {
+         )
+         
+         .subscribe(
+            (result) => {
+                  console.log(result);
                this.IsLoading = false;
                this.submitButtonTxt = "Done";
                localStorage.setItem('username', this.usernameValue);
                this._router.navigate(['/home']);
             },
-            error => {
+            (error) => {
                this.IsLoading = false;
                this.submitButtonTxt = "Get Me In";
                if (error.status == 401) {

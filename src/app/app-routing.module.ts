@@ -6,6 +6,7 @@ import { LoginpageComponent } from './loginpage/loginpage.component';
 import { UpdatepwdnewuserComponent } from './updatepwdnewuser/updatepwdnewuser.component';
 import { PageNotFoundComponentComponent } from './page-not-found-component/page-not-found-component.component';
 import { UploadcsvpageComponent } from './uploadcsvpage/uploadcsvpage.component';
+import { UsermanagementpageComponent } from './usermanagementpage/usermanagementpage.component';
 
 const routes: Routes = [
    {
@@ -29,12 +30,16 @@ const routes: Routes = [
       component: UpdatepwdnewuserComponent
    },
    {
+      path: 'user-management-page',
+      component: UsermanagementpageComponent
+   },
+   {
       path: 'pagenotfound',
       component: PageNotFoundComponentComponent
    },
    {
       path: '',
-      redirectTo: '/login',
+      redirectTo: '/home',
       pathMatch: 'full'
    }
 ];

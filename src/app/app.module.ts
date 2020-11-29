@@ -44,6 +44,7 @@ import { LoginpageComponent } from './loginpage/loginpage.component';
 import { UpdatepwdnewuserComponent } from './updatepwdnewuser/updatepwdnewuser.component';
 import { PageNotFoundComponentComponent } from './page-not-found-component/page-not-found-component.component';
 import { UploadcsvpageComponent } from './uploadcsvpage/uploadcsvpage.component';
+import { UsermanagementpageComponent } from './usermanagementpage/usermanagementpage.component';
 
 @NgModule({
    declarations: [
@@ -60,7 +61,8 @@ import { UploadcsvpageComponent } from './uploadcsvpage/uploadcsvpage.component'
       LoginpageComponent,
       UpdatepwdnewuserComponent,
       PageNotFoundComponentComponent,
-      UploadcsvpageComponent
+      UploadcsvpageComponent,
+      UsermanagementpageComponent
    ],
    imports: [
       BrowserModule,
