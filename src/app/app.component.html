@@ -10,14 +10,14 @@
       <a mat-list-item href='/upload-csv'>
         Upload CSV File
       </a>
-      <a mat-list-item (click)="Logout()">
+      <a mat-list-item class="logout" (click)="Logout()">
         Log Out
       </a>
      </mat-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar>
-      <a (click)="sidenav.toggle()">
+      <a class="side-bar-opener" (click)="sidenav.toggle()">
         <mat-icon class="material-icons">menu</mat-icon>
       </a>
       <span>FNY Lab</span>

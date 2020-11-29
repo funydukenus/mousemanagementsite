@@ -32,37 +32,31 @@ export class AppComponent {
          (event) => {
             // Checks validation each time the router event occurs
             if (event instanceof NavigationEnd) {
-               let NeedChecking:Boolean = true;
-               if(event.url.includes('secret_key')){
+               let NeedChecking: Boolean = true;
+               if (event.url.includes('secret_key')) {
                   let s = event.url.substr(0, event.url.indexOf('?secret_key'));
-                  if(s === '/updatepwdnewuser'){
+                  if (s === '/updatepwdnewuser') {
                      NeedChecking = false;
                   }
                }
 
-               if(event.url.includes('pagenotfound')){
+               if (event.url.includes('pagenotfound')) {
                   NeedChecking = false;
                }
-               
-               if(NeedChecking)
-               {
-                  if (localStorage.getItem('username')) {
-                     this.dataprovider.CheckIsLogin(localStorage.getItem('username')).subscribe(
-                        result => {
-                           this.ValidationDone = true;
-                        },
-                        error => {
-                           this.returnToLoginPage();
-                        }
-                     )
-                  }
-                  else {
-                     this.returnToLoginPage();
-                  }
+
+               if (NeedChecking) {
+                  this.dataprovider.CheckIsLogin().subscribe(
+                     result => {
+                        this.ValidationDone = true;
+                     },
+                     error => {
+                        this.returnToLoginPage();
+                     }
+                  );
                }
             }
          });
-      
+
       // Setup the call back function
       // to each to the page indicator source
       this._eventEmiter.pageLocIndicator.subscribe(
@@ -72,9 +66,12 @@ export class AppComponent {
       )
    }
 
-   returnToLoginPage(){
+   returnToLoginPage() {
       this.ValidationDone = false;
       this._router.navigate(['/login']);
+      this._eventEmiter.informPageLoc(
+         'login'
+      );
    }
 
    UploadClick() {
@@ -113,11 +110,11 @@ export class AppComponent {
       return this.type === 'login';
    }
 
-   IsUpdateNewUser(){
+   IsUpdateNewUser() {
       return this.type === 'updatenewuser';
    }
 
-   ShowSideBar(){
+   ShowSideBar() {
       return !(this.IsLoginPage() || this.IsUpdateNewUser())
    }
 }

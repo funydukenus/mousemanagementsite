@@ -3,8 +3,8 @@ import { HarvestMouse } from '../interface/harvestmouse';
 import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 
 
-// let baseUrl: string = 'http://localhost:8000/';
-let baseUrl: string = 'https://mousemanagement.herokuapp.com/';
+let local_dev: Boolean = true;
+let baseUrl: string = local_dev ? '/api/' : 'https://mousemanagement.herokuapp.com/api/';
 let serverHarvestAppBaseUrl: string = baseUrl + 'harvestedmouse/';
 let serverAccountAppBaseUrl: string = baseUrl + 'accounts/';
 export let harvestMouseListUrl: string = serverHarvestAppBaseUrl + 'force_list';
@@ -26,8 +26,6 @@ export let accountNewUserPwdKeyUrl: string = serverAccountAppBaseUrl + 'newuserp
 })
 export class DataproviderService {
 
-   stored_username: string = '';
-
    harvestMouseList: HarvestMouse[];
    last_random_symbol: string = '';
    constructor(private http: HttpClient) {
@@ -39,11 +37,7 @@ export class DataproviderService {
    Description: Making the http post request to the desired URL server,
                       the caller must make sure no null value pass into the function
    */
-   httpPostRequest(formData: FormData, httpHeader: HttpHeaders, url: string) {
-      let options = {
-         headers: httpHeader
-      }
-
+   httpPostRequest(formData: FormData, url: string, options?) {
       return this.http.post(url, formData, options);
    }
 
@@ -177,18 +171,12 @@ export class DataproviderService {
          let formData: FormData = new FormData();
          formData.append('file', file, file.name);
 
-         // Setting up http headers for the file uploading
-         let headers = new HttpHeaders({
-            'enctype': 'multipart/form-data',
-            'Accept': 'application/json'
-         });
-
          // Insert into the option field
          let options = {
-            headers: headers
+            headers: this.constructHeaederForCORSHeader()
          }
 
-         return this.httpPostRequest(formData, headers, url);
+         return this.httpPostRequest(formData, url, options);
       }
       else {
          return null;
@@ -204,19 +192,15 @@ export class DataproviderService {
       let formData: FormData = new FormData();
       formData.append('username', username);
       formData.append('password', password);
-      // Setting up http headers for the file uploading
-      let headers = new HttpHeaders({
 
-      });
-
-      // Insert into the option field
       let options = {
-         headers: headers
-      }
+         responseType: 'json',
+         observe: "response",
+         withCredentials: true,
+         headers: this.constructHeaederForCORSHeader()
+      };
 
-      this.stored_username = username;
-
-      return this.httpPostRequest(formData, headers, accountLoginUrl);
+      return this.httpPostRequest(formData, accountLoginUrl, options);
    }
 
    /*
@@ -224,7 +208,6 @@ export class DataproviderService {
    Description: Log out the user from the server
    */
    UserLoggout() {
-      this.stored_username = '';
       return this.httpGetRequest(accountLoggoutUrl);
    }
 
@@ -232,22 +215,16 @@ export class DataproviderService {
    Function name: CheckIsLogin
    Description: Check if the user has login into the server
    */
-   CheckIsLogin(username) {
+   CheckIsLogin() {
       let formData: FormData = new FormData();
-      formData.append('username', username);
 
-      // Setting up http headers for the file uploading
-      let headers = new HttpHeaders({
-         'enctype': 'multipart/form-data',
-         'Accept': 'application/json'
-      });
-
-      // Insert into the option field
       let options = {
-         headers: headers
-      }
+         observe: "response",
+         withCredentials: true,
+         headers: this.constructHeaederForCORSHeader()
+      };
 
-      return this.httpPostRequest(formData, headers, accountIsLoginUrl);
+      return this.httpPostRequest(formData, accountIsLoginUrl, options);
    }
 
    /*
@@ -259,18 +236,15 @@ export class DataproviderService {
       formData.append('secret_key', secret_key);
       formData.append('username', username);
 
-      // Setting up http headers for the file uploading
-      let headers = new HttpHeaders({
-         'enctype': 'multipart/form-data',
-         'Accept': 'application/json'
-      });
-
       // Insert into the option field
       let options = {
-         headers: headers
-      }
+         responseType: 'json',
+         observe: "response",
+         withCredentials: true,
+         headers: this.constructHeaederForCORSHeader()
+      };
 
-      return this.httpPostRequest(formData, headers, accountCheckSecretKeyUrl);
+      return this.httpPostRequest(formData, accountCheckSecretKeyUrl, options);
    }
 
    /*
@@ -283,18 +257,37 @@ export class DataproviderService {
       formData.append('username', username);
       formData.append('password', newpassword);
 
-      // Setting up http headers for the file uploading
-      let headers = new HttpHeaders({
-         'enctype': 'multipart/form-data',
-         'Accept': 'application/json'
-      });
+
+
 
       // Insert into the option field
       let options = {
-         headers: headers
-      }
+         responseType: 'json',
+         observe: "response",
+         withCredentials: true,
+         headers: this.constructHeaederForCORSHeader()
+      };
 
-      return this.httpPostRequest(formData, headers, accountNewUserPwdKeyUrl);
+      return this.httpPostRequest(formData, accountNewUserPwdKeyUrl, options);
+   }
+
+   constructHeaederForCORSHeader() {
+      // Setting up http headers for the file uploading
+      if (local_dev) {
+         let headers = new HttpHeaders({
+            'enctype': 'multipart/form-data',
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': 'http://localhost:8000'
+         });
+         return headers;
+      }
+      else {
+         let headers = new HttpHeaders({
+            'enctype': 'multipart/form-data',
+            'Accept': 'application/json'
+         });
+         return headers;
+      }
    }
 
 }
