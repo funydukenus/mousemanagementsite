@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 
-
 let local_dev: Boolean = false;
-let baseUrl: string = local_dev ? '/api/' : 'https://mousemanagement.herokuapp.com/api/';
+let client_side_url = local_dev? "http://localhost:4200" : "https://mousemanagementsite.herokuapp.com";
+let baseUrl: string = local_dev? 'http://localhost:8000/api/': 'https://mousemanagement.herokuapp.com/api/';
 let serverHarvestAppBaseUrl: string = baseUrl + 'harvestedmouse/';
 let serverAccountAppBaseUrl: string = baseUrl + 'accounts/';
 export let harvestMouseListUrl: string = serverHarvestAppBaseUrl + 'force_list';
@@ -257,9 +257,6 @@ export class DataproviderService {
       formData.append('username', username);
       formData.append('password', newpassword);
 
-
-
-
       // Insert into the option field
       let options = {
          responseType: 'json',
@@ -273,21 +270,13 @@ export class DataproviderService {
 
    constructHeaederForCORSHeader() {
       // Setting up http headers for the file uploading
-      if (local_dev) {
-         let headers = new HttpHeaders({
-            'enctype': 'multipart/form-data',
-            'Accept': 'application/json',
-            'Access-Control-Allow-Origin': 'http://localhost:8000'
-         });
-         return headers;
-      }
-      else {
-         let headers = new HttpHeaders({
-            'enctype': 'multipart/form-data',
-            'Accept': 'application/json'
-         });
-         return headers;
-      }
+      let headers = new HttpHeaders({
+         'enctype': 'multipart/form-data',
+         'Accept': 'application/json',
+         'Access-Control-Allow-Origin': client_side_url,
+         'Access-Control-Allow-Credentials': 'true'
+      });
+      return headers;
    }
 
 }
