@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 
 // Import UI Related module
 import { interval } from 'rxjs';
+import { DataproviderService } from '../service/dataprovider.service';
 
 import { EventEmiterService } from '../service/event.emmiter.service';
 
@@ -15,12 +16,27 @@ export class MainpageComponent implements OnInit {
 
    todayDate = new Date().toLocaleString();
 
+   isAdmin: Boolean = false;
+
    constructor(
       private _router: Router,
-      private _eventEmiter: EventEmiterService) {
+      private _eventEmiter: EventEmiterService,
+      private _dataprovider: DataproviderService) {
       this._eventEmiter.informPageLoc(
          'main'
       );
+
+      this._dataprovider.IsAdmin().subscribe(
+         (result) => {
+            let response: String = new String(result).toString();
+            if(response == "1"){
+               this.isAdmin = true;
+            }
+         },
+         (error) => {
+            this.isAdmin = false;
+         }
+      )
 
    }
 

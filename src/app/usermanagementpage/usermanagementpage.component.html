@@ -1,1 +1,99 @@
-<p>usermanagementpage works!</p>
+<div class="user-info-block-container">
+    <mat-card *ngFor="let user of userInfoContent" class="user-info-block"
+        [ngClass]="{'inactive': !isUserActive(user)}">
+        <mat-card-header>
+            <mat-card-title>{{ getFullName(user) }}</mat-card-title>
+            <mat-card-subtitle>{{user.email}}</mat-card-subtitle>
+        </mat-card-header>
+        <img mat-card-image src="/assets/images/person-icon.png" alt="person-icon">
+        <mat-card-content>
+            <mat-grid-list class="grid-tile" cols="1" rows="2" rowHeight="1.5rem">
+                <mat-grid-tile class="grid-to-left">
+                    <div>Joined time:</div>
+                </mat-grid-tile>
+                <mat-grid-tile class="grid-to-right">
+                    <div>{{user.created_date}}</div>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <mat-grid-list class="grid-tile" cols="1" rows="2" rowHeight="1.5rem">
+                <mat-grid-tile class="grid-to-left">
+                    <div>Last login time: </div>
+                </mat-grid-tile>
+                <mat-grid-tile class="grid-to-right">
+                    <div>{{convertLoginDisplay(user.last_login_date)}}</div>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <mat-grid-list class="grid-tile" cols="2" rows="1" rowHeight="1.5rem">
+                <mat-grid-tile class="grid-to-left">
+                    <div>Email Verified </div>
+                </mat-grid-tile>
+                <mat-grid-tile class="grid-to-right">
+                    <div *ngIf="user.is_email_verified" class="tick-container">
+                        <mat-icon color="white">check</mat-icon>
+                    </div>
+                    <div *ngIf="!user.is_email_verified" class="cross-container">
+                        <mat-icon color="white">clear</mat-icon>
+                    </div>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <mat-grid-list class="grid-tile" cols="2" rows="1" rowHeight="1.5rem">
+                <mat-grid-tile class="grid-to-left">
+                    <div>Loggin</div>
+                </mat-grid-tile>
+                <mat-grid-tile class="grid-to-right">
+                    <div *ngIf="user.is_cur_login" class="tick-container">
+                        <mat-icon color="white">check</mat-icon>
+                    </div>
+                    <div *ngIf="!user.is_cur_login" class="cross-container">
+                        <mat-icon color="white">clear</mat-icon>
+                    </div>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </mat-card-content>
+        <mat-card-actions class="user-info-actions">
+            <mat-grid-list cols="4" rows="1" rowHeight="3rem">
+                <mat-grid-tile colspan="2">
+                    <mat-slide-toggle class="action-element toggle" [checked]="isUserActive(user)"
+                        (change)="toggleChangeEvent($event, user)"
+                        [disabled]="preventInputChanged || !user.is_email_verified">
+                        {{isUserActive(user)? "active": "inactive" }}
+                    </mat-slide-toggle>
+                </mat-grid-tile>
+                <mat-grid-tile colspan="1">
+                </mat-grid-tile>
+                <mat-grid-tile colspan="1">
+                    <button class="delete-button" mat-mini-fab aria-label="Delete Button" color="warn"
+                        [disabled]="preventInputChanged"
+                        (click)="deleteUser(user)">
+                        <mat-icon color="white">delete</mat-icon>
+                    </button>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </mat-card-actions>
+    </mat-card>
+    <mat-card class="user-info-block">
+        <mat-card-header>
+            <mat-card-title>Adding New User</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="form" #userlogin="ngForm" (ngSubmit)="OnClickSubmit(userlogin.value)">
+                <input type="text" placeholder="Username" name="username" id="username" formControlName="username"
+                    required>
+                <input type="email" placeholder="Email" name="email" id="email" formControlName="email" required
+                    [pattern]="emailPattern">
+                <input type="text" placeholder="First Name" name="firstname" id="firstname" formControlName="firstname"
+                    required>
+                <input type="text" placeholder="Last Name" name="lastname" id="lastname" formControlName="lastname"
+                    required>
+                <p [ngClass]="{'show-error-msg': !form.valid && hasUserClickedSubmit && AbnormalDetected}"
+                    class="error-msg" #passwordwarning>{{WarningTxt}}</p>
+                <input class="submit-button" #submitButton
+                    [ngClass]="{'has-error': !form.valid && hasUserClickedSubmit}" type="submit"
+                    [value]="submitButtonTxt" [disabled]="!form.valid && hasUserClickedSubmit">
+            </form>
+        </mat-card-content>
+        <mat-card-actions class="user-info-actions">
+
+        </mat-card-actions>
+    </mat-card>
+</div>

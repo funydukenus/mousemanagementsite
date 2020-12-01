@@ -33,11 +33,15 @@ export class AppComponent {
             // Checks validation each time the router event occurs
             if (event instanceof NavigationEnd) {
                let NeedChecking: Boolean = true;
+               let IsRequestLoginPage: Boolean = false;
                if (event.url.includes('secret_key')) {
                   let s = event.url.substr(0, event.url.indexOf('?secret_key'));
                   if (s === '/updatepwdnewuser') {
                      NeedChecking = false;
                   }
+               }
+               if (event.url === '/login'){
+                  IsRequestLoginPage = true;
                }
 
                if (event.url.includes('pagenotfound')) {
@@ -48,6 +52,9 @@ export class AppComponent {
                   this.dataprovider.CheckIsLogin().subscribe(
                      result => {
                         this.ValidationDone = true;
+                        if(IsRequestLoginPage){
+                           this.directToMainPage();
+                        }
                      },
                      error => {
                         this.returnToLoginPage();
@@ -71,6 +78,13 @@ export class AppComponent {
       this._router.navigate(['/login']);
       this._eventEmiter.informPageLoc(
          'login'
+      );
+   }
+
+   directToMainPage(){
+      this._router.navigate(['/home']);
+      this._eventEmiter.informPageLoc(
+         'home'
       );
    }
 
