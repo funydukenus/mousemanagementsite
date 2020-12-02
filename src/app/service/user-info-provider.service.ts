@@ -24,11 +24,11 @@ export class UserInfoProviderService {
       observer => {
         this.accountInfoProvider.getLoggedUserInfo().subscribe(
           (result) => {
-            if ((result !== "Not logged") && (result !== "User not found")) {
-              this.currentLoggedUserInfo = <User>JSON.parse(<string>result);
+            if ((result === "Not logged") || (result === "User not found")) {
+              this.currentLoggedUserInfo = null;
             }
             else {
-              this.currentLoggedUserInfo = null;
+              this.currentLoggedUserInfo = <User>JSON.parse(<string>result);
             }
             observer.next();
             console.log("retrieveUserInfoAsync,OK:" + result);
@@ -70,5 +70,15 @@ export class UserInfoProviderService {
     else {
       return false;
     }
+  }
+
+  /*
+   Function name:
+     setCurrentUser
+   Description:
+     Return True if user is an admin
+   */
+  setCurrentUser(user: User): void {
+    this.currentLoggedUserInfo = user;
   }
 }

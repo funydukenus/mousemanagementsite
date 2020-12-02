@@ -4,6 +4,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { AccountInfoProviderService } from 'src/app/service/dataprovider.service';
 import { EventEmiterService } from 'src/app/service/event.emmiter.service';
+import { UserInfoProviderService } from 'src/app/service/user-info-provider.service';
 
 @Component({
   selector: 'app-site-layout',
@@ -15,7 +16,7 @@ export class SiteLayoutComponent implements OnInit {
   constructor(
     private accountInfoProvider: AccountInfoProviderService,
     private router: Router,
-    private eventEmiter: EventEmiterService) { }
+    private userInfoProvider: UserInfoProviderService) { }
 
   @ViewChild('sidenav') sidenav: MatDrawer;
 
@@ -26,6 +27,7 @@ export class SiteLayoutComponent implements OnInit {
   logout() {
     this.accountInfoProvider.userLogout().subscribe(
       result => {
+        this.userInfoProvider.setCurrentUser(null);
         this.router.navigate(['login']);
       },
       error => {

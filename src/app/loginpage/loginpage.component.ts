@@ -5,6 +5,8 @@ import { AccountInfoProviderService } from '../service/dataprovider.service';
 import { ToastmessageService, ErrorColor } from '../service/toastmessage.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { UserInfoProviderService } from '../service/user-info-provider.service';
+import { User } from '../interface/user';
 
 @Component({
   selector: 'app-loginpage',
@@ -36,6 +38,7 @@ export class LoginpageComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private accountInfoProvider: AccountInfoProviderService,
+    private userInfoProviderService: UserInfoProviderService,
     private snackBar: MatSnackBar,
     private toastService: ToastmessageService) {
   }
@@ -72,9 +75,12 @@ export class LoginpageComponent implements OnInit {
         this.passwordValue
       ).subscribe(
         (result) => {
+          let user: User;
           this.isLoading = false;
           this.submitButtonTxt = "Done";
-          localStorage.setItem('username', this.usernameValue);
+
+          user = <User>JSON.parse(<string>result);
+          this.userInfoProviderService.setCurrentUser(user);
           this.router.navigate(['']);
         },
         (error) => {

@@ -4,6 +4,13 @@ import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../interface/user';
 import { environment } from '../../environments/environment';
 
+namespace ResponseType {
+  export const JSON = 'json' as 'json';
+  export const ArrayBuffer = 'arraybuffer' as 'arraybuffer';
+  export const Blob = 'blob' as 'blob';
+  export const Text = 'text' as 'text';
+}
+
 // Main domain of the server
 let baseUrl: string = environment.serverUrl;
 
@@ -40,22 +47,6 @@ export class LowLevelLinkService {
   last_random_symbol: string = '';
 
   constructor(private http: HttpClient) { }
-
-  /*
-  Function name: httpPostRequest
-  Description: Making the http post request to the desired URL server,
-                     the caller must make sure no null value pass into the function
-  */
-  httpPostRequest(formData: FormData, url: string, options?) {
-    options = {
-      observe: "body",
-      withCredentials: true
-    };
-
-    options.headers = this.constructHeaederForCORSHeader();
-
-    return this.http.post(url, formData, options);
-  }
 
   /*
   Function name: httpGetRequest
@@ -96,40 +87,6 @@ export class LowLevelLinkService {
     });
   }
 
-  /*
-  Function name: httpDeleteRequest
-  Description: Making the http delete request to the desired URL server with
-                   optional parameters
-  */
-  httpDeleteRequest(harvestedMouseArray: HarvestMouse[], httpHeader: HttpHeaders, url: string) {
-    let mouse_list_obj = {
-      'mouse_list': harvestedMouseArray
-    }
-    let options = {
-      headers: httpHeader,
-      body: mouse_list_obj
-    }
-
-    return this.http.request('DELETE', url, options);
-  }
-
-  /*
-  Function name: httpPutRequest
-  Description: Making the http put request to the desired URL server with
-                     optional parameters
-  */
-  httpPutRequest(harvestedMouseArray: HarvestMouse[], httpHeader: HttpHeaders, url: string) {
-    let mouse_list_obj = {
-      'mouse_list': harvestedMouseArray
-    }
-    let options = {
-      headers: httpHeader,
-      body: mouse_list_obj
-    }
-
-    return this.http.request('PUT', url, options);
-  }
-
   constructHeaederForCORSHeader() {
     // Setting up http headers for the file uploading
     let headers = new HttpHeaders({
@@ -149,7 +106,9 @@ export class HarvestedMouseDataproviderService {
 
   harvestMouseList: HarvestMouse[];
 
-  constructor(private lowLevelLinkService: LowLevelLinkService) { }
+  constructor(
+    private http: HttpClient,
+    private lowLevelLinkService: LowLevelLinkService) { }
 
   /*
   Function name: deleteHarvestedMouseRequest
@@ -165,7 +124,15 @@ export class HarvestedMouseDataproviderService {
       'Accept': 'application/json'
     });
 
-    return this.lowLevelLinkService.httpDeleteRequest(harvestedMouseArray, headers, url);
+    let mouse_list_obj = {
+      'mouse_list': harvestedMouseArray
+    }
+    let options = {
+      headers: headers,
+      body: mouse_list_obj
+    }
+
+    return this.http.request('DELETE', url, options);
   }
 
   /*
@@ -182,7 +149,16 @@ export class HarvestedMouseDataproviderService {
       'Accept': 'application/json'
     });
 
-    return this.lowLevelLinkService.httpPutRequest(harvestedMouseArray, headers, url);
+    let mouse_list_obj = {
+      'mouse_list': harvestedMouseArray
+    }
+
+    let options = {
+      headers: headers,
+      body: mouse_list_obj
+    }
+
+    return this.http.request('PUT', url, options);
   }
 
   /*
@@ -217,10 +193,10 @@ export class HarvestedMouseDataproviderService {
 
       // Insert into the option field
       let options = {
+        headers: this.lowLevelLinkService.constructHeaederForCORSHeader()
+      };
 
-      }
-
-      return this.lowLevelLinkService.httpPostRequest(formData, url, options);
+      return this.http.post(url, formData, options);
     }
     else {
       return null;
@@ -233,7 +209,9 @@ export class HarvestedMouseDataproviderService {
 })
 export class AccountInfoProviderService {
 
-  constructor(private lowLevelLinkService: LowLevelLinkService) { }
+  constructor(
+    private http: HttpClient,
+    private lowLevelLinkService: LowLevelLinkService) { }
 
   /*
   Function name: validateUserInfo
@@ -242,16 +220,15 @@ export class AccountInfoProviderService {
   */
   validateUserInfo(username: string, password: string) {
     let formData: FormData = new FormData();
-    // formData.append('username', this.encodeString(username));
-    // formData.append('password', this.encodeString(password));
     formData.append('username', username);
     formData.append('password', password);
     let options = {
-      observe: "response",
-      withCredentials: true
+      responseType: ResponseType.JSON,
+      withCredentials: true,
+      headers: this.lowLevelLinkService.constructHeaederForCORSHeader()
     };
 
-    return this.lowLevelLinkService.httpPostRequest(formData, accountLoginUrl, options);
+    return this.http.post(accountLoginUrl, formData, options);
   }
   /*
   Function name: userLogout
@@ -272,12 +249,11 @@ export class AccountInfoProviderService {
 
     // Insert into the option field
     let options = {
-      responseType: 'json',
-      observe: "response",
-      withCredentials: true
+      responseType: ResponseType.JSON,
+      withCredentials: true,
+      headers: this.lowLevelLinkService.constructHeaederForCORSHeader()
     };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountCheckSecretKeyUrl, options);
+    return this.http.post(accountCheckSecretKeyUrl, formData, options);
   }
 
 
@@ -293,12 +269,11 @@ export class AccountInfoProviderService {
 
     // Insert into the option field
     let options = {
-      responseType: 'json',
-      observe: "response",
-      withCredentials: true
+      responseType: ResponseType.JSON,
+      withCredentials: true,
+      headers: this.lowLevelLinkService.constructHeaederForCORSHeader()
     };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountNewUserPwdKeyUrl, options);
+    return this.http.post(accountNewUserPwdKeyUrl, formData, options);
   }
 
   getAllUserInfo() {
@@ -313,11 +288,10 @@ export class AccountInfoProviderService {
 
     // Insert into the option field
     let options = {
-      observe: "body",
-      withCredentials: true
+      withCredentials: true,
+      headers: this.lowLevelLinkService.constructHeaederForCORSHeader()
     };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountToggleActivityUser, options);
+    return this.http.post(accountToggleActivityUser, formData, options);
   }
 
   createNewUser(username: string, email: string, firstname: string, lastname: string) {
@@ -329,11 +303,11 @@ export class AccountInfoProviderService {
 
     // Insert into the option field
     let options = {
-      observe: "body",
-      withCredentials: true
+      withCredentials: true,
+      headers: this.lowLevelLinkService.constructHeaederForCORSHeader()
     };
 
-    return this.lowLevelLinkService.httpPostRequest(formData, accountCreateNewUser, options);
+    return this.http.post(accountCreateNewUser, formData, options);
   }
 
 
@@ -343,24 +317,11 @@ export class AccountInfoProviderService {
 
     // Insert into the option field
     let options = {
-      observe: "body",
-      withCredentials: true
+      withCredentials: true,
+      headers: this.lowLevelLinkService.constructHeaederForCORSHeader()
     };
 
-    return this.lowLevelLinkService.httpPostRequest(formData, accountDeleteUser, options);
-  }
-
-
-  isAdmin() {
-    let formData: FormData = new FormData();
-
-    // Insert into the option field
-    let options = {
-      observe: "body",
-      withCredentials: true
-    };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountIsAdmin, options);
+    return this.http.post(accountCreateNewUser, formData, options);
   }
 
   getLoggedUserInfo() {

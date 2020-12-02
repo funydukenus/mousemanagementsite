@@ -12,7 +12,7 @@
             <a mat-list-item (click)="sidenav.close()" routerLink="/upload-csv">
                 Upload CSV File
             </a>
-            <a mat-list-item class="logout" (click)="logout()">
+            <a mat-list-item class="logout" (click)="sidenav.close()" (click)="logout()">
                 Log Out
             </a>
         </mat-list>
