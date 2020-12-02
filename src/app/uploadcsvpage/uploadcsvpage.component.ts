@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { DataproviderService, harvestMouseFileUploadUrl } from '../service/dataprovider.service';
+import { HarvestedMouseDataproviderService, harvestMouseFileUploadUrl } from '../service/dataprovider.service';
 import { EventEmiterService } from '../service/event.emmiter.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastmessage.service';
@@ -16,7 +16,7 @@ export class UploadcsvpageComponent implements OnInit {
   loaded: boolean;
 
   constructor(
-    private dataprovider: DataproviderService,
+    private harvestedMouseDataproviderService: HarvestedMouseDataproviderService,
     private _eventEmiter: EventEmiterService,
     private toastservice: ToastmessageService,
     private _snackBar: MatSnackBar,
@@ -41,7 +41,7 @@ export class UploadcsvpageComponent implements OnInit {
   fileInputChange(event: any) {
     let file: File = event.target.files[0];
     this.showInProgress();
-    this.dataprovider.fileUploadRequest(file, harvestMouseFileUploadUrl).subscribe(
+    this.harvestedMouseDataproviderService.fileUploadRequest(file, harvestMouseFileUploadUrl).subscribe(
       data => {
         this.toastservice.openSnackBar(
           this._snackBar, 'Imported Success', 'Dismiss', SuccessColor

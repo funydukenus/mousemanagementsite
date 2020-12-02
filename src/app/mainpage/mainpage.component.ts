@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 // Import UI Related module
 import { interval } from 'rxjs';
-import { DataproviderService } from '../service/dataprovider.service';
+import { AccountInfoProviderService } from '../service/dataprovider.service';
 
 import { EventEmiterService } from '../service/event.emmiter.service';
 
@@ -21,12 +21,12 @@ export class MainpageComponent implements OnInit {
   constructor(
     private _router: Router,
     private _eventEmiter: EventEmiterService,
-    private _dataprovider: DataproviderService) {
+    private accountInfoProvider: AccountInfoProviderService) {
     this._eventEmiter.informPageLoc(
       'main'
     );
 
-    this._dataprovider.IsAdmin().subscribe(
+    this.accountInfoProvider.IsAdmin().subscribe(
       (result) => {
         let response: String = new String(result).toString();
         if (response == "1") {

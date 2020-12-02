@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { User } from '../interface/user';
-import { DataproviderService } from '../service/dataprovider.service';
+import { AccountInfoProviderService } from '../service/dataprovider.service';
 import { EventEmiterService } from '../service/event.emmiter.service';
 import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastmessage.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -37,7 +37,7 @@ export class UsermanagementpageComponent implements OnInit {
 
   constructor(
     private _eventEmiter: EventEmiterService,
-    private _dataprovider: DataproviderService,
+    private accountInfoProvider: AccountInfoProviderService,
     private _toastservice: ToastmessageService,
     private _snackBar: MatSnackBar,
     private formBuilder: FormBuilder
@@ -55,7 +55,7 @@ export class UsermanagementpageComponent implements OnInit {
 
     // Setup observer for value change event
     this.form.valueChanges.subscribe(
-      userForm => {
+      () => {
         this.resetAllValidation();
       }
     )
@@ -69,7 +69,7 @@ export class UsermanagementpageComponent implements OnInit {
 
   retrieveAllUserInfo(): void {
     console.log("GetAllUserInfo - Start getting info");
-    this._dataprovider.GetAllUserInfo().subscribe(
+    this.accountInfoProvider.GetAllUserInfo().subscribe(
       (data) => {
         this.userInfoContent = <User[]>JSON.parse(<string>data)['user_list'];
       },
@@ -85,7 +85,7 @@ export class UsermanagementpageComponent implements OnInit {
 
   deleteUser(user: User) {
     this.preventInputChanged = true;
-    this._dataprovider.DeleteUser(user.username).subscribe(
+    this.accountInfoProvider.DeleteUser(user.username).subscribe(
       (result) => {
         let response: String = new String(result).toString();
         if (response !== 'Success') {
@@ -124,7 +124,7 @@ export class UsermanagementpageComponent implements OnInit {
     let oldValue: Boolean = user.is_active;
     user.is_active = event.checked;
     this.preventInputChanged = true;
-    this._dataprovider.ToggleActivityUser(user).subscribe(
+    this.accountInfoProvider.ToggleActivityUser(user).subscribe(
       (result) => {
         let response: String = new String(result).toString();
         if (response !== 'Success') {
@@ -192,7 +192,7 @@ export class UsermanagementpageComponent implements OnInit {
     this.hasUserClickedSubmit = true;
     if (this.form.valid) {
       this.submitButtonTxt = "Creating and sending...";
-      this._dataprovider.CreateNewUser(
+      this.accountInfoProvider.CreateNewUser(
         this.form.get("username").value,
         this.form.get("email").value,
         this.form.get("firstname").value,

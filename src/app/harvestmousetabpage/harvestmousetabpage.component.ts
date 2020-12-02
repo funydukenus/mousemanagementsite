@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChildren, ViewChild, QueryList, ChangeDetectorRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DataproviderService } from '../service/dataprovider.service';
+import { HarvestedMouseDataproviderService } from '../service/dataprovider.service';
 import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastmessage.service';
 import { HarvestmousepageComponent } from '../harvestmousepage/harvestmousepage.component';
 import { HarvestMouse } from '../interface/harvestmouse';
@@ -48,7 +48,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
   @ViewChild('sidenav') sideNav: MatDrawer;
 
   constructor(
-    private dataprovider: DataproviderService,
+    private harvestedMouseDataproviderService: HarvestedMouseDataproviderService,
     private toastservice: ToastmessageService,
     private diagservice: DiagService,
     private _snackBar: MatSnackBar,
@@ -67,7 +67,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
   refreshTabAndData(): void {
     let project_list: string[];
     this.loading_twice_or_more = true;
-    this.dataprovider.getDataList().subscribe(
+    this.harvestedMouseDataproviderService.getDataList().subscribe(
       data => {
         project_list = data['projectTitleList'];
         project_list.forEach(
@@ -190,7 +190,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
   GetMouseTabList(tabConfig: TabConfig) {
     // Load the harvested mouse list when the page is loaded
     this.showInProgress();
-    this.dataprovider.getHarvestMouseList(
+    this.harvestedMouseDataproviderService.getHarvestMouseList(
       tabConfig.filterString
     ).subscribe(
       data => {
@@ -275,7 +275,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
     ).subscribe(result => {
       if (result) {
         this.showInProgress();
-        this.dataprovider.deleteHarvestedMouseRequest(
+        this.harvestedMouseDataproviderService.deleteHarvestedMouseRequest(
           this.selectedHarvestedMouse
         ).subscribe(
           data => {

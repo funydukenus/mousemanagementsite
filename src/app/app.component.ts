@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { EventEmiterService } from './service/event.emmiter.service';
 import { MatDrawer } from '@angular/material/sidenav';
-import { DataproviderService } from './service/dataprovider.service';
+import { AccountInfoProviderService } from './service/dataprovider.service';
 import { Router, NavigationEnd } from '@angular/router';
 
 
@@ -25,7 +25,7 @@ export class AppComponent {
 
   constructor(
     private _eventEmiter: EventEmiterService,
-    private dataprovider: DataproviderService,
+    private accountInfoProvider: AccountInfoProviderService,
     private _router: Router
   ) {
     this._router.events.subscribe(
@@ -49,7 +49,7 @@ export class AppComponent {
           }
 
           if (NeedChecking) {
-            this.dataprovider.CheckIsLogin().subscribe(
+            this.accountInfoProvider.CheckIsLogin().subscribe(
               result => {
                 this.ValidationDone = true;
                 if (IsRequestLoginPage) {
@@ -94,7 +94,7 @@ export class AppComponent {
   }
 
   Logout() {
-    this.dataprovider.UserLoggout().subscribe(
+    this.accountInfoProvider.UserLoggout().subscribe(
       result => {
         localStorage.setItem('username', '');
         this.ValidationDone = false;

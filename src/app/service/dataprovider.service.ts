@@ -1,44 +1,43 @@
 import { Injectable } from '@angular/core';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
-import hmacSHA512 from 'crypto-js/hmac-sha512';
-import * as CryptoJS from 'crypto-js';
 import { User } from '../interface/user';
 
 let local_dev: Boolean = false;
 let client_side_url = local_dev ? "http://localhost:4200" : "https://mousemanagementsite.herokuapp.com";
 let baseUrl: string = local_dev ? 'http://localhost:8000/api/' : 'https://mousemanagement.herokuapp.com/api/';
+
+/*
+Harvested Mouse information related API end point
+*/
 let serverHarvestAppBaseUrl: string = baseUrl + 'harvestedmouse/';
-let serverAccountAppBaseUrl: string = baseUrl + 'accounts/';
 export let harvestMouseListUrl: string = serverHarvestAppBaseUrl + 'force_list';
 export let harvestMouseFileUploadUrl: string = serverHarvestAppBaseUrl + 'import';
 export let harvestMouseDeleteUrl: string = serverHarvestAppBaseUrl + 'delete';
 export let harvestMouseUpdateUrl: string = serverHarvestAppBaseUrl + 'update';
 export let getDataListUrl: string = serverHarvestAppBaseUrl + 'getdatalist';
 
+/*
+Account information related API end point
+*/
+let serverAccountAppBaseUrl: string = baseUrl + 'accounts/';
 export let accountLoginUrl: string = serverAccountAppBaseUrl + 'login';
 export let accountLoggoutUrl: string = serverAccountAppBaseUrl + 'logout';
 export let accountIsLoginUrl: string = serverAccountAppBaseUrl + 'islogin';
-
 export let accountCheckSecretKeyUrl: string = serverAccountAppBaseUrl + 'checksecretuser';
 export let accountNewUserPwdKeyUrl: string = serverAccountAppBaseUrl + 'newuserpwdchange';
-
 export let accountGetAllUserInfoUrl: string = serverAccountAppBaseUrl + 'getalluserinfo';
 export let accountToggleActivityUser: string = serverAccountAppBaseUrl + 'toggle-activity-user';
-
 export let accountIsAdmin: string = serverAccountAppBaseUrl + 'is-admin';
 export let accountCreateNewUser: string = serverAccountAppBaseUrl + 'create';
-
 export let accountDeleteUser: string = serverAccountAppBaseUrl + 'delete-user';
-
 
 @Injectable({
   providedIn: 'root'
 })
-export class DataproviderService {
-
-  harvestMouseList: HarvestMouse[];
+export class LowLevelLinkService {
   last_random_symbol: string = '';
+
   constructor(private http: HttpClient) { }
 
   /*
@@ -47,6 +46,13 @@ export class DataproviderService {
                      the caller must make sure no null value pass into the function
   */
   httpPostRequest(formData: FormData, url: string, options?) {
+    options = {
+      observe: "body",
+      withCredentials: true
+    };
+
+    options.headers = this.constructHeaederForCORSHeader();
+
     return this.http.post(url, formData, options);
   }
 
@@ -60,6 +66,7 @@ export class DataproviderService {
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let charactersLength = characters.length;
     let localresult = '';
+    let last_random_symbol: string = '';
     for (var i = 0; i < 30; i++) {
       localresult += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
@@ -91,7 +98,7 @@ export class DataproviderService {
   /*
   Function name: httpDeleteRequest
   Description: Making the http delete request to the desired URL server with
-                     optional parameters
+                   optional parameters
   */
   httpDeleteRequest(harvestedMouseArray: HarvestMouse[], httpHeader: HttpHeaders, url: string) {
     let mouse_list_obj = {
@@ -122,6 +129,27 @@ export class DataproviderService {
     return this.http.request('PUT', url, options);
   }
 
+  constructHeaederForCORSHeader() {
+    // Setting up http headers for the file uploading
+    let headers = new HttpHeaders({
+      'enctype': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Origin': client_side_url,
+      'Access-Control-Allow-Credentials': 'true'
+    });
+    return headers;
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class HarvestedMouseDataproviderService {
+
+  harvestMouseList: HarvestMouse[];
+
+  constructor(private lowLevelLinkService: LowLevelLinkService) { }
+
   /*
   Function name: deleteHarvestedMouseRequest
   Description: Making the http delete request to the desired URL server with
@@ -136,7 +164,7 @@ export class DataproviderService {
       'Accept': 'application/json'
     });
 
-    return this.httpDeleteRequest(harvestedMouseArray, headers, url);
+    return this.lowLevelLinkService.httpDeleteRequest(harvestedMouseArray, headers, url);
   }
 
   /*
@@ -153,7 +181,7 @@ export class DataproviderService {
       'Accept': 'application/json'
     });
 
-    return this.httpPutRequest(harvestedMouseArray, headers, url);
+    return this.lowLevelLinkService.httpPutRequest(harvestedMouseArray, headers, url);
   }
 
   /*
@@ -163,7 +191,7 @@ export class DataproviderService {
   */
   getHarvestMouseList(params?: string[]) {
     let url = harvestMouseListUrl;
-    return this.httpGetRequest(url, params);
+    return this.lowLevelLinkService.httpGetRequest(url, params);
   }
 
   /*
@@ -172,7 +200,7 @@ export class DataproviderService {
   */
   getDataList(params?: string[]) {
     let url = getDataListUrl;
-    return this.httpGetRequest(url, params);
+    return this.lowLevelLinkService.httpGetRequest(url, params);
   }
 
   /*
@@ -188,10 +216,10 @@ export class DataproviderService {
 
       // Insert into the option field
       let options = {
-        headers: this.constructHeaederForCORSHeader()
+
       }
 
-      return this.httpPostRequest(formData, url, options);
+      return this.lowLevelLinkService.httpPostRequest(formData, url, options);
     }
     else {
       return null;
@@ -211,11 +239,10 @@ export class DataproviderService {
     formData.append('password', password);
     let options = {
       observe: "response",
-      withCredentials: true,
-      headers: this.constructHeaederForCORSHeader()
+      withCredentials: true
     };
 
-    return this.httpPostRequest(formData, accountLoginUrl, options);
+    return this.lowLevelLinkService.httpPostRequest(formData, accountLoginUrl, options);
   }
 
   /*
@@ -223,7 +250,7 @@ export class DataproviderService {
   Description: Log out the user from the server
   */
   UserLoggout() {
-    return this.httpGetRequest(accountLoggoutUrl);
+    return this.lowLevelLinkService.httpGetRequest(accountLoggoutUrl);
   }
 
   /*
@@ -235,11 +262,10 @@ export class DataproviderService {
 
     let options = {
       observe: "response",
-      withCredentials: true,
-      headers: this.constructHeaederForCORSHeader()
+      withCredentials: true
     };
 
-    return this.httpPostRequest(formData, accountIsLoginUrl, options);
+    return this.lowLevelLinkService.httpPostRequest(formData, accountIsLoginUrl, options);
   }
 
   /*
@@ -255,11 +281,10 @@ export class DataproviderService {
     let options = {
       responseType: 'json',
       observe: "response",
-      withCredentials: true,
-      headers: this.constructHeaederForCORSHeader()
+      withCredentials: true
     };
 
-    return this.httpPostRequest(formData, accountCheckSecretKeyUrl, options);
+    return this.lowLevelLinkService.httpPostRequest(formData, accountCheckSecretKeyUrl, options);
   }
 
   /*
@@ -276,16 +301,15 @@ export class DataproviderService {
     let options = {
       responseType: 'json',
       observe: "response",
-      withCredentials: true,
-      headers: this.constructHeaederForCORSHeader()
+      withCredentials: true
     };
 
-    return this.httpPostRequest(formData, accountNewUserPwdKeyUrl, options);
+    return this.lowLevelLinkService.httpPostRequest(formData, accountNewUserPwdKeyUrl, options);
   }
 
   GetAllUserInfo() {
     let url = accountGetAllUserInfoUrl;
-    return this.httpGetRequest(url);
+    return this.lowLevelLinkService.httpGetRequest(url);
   }
 
   ToggleActivityUser(user: User) {
@@ -296,11 +320,10 @@ export class DataproviderService {
     // Insert into the option field
     let options = {
       observe: "body",
-      withCredentials: true,
-      headers: this.constructHeaederForCORSHeader()
+      withCredentials: true
     };
 
-    return this.httpPostRequest(formData, accountToggleActivityUser, options);
+    return this.lowLevelLinkService.httpPostRequest(formData, accountToggleActivityUser, options);
   }
 
   CreateNewUser(username: string, email: string, firstname: string, lastname: string) {
@@ -313,11 +336,10 @@ export class DataproviderService {
     // Insert into the option field
     let options = {
       observe: "body",
-      withCredentials: true,
-      headers: this.constructHeaederForCORSHeader()
+      withCredentials: true
     };
 
-    return this.httpPostRequest(formData, accountCreateNewUser, options);
+    return this.lowLevelLinkService.httpPostRequest(formData, accountCreateNewUser, options);
   }
 
 
@@ -328,11 +350,10 @@ export class DataproviderService {
     // Insert into the option field
     let options = {
       observe: "body",
-      withCredentials: true,
-      headers: this.constructHeaederForCORSHeader()
+      withCredentials: true
     };
 
-    return this.httpPostRequest(formData, accountDeleteUser, options);
+    return this.lowLevelLinkService.httpPostRequest(formData, accountDeleteUser, options);
   }
 
 
@@ -342,71 +363,160 @@ export class DataproviderService {
     // Insert into the option field
     let options = {
       observe: "body",
-      withCredentials: true,
-      headers: this.constructHeaederForCORSHeader()
+      withCredentials: true
     };
 
-    return this.httpPostRequest(formData, accountIsAdmin, options);
+    return this.lowLevelLinkService.httpPostRequest(formData, accountIsAdmin, options);
   }
+}
 
-  constructHeaederForCORSHeader() {
-    // Setting up http headers for the file uploading
-    let headers = new HttpHeaders({
-      'enctype': 'multipart/form-data',
-      'Accept': 'application/json',
-      'Access-Control-Allow-Origin': client_side_url,
-      'Access-Control-Allow-Credentials': 'true'
-    });
-    return headers;
+@Injectable({
+  providedIn: 'root'
+})
+export class AccountInfoProviderService {
+
+  constructor(private lowLevelLinkService: LowLevelLinkService) { }
+
+  /*
+  Function name: ValidateUserInfo
+  Description: This function issues POST request to the backend server
+               for user info validation with provided username and password
+  */
+  ValidateUserInfo(username: string, password: string) {
+    let formData: FormData = new FormData();
+    // formData.append('username', this.encodeString(username));
+    // formData.append('password', this.encodeString(password));
+    formData.append('username', username);
+    formData.append('password', password);
+    let options = {
+      observe: "response",
+      withCredentials: true
+    };
+
+    return this.lowLevelLinkService.httpPostRequest(formData, accountLoginUrl, options);
+  }
+  /*
+  Function name: UserLoggout
+  Description: Log out the user from the server
+  */
+  UserLoggout() {
+    return this.lowLevelLinkService.httpGetRequest(accountLoggoutUrl);
   }
 
   /*
-  Function name: encodeString
-  Description: Helper function for encrypting incoming string
+  Function name: CheckIsLogin
+  Description: Check if the user has login into the server
   */
-  encodeString(stringToEncode) {
-    // using AES, key will be get from the server, stick to fixed value
-    // To-DO
-    try {
-      var text = this.padOrTruncate(stringToEncode);
-      var key = CryptoJS.enc.Hex.parse("abcdef");
-      // padding and truncating
-      var encrypted = CryptoJS.AES.encrypt(text, key, {
-        // iv: this.iv,
-        mode: CryptoJS.mode.ECB,
-        padding: CryptoJS.pad.NoPadding
-      });
-      return CryptoJS.enc.Hex.stringify(encrypted.ciphertext);
-    } catch (e) {
-      return stringToEncode;
-    }
+  CheckIsLogin() {
+    let formData: FormData = new FormData();
+
+    let options = {
+      observe: "response",
+      withCredentials: true
+    };
+
+    return this.lowLevelLinkService.httpPostRequest(formData, accountIsLoginUrl, options);
   }
 
-  padOrTruncate(str: string): string {
-    var result: string = '';
-    if (str.length % 32 == 0)
-      return str;
+  /*
+  Function name: CheckSecretKey
+  Description: This function checks the secret is valid
+  */
+  CheckSecretKey(secret_key, username) {
+    let formData: FormData = new FormData();
+    formData.append('secret_key', secret_key);
+    formData.append('username', username);
 
-    result = str + '';
-    while (!(result.length % 32 == 0)) {
-      result = result + " ";
-    }
+    // Insert into the option field
+    let options = {
+      responseType: 'json',
+      observe: "response",
+      withCredentials: true
+    };
 
-    return result;
+    return this.lowLevelLinkService.httpPostRequest(formData, accountCheckSecretKeyUrl, options);
   }
 
-  decodeString(stringToDecode) {
-    // using AES, key will be get from the server, stick to fixed value
-    // To-DO
-    try {
-      const bytes = CryptoJS.AES256.decrypt(stringToDecode, "mousemanagement");
-      if (bytes.toString()) {
-        return JSON.parse(bytes.toString(hmacSHA512.Utf8));
-      }
-      return stringToDecode;
-    } catch (e) {
-      return stringToDecode;
-    }
+
+  /*
+  Function name: NewUserChangePassword
+  Description: This function change the password for new user
+  */
+  NewUserChangePassword(secret_key, username, newpassword) {
+    let formData: FormData = new FormData();
+    formData.append('secret_key', secret_key);
+    formData.append('username', username);
+    formData.append('password', newpassword);
+
+    // Insert into the option field
+    let options = {
+      responseType: 'json',
+      observe: "response",
+      withCredentials: true
+    };
+
+    return this.lowLevelLinkService.httpPostRequest(formData, accountNewUserPwdKeyUrl, options);
   }
 
+  GetAllUserInfo() {
+    let url = accountGetAllUserInfoUrl;
+    return this.lowLevelLinkService.httpGetRequest(url);
+  }
+
+  ToggleActivityUser(user: User) {
+    let formData: FormData = new FormData();
+    formData.append('username', user.username);
+    formData.append('is_active', user.is_active + "");  // Convert Boolean to String for transmission
+
+    // Insert into the option field
+    let options = {
+      observe: "body",
+      withCredentials: true
+    };
+
+    return this.lowLevelLinkService.httpPostRequest(formData, accountToggleActivityUser, options);
+  }
+
+  CreateNewUser(username: string, email: string, firstname: string, lastname: string) {
+    let formData: FormData = new FormData();
+    formData.append('username', username);
+    formData.append('email', email);
+    formData.append('firstname', firstname);
+    formData.append('lastname', lastname);
+
+    // Insert into the option field
+    let options = {
+      observe: "body",
+      withCredentials: true
+    };
+
+    return this.lowLevelLinkService.httpPostRequest(formData, accountCreateNewUser, options);
+  }
+
+
+  DeleteUser(username: string) {
+    let formData: FormData = new FormData();
+    formData.append('username', username);
+
+    // Insert into the option field
+    let options = {
+      observe: "body",
+      withCredentials: true
+    };
+
+    return this.lowLevelLinkService.httpPostRequest(formData, accountDeleteUser, options);
+  }
+
+
+  IsAdmin() {
+    let formData: FormData = new FormData();
+
+    // Insert into the option field
+    let options = {
+      observe: "body",
+      withCredentials: true
+    };
+
+    return this.lowLevelLinkService.httpPostRequest(formData, accountIsAdmin, options);
+  }
 }

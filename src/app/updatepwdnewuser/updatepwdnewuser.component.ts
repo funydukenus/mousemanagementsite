@@ -4,7 +4,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataproviderService } from '../service/dataprovider.service';
+import { AccountInfoProviderService } from '../service/dataprovider.service';
 import { EventEmiterService } from '../service/event.emmiter.service';
 import { ErrorColor, SuccessColor, ToastmessageService } from '../service/toastmessage.service';
 
@@ -45,7 +45,7 @@ export class UpdatepwdnewuserComponent implements OnInit {
     private _router: Router,
     private _eventEmiter: EventEmiterService,
     private formBuilder: FormBuilder,
-    private dataprovider: DataproviderService,
+    private accountInfoProvider: AccountInfoProviderService,
     private _snackBar: MatSnackBar,
     private toastservice: ToastmessageService) {
     this._eventEmiter.informPageLoc(
@@ -56,7 +56,7 @@ export class UpdatepwdnewuserComponent implements OnInit {
       let username = params['username'];
       this.secret_key = secret_key;
       this.username = username;
-      this.dataprovider.CheckSecretKey(secret_key, username).subscribe(
+      this.accountInfoProvider.CheckSecretKey(secret_key, username).subscribe(
         result => {
           this.IsValid = true;
         },
@@ -92,7 +92,7 @@ export class UpdatepwdnewuserComponent implements OnInit {
     if (this.form.valid) {
       this.submitButtonTxt = "Updating...";
       this.IsLoading = true;
-      this.dataprovider.NewUserChangePassword(
+      this.accountInfoProvider.NewUserChangePassword(
         this.secret_key,
         this.username,
         this.passwordValue,

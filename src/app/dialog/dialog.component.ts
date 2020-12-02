@@ -2,7 +2,7 @@ import { Component, Inject, ViewChild, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { MatAccordion } from '@angular/material/expansion';
-import { DataproviderService } from '../service/dataprovider.service';
+import { HarvestedMouseDataproviderService } from '../service/dataprovider.service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -89,7 +89,7 @@ export class DialogSingleEditComponent implements OnInit {
     public dialogRef: MatDialogRef<DialogSingleEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogSingleEditData,
     private diaglog: MatDialog,
-    public dataproviderService: DataproviderService) {
+    public harvesteddataproviderService: HarvestedMouseDataproviderService) {
     this.origHarvestedMouse = data.harvestedMouse;
     this.harvestedMouse = Object.assign({}, data.harvestedMouse);
     this.birth_date = new Date(this.harvestedMouse.birth_date);
@@ -98,7 +98,7 @@ export class DialogSingleEditComponent implements OnInit {
   ngOnInit(): void {
     this.initDataOption();
 
-    this.dataproviderService.getDataList().subscribe(
+    this.harvesteddataproviderService.getDataList().subscribe(
       data => {
         this.getDataOptionByName('MouseLine').listOfData = JSON.parse(JSON.stringify(data['mouseLineList']));
         this.getDataOptionByName('GenoType').listOfData = JSON.parse(JSON.stringify(data['genoTypeList']));

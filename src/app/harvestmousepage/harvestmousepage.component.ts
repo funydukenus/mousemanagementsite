@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input, EventEmitter, Output } from '@angular/core';
-import { DataproviderService } from '../service/dataprovider.service';
+import { HarvestedMouseDataproviderService } from '../service/dataprovider.service';
 import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastmessage.service';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { MatSort } from '@angular/material/sort';
@@ -89,7 +89,7 @@ export class HarvestmousepageComponent implements OnInit {
   submitDisabled: boolean = false;
 
   constructor(
-    private dataprovider: DataproviderService,
+    private harvestedMouseDataproviderService: HarvestedMouseDataproviderService,
     private toastservice: ToastmessageService,
     private diagservice: DiagService,
     private _snackBar: MatSnackBar,
@@ -267,7 +267,7 @@ export class HarvestmousepageComponent implements OnInit {
             let harvestMouseList: HarvestMouse[] = [];
             harvestMouseList.push(result.harvestedMouse);
             this.submitDisabled = true;
-            this.dataprovider.updateHarvestedMouseRequest(
+            this.harvestedMouseDataproviderService.updateHarvestedMouseRequest(
               harvestMouseList
             ).subscribe(
               data => {
@@ -372,7 +372,7 @@ export class HarvestmousepageComponent implements OnInit {
     ).subscribe(result => {
       if (result) {
         this.submitDisabled = true;
-        this.dataprovider.deleteHarvestedMouseRequest(
+        this.harvestedMouseDataproviderService.deleteHarvestedMouseRequest(
           harvestMouseList
         ).subscribe(
           data => {
@@ -416,7 +416,7 @@ export class HarvestmousepageComponent implements OnInit {
     let harvestMouseList: HarvestMouse[] = [];
     harvestMouseList.push(this.expandedElement);
     this.submitDisabled = true;
-    this.dataprovider.updateHarvestedMouseRequest(
+    this.harvestedMouseDataproviderService.updateHarvestedMouseRequest(
       harvestMouseList
     ).subscribe(
       data => {

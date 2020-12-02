@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, ViewEncapsulation } from '@angular/core';
 import { EventEmiterService } from '../service/event.emmiter.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { DataproviderService } from '../service/dataprovider.service';
+import { AccountInfoProviderService } from '../service/dataprovider.service';
 import { ToastmessageService, ErrorColor } from '../service/toastmessage.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -36,7 +36,7 @@ export class LoginpageComponent implements OnInit {
     private _router: Router,
     private _eventEmiter: EventEmiterService,
     private formBuilder: FormBuilder,
-    private dataprovider: DataproviderService,
+    private accountInfoProvider: AccountInfoProviderService,
     private _snackBar: MatSnackBar,
     private toastservice: ToastmessageService) {
     this._eventEmiter.informPageLoc(
@@ -71,29 +71,27 @@ export class LoginpageComponent implements OnInit {
     if (this.form.valid) {
       this.submitButtonTxt = "Validating...";
       this.IsLoading = true;
-      this.dataprovider.ValidateUserInfo(
+      this.accountInfoProvider.ValidateUserInfo(
         this.usernameValue,
         this.passwordValue
-      )
-
-        .subscribe(
-          (result) => {
-            console.log(result);
-            this.IsLoading = false;
-            this.submitButtonTxt = "Done";
-            localStorage.setItem('username', this.usernameValue);
-            this._router.navigate(['/home']);
-          },
-          (error) => {
-            this.IsLoading = false;
-            this.submitButtonTxt = "Get Me In";
-            if (error.status == 401) {
-              this.toastservice.openSnackBar(
-                this._snackBar, 'Username or Password is incorrect', 'Dismiss', ErrorColor
-              )
-            }
+      ).subscribe(
+        (result) => {
+          console.log(result);
+          this.IsLoading = false;
+          this.submitButtonTxt = "Done";
+          localStorage.setItem('username', this.usernameValue);
+          this._router.navigate(['/home']);
+        },
+        (error) => {
+          this.IsLoading = false;
+          this.submitButtonTxt = "Get Me In";
+          if (error.status == 401) {
+            this.toastservice.openSnackBar(
+              this._snackBar, 'Username or Password is incorrect', 'Dismiss', ErrorColor
+            )
           }
-        )
+        }
+      )
     }
     else {
       if (!this.usernameValue || !this.passwordValue) {
