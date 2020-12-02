@@ -19,7 +19,7 @@
   .element-detail {
     overflow: hidden;
 
-    >div {
+    > div {
       padding: 1rem 0;
     }
 
@@ -34,11 +34,11 @@
   }
 
   .element-row {
-    &:nth-child(4n+1) {
+    &:nth-child(4n + 1) {
       background-color: whitesmoke;
     }
 
-    &:nth-child(4n+3) {
+    &:nth-child(4n + 3) {
       background-color: lightgray;
     }
   }

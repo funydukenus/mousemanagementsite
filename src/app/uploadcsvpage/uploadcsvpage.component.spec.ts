@@ -8,9 +8,9 @@ describe('UploadcsvpageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UploadcsvpageComponent ]
+      declarations: [UploadcsvpageComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

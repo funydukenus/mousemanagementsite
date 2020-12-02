@@ -1,4 +1,4 @@
-import {Injectable, EventEmitter} from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 
 @Injectable()
 export class EventEmiterService {
@@ -13,8 +13,8 @@ export class EventEmiterService {
     this.dataStr.emit();
   }
 
-  informPageLoc(loc){
-     this.pageLocIndicator.emit(loc);
+  informPageLoc(loc) {
+    this.pageLocIndicator.emit(loc);
   }
 
 }
