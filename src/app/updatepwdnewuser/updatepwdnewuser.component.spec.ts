@@ -8,9 +8,9 @@ describe('UpdatepwdnewuserComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UpdatepwdnewuserComponent ]
+      declarations: [UpdatepwdnewuserComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

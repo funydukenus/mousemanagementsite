@@ -8,52 +8,52 @@ import { DataproviderService } from '../service/dataprovider.service';
 import { EventEmiterService } from '../service/event.emmiter.service';
 
 @Component({
-   selector: 'app-mainpage',
-   templateUrl: './mainpage.component.html',
-   styleUrls: ['./mainpage.component.scss']
+  selector: 'app-mainpage',
+  templateUrl: './mainpage.component.html',
+  styleUrls: ['./mainpage.component.scss']
 })
 export class MainpageComponent implements OnInit {
 
-   todayDate = new Date().toLocaleString();
+  todayDate = new Date().toLocaleString();
 
-   isAdmin: Boolean = false;
+  isAdmin: Boolean = false;
 
-   constructor(
-      private _router: Router,
-      private _eventEmiter: EventEmiterService,
-      private _dataprovider: DataproviderService) {
-      this._eventEmiter.informPageLoc(
-         'main'
-      );
+  constructor(
+    private _router: Router,
+    private _eventEmiter: EventEmiterService,
+    private _dataprovider: DataproviderService) {
+    this._eventEmiter.informPageLoc(
+      'main'
+    );
 
-      this._dataprovider.IsAdmin().subscribe(
-         (result) => {
-            let response: String = new String(result).toString();
-            if(response == "1"){
-               this.isAdmin = true;
-            }
-         },
-         (error) => {
-            this.isAdmin = false;
-         }
-      )
+    this._dataprovider.IsAdmin().subscribe(
+      (result) => {
+        let response: String = new String(result).toString();
+        if (response == "1") {
+          this.isAdmin = true;
+        }
+      },
+      (error) => {
+        this.isAdmin = false;
+      }
+    )
 
-   }
+  }
 
-   ngOnInit(): void {
-      // Creates a timer to update the current datetime
-      let sub = interval(1000).subscribe(x => {
-         this.todayDate = new Date().toLocaleString();
-      });
-   }
+  ngOnInit(): void {
+    // Creates a timer to update the current datetime
+    let sub = interval(1000).subscribe(x => {
+      this.todayDate = new Date().toLocaleString();
+    });
+  }
 
-   PageDirect(target){
-      this._router.navigate([target]);
-   }
+  PageDirect(target) {
+    this._router.navigate([target]);
+  }
 
-   /*
-   triggerGridEvent(routeLink: string): void {
-      this._router.navigate([routeLink]);
-   }
-   */
+  /*
+  triggerGridEvent(routeLink: string): void {
+     this._router.navigate([routeLink]);
+  }
+  */
 }

@@ -9,43 +9,43 @@ import { UploadcsvpageComponent } from './uploadcsvpage/uploadcsvpage.component'
 import { UsermanagementpageComponent } from './usermanagementpage/usermanagementpage.component';
 
 const routes: Routes = [
-   {
-      path: 'home',
-      component: MainpageComponent
-   },
-   {
+  {
+    path: 'home',
+    component: MainpageComponent
+  },
+  {
     path: 'harvest-mouse',
     component: HarvestmousetabpageComponent
-   },
-   {
+  },
+  {
     path: 'upload-csv',
     component: UploadcsvpageComponent
-   },
-   {
-      path: 'login',
-      component: LoginpageComponent
-   },
-   {
-      path: 'updatepwdnewuser',
-      component: UpdatepwdnewuserComponent
-   },
-   {
-      path: 'user-management-page',
-      component: UsermanagementpageComponent
-   },
-   {
-      path: 'pagenotfound',
-      component: PageNotFoundComponentComponent
-   },
-   {
-      path: '',
-      redirectTo: '/home',
-      pathMatch: 'full'
-   }
+  },
+  {
+    path: 'login',
+    component: LoginpageComponent
+  },
+  {
+    path: 'updatepwdnewuser',
+    component: UpdatepwdnewuserComponent
+  },
+  {
+    path: 'user-management-page',
+    component: UsermanagementpageComponent
+  },
+  {
+    path: 'pagenotfound',
+    component: PageNotFoundComponentComponent
+  },
+  {
+    path: '',
+    redirectTo: '/home',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({
-   imports: [RouterModule.forRoot(routes)],
-   exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }

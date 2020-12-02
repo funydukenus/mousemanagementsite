@@ -8,9 +8,9 @@ describe('HarvestmousetabpageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HarvestmousetabpageComponent ]
+      declarations: [HarvestmousetabpageComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

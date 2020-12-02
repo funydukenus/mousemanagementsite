@@ -5,40 +5,40 @@ import { HarvestMouse } from '../interface/harvestmouse';
 import { Observable } from 'rxjs';
 
 @Injectable({
-   providedIn: 'root'
+  providedIn: 'root'
 })
 export class DiagService {
 
-   constructor() { }
+  constructor() { }
 
-   openConfirmationDialog(
-      diag: MatDialog,
-      harvestmouse: HarvestMouse[]): Observable<any> {
-      const dialogRef = diag.open(DialogConfirmationComponent, {
-         width: '400px',
-         data: { harvestedMouse: harvestmouse }
-      });
+  openConfirmationDialog(
+    diag: MatDialog,
+    harvestmouse: HarvestMouse[]): Observable<any> {
+    const dialogRef = diag.open(DialogConfirmationComponent, {
+      width: '400px',
+      data: { harvestedMouse: harvestmouse }
+    });
 
-      return dialogRef.afterClosed();
-   }
+    return dialogRef.afterClosed();
+  }
 
-   openSimpleConfirmationDialog(
-      diag: MatDialog): Observable<any> {
-      const dialogRef = diag.open(DialogSimpleConfirmationComponent, {
-         width: '400px'
-      });
+  openSimpleConfirmationDialog(
+    diag: MatDialog): Observable<any> {
+    const dialogRef = diag.open(DialogSimpleConfirmationComponent, {
+      width: '400px'
+    });
 
-      return dialogRef.afterClosed();
-   }
+    return dialogRef.afterClosed();
+  }
 
-   openSingleEditDialog(
-      diag: MatDialog,
-      harvestmouse: HarvestMouse): Observable<any> {
-      const dialogRef = diag.open(DialogSingleEditComponent, {
-         width: '900px',
-         data: { harvestedMouse: harvestmouse }
-      });
+  openSingleEditDialog(
+    diag: MatDialog,
+    harvestmouse: HarvestMouse): Observable<any> {
+    const dialogRef = diag.open(DialogSingleEditComponent, {
+      width: '900px',
+      data: { harvestedMouse: harvestmouse }
+    });
 
-      return dialogRef.afterClosed();
-   }
+    return dialogRef.afterClosed();
+  }
 }

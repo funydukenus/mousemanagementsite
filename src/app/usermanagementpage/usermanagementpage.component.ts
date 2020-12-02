@@ -83,7 +83,7 @@ export class UsermanagementpageComponent implements OnInit {
     return user.is_active;
   }
 
-  deleteUser(user: User){
+  deleteUser(user: User) {
     this.preventInputChanged = true;
     this._dataprovider.DeleteUser(user.username).subscribe(
       (result) => {
@@ -207,7 +207,7 @@ export class UsermanagementpageComponent implements OnInit {
           )
           this.retrieveAllUserInfo();
         },
-        (error) =>{
+        (error) => {
           console.log(error);
           this._toastservice.openSnackBar(
             this._snackBar,
@@ -219,14 +219,14 @@ export class UsermanagementpageComponent implements OnInit {
       );
     }
     else {
-      if (this.form.get("username").errors){
-        if(this.form.get("username").errors.required){
+      if (this.form.get("username").errors) {
+        if (this.form.get("username").errors.required) {
           this.WarningTxt = "Username cannot be empty";
           this.AbnormalDetected = true;
         }
       }
       else if (this.form.get("email").errors) {
-        if(this.form.get("email").errors.required){
+        if (this.form.get("email").errors.required) {
           this.WarningTxt = "Email cannot be empty";
           this.AbnormalDetected = true;
         }
@@ -235,14 +235,14 @@ export class UsermanagementpageComponent implements OnInit {
           this.AbnormalDetected = true;
         }
       }
-      else if (this.form.get("firstname").errors){
-        if(this.form.get("firstname").errors.required){
+      else if (this.form.get("firstname").errors) {
+        if (this.form.get("firstname").errors.required) {
           this.WarningTxt = "First Name cannot be empty";
           this.AbnormalDetected = true;
         }
       }
-      else if(this.form.get("lastname").errors){
-        if(this.form.get("lastname").errors.required){
+      else if (this.form.get("lastname").errors) {
+        if (this.form.get("lastname").errors.required) {
           this.WarningTxt = "Last Name cannot be empty";
           this.AbnormalDetected = true;
         }

@@ -8,9 +8,9 @@ describe('UsermanagementpageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UsermanagementpageComponent ]
+      declarations: [UsermanagementpageComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

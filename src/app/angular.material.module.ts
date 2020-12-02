@@ -85,4 +85,4 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
   ]
 })
-export class AngularMaterialModule {}
+export class AngularMaterialModule { }
