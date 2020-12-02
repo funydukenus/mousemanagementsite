@@ -1,0 +1,31 @@
+<mat-sidenav-container>
+    <mat-sidenav #sidenav mode="over">
+        <div class="top">
+            <a mat-list-item (click)="sidenav.close()" routerLink="" >
+                <img src='/assets/images/dukenus-logo.png' />
+            </a>
+        </div>
+        <mat-list>
+            <a mat-list-item (click)="sidenav.close()" routerLink="/harvest-mouse" >
+                Havest Mouse
+            </a>
+            <a mat-list-item (click)="sidenav.close()" routerLink="/upload-csv">
+                Upload CSV File
+            </a>
+            <a mat-list-item class="logout" (click)="logout()">
+                Log Out
+            </a>
+        </mat-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar>
+            <a class="side-bar-opener" (click)="sidenav.toggle()">
+                <mat-icon class="material-icons">menu</mat-icon>
+            </a>
+            <span>FNY Lab</span>
+        </mat-toolbar>
+        <div class="root-container">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

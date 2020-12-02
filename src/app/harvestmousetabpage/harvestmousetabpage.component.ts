@@ -10,7 +10,6 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { DiagService } from '../service/diag.service';
 import { MatDialog } from '@angular/material/dialog';
-import { EventEmiterService } from '../service/event.emmiter.service';
 import { MatDrawer } from '@angular/material/sidenav';
 
 interface TabConfig {
@@ -43,30 +42,26 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
   // selected harvested mouse
   selectedHarvestedMouse: HarvestMouse[];
 
-  loading_twice_or_more: boolean;
+  loadingTwiceOrMore: boolean;
 
   @ViewChild('sidenav') sideNav: MatDrawer;
 
   constructor(
     private harvestedMouseDataproviderService: HarvestedMouseDataproviderService,
-    private toastservice: ToastmessageService,
-    private diagservice: DiagService,
-    private _snackBar: MatSnackBar,
-    private bottomsheetservice: BottomsheetService,
+    private toastService: ToastmessageService,
+    private diagService: DiagService,
+    private snackBar: MatSnackBar,
+    private bottomSheetService: BottomsheetService,
     private bottomSheet: MatBottomSheet,
-    private diaglog: MatDialog,
-    private cdr: ChangeDetectorRef,
-    private _eventEmiter: EventEmiterService
+    private dialog: MatDialog,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.showInProgress();
-    this._eventEmiter.informPageLoc(
-      'mousetable'
-    );
   }
 
   refreshTabAndData(): void {
     let project_list: string[];
-    this.loading_twice_or_more = true;
+    this.loadingTwiceOrMore = true;
     this.harvestedMouseDataproviderService.getDataList().subscribe(
       data => {
         project_list = data['projectTitleList'];
@@ -112,7 +107,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
           }
         )
 
-        this.cdr.detectChanges();
+        this.changeDetectorRef.detectChanges();
 
         // Convert view children query set to array
         this.tabList.toArray().forEach(
@@ -173,7 +168,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
     console.log(this.tabConfig);
     this.tabConfig.forEach(
       tabConfig => {
-        this.GetMouseTabList(
+        this.getMouseTabList(
           tabConfig
         );
       }
@@ -187,7 +182,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
   Description: This function trigger get method to get the mouse list
                and populate to the table
   */
-  GetMouseTabList(tabConfig: TabConfig) {
+  getMouseTabList(tabConfig: TabConfig) {
     // Load the harvested mouse list when the page is loaded
     this.showInProgress();
     this.harvestedMouseDataproviderService.getHarvestMouseList(
@@ -204,20 +199,20 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
 
         tabConfig.datasource = new MatTableDataSource<HarvestMouse>(
           tabConfig.harvestMouseList);
-        tabConfig.tabComponent.InsertDataSource(tabConfig.datasource);
+        tabConfig.tabComponent.insertDataSource(tabConfig.datasource);
         tabConfig.tabComponent.refreshSelected();
         this.trackedLoadedTabCom = this.trackedLoadedTabCom + 1;
         if (this.trackedLoadedTabCom == this.tabList.length) {
-          this.toastservice.openSnackBar(
-            this._snackBar, 'Loaded list completed', 'Dismiss', SuccessColor
+          this.toastService.openSnackBar(
+            this.snackBar, 'Loaded list completed', 'Dismiss', SuccessColor
           )
         }
 
-        this.InProgressDone();
+        this.inProgressDone();
       },
       error => {
-        this.toastservice.openSnackBar(
-          this._snackBar, 'Loading list failed', 'Dismiss', ErrorColor
+        this.toastService.openSnackBar(
+          this.snackBar, 'Loading list failed', 'Dismiss', ErrorColor
         )
       }
     );
@@ -249,7 +244,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                is clicked
   */
   openBottomSheetClick() {
-    this.bottomsheetservice.openBottomSheet(
+    this.bottomSheetService.openBottomSheet(
       this.bottomSheet,
       this.activeTabConfig.tabComponent.displayedColumnInfo,
       this.activeTabConfig.tabComponent.displayedColumns
@@ -268,9 +263,9 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  GroupDeleted() {
-    this.diagservice.openConfirmationDialog(
-      this.diaglog,
+  groupDeleted() {
+    this.diagService.openConfirmationDialog(
+      this.dialog,
       this.selectedHarvestedMouse
     ).subscribe(result => {
       if (result) {
@@ -280,23 +275,23 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
         ).subscribe(
           data => {
             this.refreshTabAndData();
-            this.toastservice.openSnackBar(
-              this._snackBar,
+            this.toastService.openSnackBar(
+              this.snackBar,
               "Deleted successfully",
               "Dismiss",
               SuccessColor
             )
             this.groupSelectedEnabled = false;
-            this.InProgressDone();
+            this.inProgressDone();
           },
           error => {
-            this.toastservice.openSnackBar(
-              this._snackBar,
+            this.toastService.openSnackBar(
+              this.snackBar,
               "Encountered Error",
               "Dismiss",
               ErrorColor
             )
-            this.InProgressDone();
+            this.inProgressDone();
           }
         )
       }
@@ -307,7 +302,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
     this.loaded = true;
   }
 
-  InProgressDone() {
+  inProgressDone() {
     this.loaded = false;
   }
 }

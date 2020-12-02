@@ -78,8 +78,8 @@ export class DialogSingleEditComponent implements OnInit {
     filteredOptions: new Observable<string[]>(),
     control: new FormControl()
   }
-  end_date: Date;
-  birth_date: Date;
+  endDate: Date;
+  birthDate: Date;
 
   @ViewChild("accordion", { static: true }) accordion: MatAccordion;
   // Workaround for angular component issue #13870
@@ -88,12 +88,12 @@ export class DialogSingleEditComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<DialogSingleEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogSingleEditData,
-    private diaglog: MatDialog,
+    private dialog: MatDialog,
     public harvesteddataproviderService: HarvestedMouseDataproviderService) {
     this.origHarvestedMouse = data.harvestedMouse;
     this.harvestedMouse = Object.assign({}, data.harvestedMouse);
-    this.birth_date = new Date(this.harvestedMouse.birth_date);
-    this.end_date = new Date(this.harvestedMouse.end_date);
+    this.birthDate = new Date(this.harvestedMouse.birth_date);
+    this.endDate = new Date(this.harvestedMouse.end_date);
   }
   ngOnInit(): void {
     this.initDataOption();
@@ -172,7 +172,7 @@ export class DialogSingleEditComponent implements OnInit {
 
   CloseConfirm() {
     if (this.checkDataModifed()) {
-      const dialogRef = this.diaglog.open(DialogSimpleConfirmationComponent, {
+      const dialogRef = this.dialog.open(DialogSimpleConfirmationComponent, {
         width: '400px'
       });
 
@@ -180,13 +180,13 @@ export class DialogSingleEditComponent implements OnInit {
         result => {
           console.log(result);
           if (result) {
-            this.diaglog.closeAll();
+            this.dialog.closeAll();
           }
         }
       );
     }
     else {
-      this.diaglog.closeAll();
+      this.dialog.closeAll();
     }
   }
   appendLeadingZeroes(n) {
@@ -197,8 +197,8 @@ export class DialogSingleEditComponent implements OnInit {
   }
 
   checkDataModifed() {
-    this.harvestedMouse.birth_date = this.birth_date.getFullYear() + "-" + this.appendLeadingZeroes((this.birth_date.getMonth() + 1)) + "-" + this.appendLeadingZeroes(this.birth_date.getDate());
-    this.harvestedMouse.end_date = this.end_date.getFullYear() + "-" + this.appendLeadingZeroes((this.end_date.getMonth() + 1)) + "-" + this.appendLeadingZeroes(this.end_date.getDate());
+    this.harvestedMouse.birth_date = this.birthDate.getFullYear() + "-" + this.appendLeadingZeroes((this.birthDate.getMonth() + 1)) + "-" + this.appendLeadingZeroes(this.birthDate.getDate());
+    this.harvestedMouse.end_date = this.endDate.getFullYear() + "-" + this.appendLeadingZeroes((this.endDate.getMonth() + 1)) + "-" + this.appendLeadingZeroes(this.endDate.getDate());
     let origJSONObj = JSON.stringify(this.origHarvestedMouse);
     let JSONObj = JSON.stringify(this.harvestedMouse);
     console.log(origJSONObj);

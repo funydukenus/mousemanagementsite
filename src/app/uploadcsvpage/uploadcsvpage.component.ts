@@ -17,17 +17,10 @@ export class UploadcsvpageComponent implements OnInit {
 
   constructor(
     private harvestedMouseDataproviderService: HarvestedMouseDataproviderService,
-    private _eventEmiter: EventEmiterService,
-    private toastservice: ToastmessageService,
-    private _snackBar: MatSnackBar,
+    private toastService: ToastmessageService,
+    private snackBar: MatSnackBar,
   ) {
-    this._eventEmiter.informPageLoc('uploadcsvpage');
 
-    this._eventEmiter.dataStr.subscribe(
-      data => {
-        this.uploadButtonClick();
-      }
-    );
   }
 
   ngOnInit(): void {
@@ -43,15 +36,15 @@ export class UploadcsvpageComponent implements OnInit {
     this.showInProgress();
     this.harvestedMouseDataproviderService.fileUploadRequest(file, harvestMouseFileUploadUrl).subscribe(
       data => {
-        this.toastservice.openSnackBar(
-          this._snackBar, 'Imported Success', 'Dismiss', SuccessColor
+        this.toastService.openSnackBar(
+          this.snackBar, 'Imported Success', 'Dismiss', SuccessColor
         )
         this.fileInputButton.nativeElement.value = "";
         this.inProgressDone();
       },
       error => {
-        this.toastservice.openSnackBar(
-          this._snackBar, 'Something wrong', 'Dismiss', ErrorColor
+        this.toastService.openSnackBar(
+          this.snackBar, 'Something wrong', 'Dismiss', ErrorColor
         )
         // clear the file cache
         this.fileInputButton.nativeElement.value = "";

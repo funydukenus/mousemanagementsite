@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../interface/user';
+import { environment } from '../../environments/environment';
 
-let local_dev: Boolean = false;
-let client_side_url = local_dev ? "http://localhost:4200" : "https://mousemanagementsite.herokuapp.com";
-let baseUrl: string = local_dev ? 'http://localhost:8000/api/' : 'https://mousemanagement.herokuapp.com/api/';
+// Main domain of the server
+let baseUrl: string = environment.serverUrl;
 
 /*
 Harvested Mouse information related API end point
@@ -31,6 +31,7 @@ export let accountToggleActivityUser: string = serverAccountAppBaseUrl + 'toggle
 export let accountIsAdmin: string = serverAccountAppBaseUrl + 'is-admin';
 export let accountCreateNewUser: string = serverAccountAppBaseUrl + 'create';
 export let accountDeleteUser: string = serverAccountAppBaseUrl + 'delete-user';
+export let accountGetLoggedInfoUser: string = serverAccountAppBaseUrl + 'get-logged-user-info';
 
 @Injectable({
   providedIn: 'root'
@@ -134,7 +135,7 @@ export class LowLevelLinkService {
     let headers = new HttpHeaders({
       'enctype': 'multipart/form-data',
       'Accept': 'application/json',
-      'Access-Control-Allow-Origin': client_side_url,
+      'Access-Control-Allow-Origin': environment.clientUrl,
       'Access-Control-Allow-Credentials': 'true'
     });
     return headers;
@@ -225,149 +226,6 @@ export class HarvestedMouseDataproviderService {
       return null;
     }
   }
-
-  /*
-  Function name: ValidateUserInfo
-  Description: This function issues POST request to the backend server
-               for user info validation with provided username and password
-  */
-  ValidateUserInfo(username: string, password: string) {
-    let formData: FormData = new FormData();
-    // formData.append('username', this.encodeString(username));
-    // formData.append('password', this.encodeString(password));
-    formData.append('username', username);
-    formData.append('password', password);
-    let options = {
-      observe: "response",
-      withCredentials: true
-    };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountLoginUrl, options);
-  }
-
-  /*
-  Function name: UserLoggout
-  Description: Log out the user from the server
-  */
-  UserLoggout() {
-    return this.lowLevelLinkService.httpGetRequest(accountLoggoutUrl);
-  }
-
-  /*
-  Function name: CheckIsLogin
-  Description: Check if the user has login into the server
-  */
-  CheckIsLogin() {
-    let formData: FormData = new FormData();
-
-    let options = {
-      observe: "response",
-      withCredentials: true
-    };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountIsLoginUrl, options);
-  }
-
-  /*
-  Function name: CheckSecretKey
-  Description: This function checks the secret is valid
-  */
-  CheckSecretKey(secret_key, username) {
-    let formData: FormData = new FormData();
-    formData.append('secret_key', secret_key);
-    formData.append('username', username);
-
-    // Insert into the option field
-    let options = {
-      responseType: 'json',
-      observe: "response",
-      withCredentials: true
-    };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountCheckSecretKeyUrl, options);
-  }
-
-  /*
-  Function name: NewUserChangePassword
-  Description: This function change the password for new user
-  */
-  NewUserChangePassword(secret_key, username, newpassword) {
-    let formData: FormData = new FormData();
-    formData.append('secret_key', secret_key);
-    formData.append('username', username);
-    formData.append('password', newpassword);
-
-    // Insert into the option field
-    let options = {
-      responseType: 'json',
-      observe: "response",
-      withCredentials: true
-    };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountNewUserPwdKeyUrl, options);
-  }
-
-  GetAllUserInfo() {
-    let url = accountGetAllUserInfoUrl;
-    return this.lowLevelLinkService.httpGetRequest(url);
-  }
-
-  ToggleActivityUser(user: User) {
-    let formData: FormData = new FormData();
-    formData.append('username', user.username);
-    formData.append('is_active', user.is_active + "");  // Convert Boolean to String for transmission
-
-    // Insert into the option field
-    let options = {
-      observe: "body",
-      withCredentials: true
-    };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountToggleActivityUser, options);
-  }
-
-  CreateNewUser(username: string, email: string, firstname: string, lastname: string) {
-    let formData: FormData = new FormData();
-    formData.append('username', username);
-    formData.append('email', email);
-    formData.append('firstname', firstname);
-    formData.append('lastname', lastname);
-
-    // Insert into the option field
-    let options = {
-      observe: "body",
-      withCredentials: true
-    };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountCreateNewUser, options);
-  }
-
-
-  DeleteUser(username: string) {
-    let formData: FormData = new FormData();
-    formData.append('username', username);
-
-    // Insert into the option field
-    let options = {
-      observe: "body",
-      withCredentials: true
-    };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountDeleteUser, options);
-  }
-
-
-  IsAdmin() {
-    let formData: FormData = new FormData();
-
-    // Insert into the option field
-    let options = {
-      observe: "body",
-      withCredentials: true
-    };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountIsAdmin, options);
-  }
 }
 
 @Injectable({
@@ -378,11 +236,11 @@ export class AccountInfoProviderService {
   constructor(private lowLevelLinkService: LowLevelLinkService) { }
 
   /*
-  Function name: ValidateUserInfo
+  Function name: validateUserInfo
   Description: This function issues POST request to the backend server
                for user info validation with provided username and password
   */
-  ValidateUserInfo(username: string, password: string) {
+  validateUserInfo(username: string, password: string) {
     let formData: FormData = new FormData();
     // formData.append('username', this.encodeString(username));
     // formData.append('password', this.encodeString(password));
@@ -396,33 +254,18 @@ export class AccountInfoProviderService {
     return this.lowLevelLinkService.httpPostRequest(formData, accountLoginUrl, options);
   }
   /*
-  Function name: UserLoggout
+  Function name: userLogout
   Description: Log out the user from the server
   */
-  UserLoggout() {
+  userLogout() {
     return this.lowLevelLinkService.httpGetRequest(accountLoggoutUrl);
   }
 
   /*
-  Function name: CheckIsLogin
-  Description: Check if the user has login into the server
-  */
-  CheckIsLogin() {
-    let formData: FormData = new FormData();
-
-    let options = {
-      observe: "response",
-      withCredentials: true
-    };
-
-    return this.lowLevelLinkService.httpPostRequest(formData, accountIsLoginUrl, options);
-  }
-
-  /*
-  Function name: CheckSecretKey
+  Function name: checkSecretKey
   Description: This function checks the secret is valid
   */
-  CheckSecretKey(secret_key, username) {
+  checkSecretKey(secret_key, username) {
     let formData: FormData = new FormData();
     formData.append('secret_key', secret_key);
     formData.append('username', username);
@@ -439,10 +282,10 @@ export class AccountInfoProviderService {
 
 
   /*
-  Function name: NewUserChangePassword
+  Function name: newUserChangePassword
   Description: This function change the password for new user
   */
-  NewUserChangePassword(secret_key, username, newpassword) {
+  newUserChangePassword(secret_key, username, newpassword) {
     let formData: FormData = new FormData();
     formData.append('secret_key', secret_key);
     formData.append('username', username);
@@ -458,12 +301,12 @@ export class AccountInfoProviderService {
     return this.lowLevelLinkService.httpPostRequest(formData, accountNewUserPwdKeyUrl, options);
   }
 
-  GetAllUserInfo() {
+  getAllUserInfo() {
     let url = accountGetAllUserInfoUrl;
     return this.lowLevelLinkService.httpGetRequest(url);
   }
 
-  ToggleActivityUser(user: User) {
+  toggleActivityUser(user: User) {
     let formData: FormData = new FormData();
     formData.append('username', user.username);
     formData.append('is_active', user.is_active + "");  // Convert Boolean to String for transmission
@@ -477,7 +320,7 @@ export class AccountInfoProviderService {
     return this.lowLevelLinkService.httpPostRequest(formData, accountToggleActivityUser, options);
   }
 
-  CreateNewUser(username: string, email: string, firstname: string, lastname: string) {
+  createNewUser(username: string, email: string, firstname: string, lastname: string) {
     let formData: FormData = new FormData();
     formData.append('username', username);
     formData.append('email', email);
@@ -494,7 +337,7 @@ export class AccountInfoProviderService {
   }
 
 
-  DeleteUser(username: string) {
+  deleteUser(username: string) {
     let formData: FormData = new FormData();
     formData.append('username', username);
 
@@ -508,7 +351,7 @@ export class AccountInfoProviderService {
   }
 
 
-  IsAdmin() {
+  isAdmin() {
     let formData: FormData = new FormData();
 
     // Insert into the option field
@@ -518,5 +361,9 @@ export class AccountInfoProviderService {
     };
 
     return this.lowLevelLinkService.httpPostRequest(formData, accountIsAdmin, options);
+  }
+
+  getLoggedUserInfo() {
+    return this.lowLevelLinkService.httpGetRequest(accountGetLoggedInfoUser);
   }
 }

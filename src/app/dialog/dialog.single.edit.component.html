@@ -106,7 +106,7 @@
         <mat-grid-tile colspan="1">
           <mat-form-field appearance="outline">
             <mat-label>BirthDate</mat-label>
-            <input matInput [matDatepicker]="birthDatePicker" [(ngModel)]="this.birth_date">
+            <input matInput [matDatepicker]="birthDatePicker" [(ngModel)]="this.birthDate">
             <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #birthDatePicker></mat-datepicker>
           </mat-form-field>
@@ -114,7 +114,7 @@
         <mat-grid-tile colspan="1">
           <mat-form-field appearance="outline">
             <mat-label>EndDate</mat-label>
-            <input matInput [min]="this.birth_date" [matDatepicker]="endDatePicker" [(ngModel)]="this.end_date">
+            <input matInput [min]="this.birthDate" [matDatepicker]="endDatePicker" [(ngModel)]="this.endDate">
             <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #endDatePicker></mat-datepicker>
           </mat-form-field>

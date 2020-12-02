@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 
 // Import UI Related module
 import { interval } from 'rxjs';
-import { AccountInfoProviderService } from '../service/dataprovider.service';
-
-import { EventEmiterService } from '../service/event.emmiter.service';
+import { UserInfoProviderService } from '../service/user-info-provider.service';
 
 @Component({
   selector: 'app-mainpage',
@@ -18,26 +15,8 @@ export class MainpageComponent implements OnInit {
 
   isAdmin: Boolean = false;
 
-  constructor(
-    private _router: Router,
-    private _eventEmiter: EventEmiterService,
-    private accountInfoProvider: AccountInfoProviderService) {
-    this._eventEmiter.informPageLoc(
-      'main'
-    );
-
-    this.accountInfoProvider.IsAdmin().subscribe(
-      (result) => {
-        let response: String = new String(result).toString();
-        if (response == "1") {
-          this.isAdmin = true;
-        }
-      },
-      (error) => {
-        this.isAdmin = false;
-      }
-    )
-
+  constructor(private userInfoProvider: UserInfoProviderService) {
+    this.isAdmin = this.userInfoProvider.isUserAdmin();
   }
 
   ngOnInit(): void {
@@ -46,14 +25,4 @@ export class MainpageComponent implements OnInit {
       this.todayDate = new Date().toLocaleString();
     });
   }
-
-  PageDirect(target) {
-    this._router.navigate([target]);
-  }
-
-  /*
-  triggerGridEvent(routeLink: string): void {
-     this._router.navigate([routeLink]);
-  }
-  */
 }

@@ -1,6 +1,6 @@
 /* Angular Core related modules */
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER  } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -10,6 +10,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 /* Angular Material Module */
 import { AngularMaterialModule } from './angular.material.module';
+
+/* Default page component related class */
+import { SiteLayoutComponent } from './_layout/site-layout/site-layout.compoenent';
 
 /* Page Component related class*/
 import { MainpageComponent } from './mainpage/mainpage.component';
@@ -31,6 +34,11 @@ import { BottomSheetColSelComponent } from './service/bottomsheet.service';
 /* Pipe related class*/
 import { GenderConverter } from './pipe/gender.pipe';
 import { TableHeaderConverter } from './pipe/tableheader.pipe';
+import { AppConfigService } from './service/app-config.service';
+
+export function init_app(appConfigService: AppConfigService) {
+  return () => appConfigService.load();
+}
 
 @NgModule({
   declarations: [
@@ -48,7 +56,8 @@ import { TableHeaderConverter } from './pipe/tableheader.pipe';
     UpdatepwdnewuserComponent,
     PageNotFoundComponentComponent,
     UploadcsvpageComponent,
-    UsermanagementpageComponent
+    UsermanagementpageComponent,
+    SiteLayoutComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +68,11 @@ import { TableHeaderConverter } from './pipe/tableheader.pipe';
     ReactiveFormsModule,
     AngularMaterialModule
   ],
-  providers: [EventEmiterService],
+  providers: [
+    AppConfigService,
+    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppConfigService], multi: true },
+    EventEmiterService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

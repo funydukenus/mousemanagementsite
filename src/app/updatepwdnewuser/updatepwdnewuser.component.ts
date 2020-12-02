@@ -23,46 +23,43 @@ export class UpdatepwdnewuserComponent implements OnInit {
   submitButtonTxt: string = "Update";
 
   // username and password field attribute
-  WarningTxt: string = 'Username cannot be empty';
-  AbnormalDetected: Boolean = false;
+  warningTxt: string = 'Username cannot be empty';
+  abnormalDetected: Boolean = false;
   passwordValue: string = '';
 
   // Loading trigger indication
-  IsLoading: Boolean = false;
+  isLoading: Boolean = false;
 
   triggered: Boolean = true;
 
-  IsValid: Boolean = false;
+  isValid: Boolean = false;
 
   // Save current new user info
-  secret_key: string;
+  secretKey: string;
   username: string;
 
   redirecedTimer;
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private _router: Router,
-    private _eventEmiter: EventEmiterService,
+    private router: Router,
     private formBuilder: FormBuilder,
     private accountInfoProvider: AccountInfoProviderService,
-    private _snackBar: MatSnackBar,
-    private toastservice: ToastmessageService) {
-    this._eventEmiter.informPageLoc(
-      'updatenewuser'
-    );
+    private snackBar: MatSnackBar,
+    private toastService: ToastmessageService) {
+
     this.activatedRoute.queryParams.subscribe(params => {
       let secret_key = params['secret_key'];
       let username = params['username'];
-      this.secret_key = secret_key;
+      this.secretKey = secret_key;
       this.username = username;
-      this.accountInfoProvider.CheckSecretKey(secret_key, username).subscribe(
+      this.accountInfoProvider.checkSecretKey(secret_key, username).subscribe(
         result => {
-          this.IsValid = true;
+          this.isValid = true;
         },
 
         error => {
-          this._router.navigate(['/pagenotfound']);
+          this.router.navigate(['**']);
         }
       );
     });
@@ -91,28 +88,28 @@ export class UpdatepwdnewuserComponent implements OnInit {
     this.hasUserClickedSubmit = true;
     if (this.form.valid) {
       this.submitButtonTxt = "Updating...";
-      this.IsLoading = true;
-      this.accountInfoProvider.NewUserChangePassword(
-        this.secret_key,
+      this.isLoading = true;
+      this.accountInfoProvider.newUserChangePassword(
+        this.secretKey,
         this.username,
         this.passwordValue,
       ).subscribe(
         result => {
-          this.IsLoading = false;
+          this.isLoading = false;
           this.submitButtonTxt = "Done";
-          this.toastservice.openSnackBar(
-            this._snackBar, 'Success! Redirected to login page in 3s', 'Dismiss', SuccessColor
+          this.toastService.openSnackBar(
+            this.snackBar, 'Success! Redirected to login page in 3s', 'Dismiss', SuccessColor
           )
           setTimeout(() => {
-            this._router.navigate(['/login']);
+            this.router.navigate(['/login']);
           }, 3000)
         },
         error => {
-          this.IsLoading = false;
+          this.isLoading = false;
           this.submitButtonTxt = "Update";
           if (error.status == 401) {
-            this.toastservice.openSnackBar(
-              this._snackBar, 'Username or Secrete is incorrect', 'Dismiss', ErrorColor
+            this.toastService.openSnackBar(
+              this.snackBar, 'Username or Secrete is incorrect', 'Dismiss', ErrorColor
             )
           }
         }
@@ -120,8 +117,8 @@ export class UpdatepwdnewuserComponent implements OnInit {
     }
     else {
       if (!this.passwordValue) {
-        this.WarningTxt = "Password cannot be empty";
-        this.AbnormalDetected = true;
+        this.warningTxt = "Password cannot be empty";
+        this.abnormalDetected = true;
       }
     }
   }
@@ -131,7 +128,7 @@ export class UpdatepwdnewuserComponent implements OnInit {
   Description: Reset all the attributes for input abnormal detection
    */
   resetAllValidation() {
-    this.AbnormalDetected = false;
+    this.abnormalDetected = false;
     this.hasUserClickedSubmit = false;
   }
 }

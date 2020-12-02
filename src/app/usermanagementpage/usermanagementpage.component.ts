@@ -36,15 +36,11 @@ export class UsermanagementpageComponent implements OnInit {
   emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
 
   constructor(
-    private _eventEmiter: EventEmiterService,
     private accountInfoProvider: AccountInfoProviderService,
-    private _toastservice: ToastmessageService,
-    private _snackBar: MatSnackBar,
+    private toastService: ToastmessageService,
+    private snackBar: MatSnackBar,
     private formBuilder: FormBuilder
   ) {
-    this._eventEmiter.informPageLoc(
-      'usermanagement'
-    );
     // Setup FormControl for input validation
     this.form = this.formBuilder.group({
       username: [null, [Validators.required]],
@@ -69,7 +65,7 @@ export class UsermanagementpageComponent implements OnInit {
 
   retrieveAllUserInfo(): void {
     console.log("GetAllUserInfo - Start getting info");
-    this.accountInfoProvider.GetAllUserInfo().subscribe(
+    this.accountInfoProvider.getAllUserInfo().subscribe(
       (data) => {
         this.userInfoContent = <User[]>JSON.parse(<string>data)['user_list'];
       },
@@ -85,20 +81,20 @@ export class UsermanagementpageComponent implements OnInit {
 
   deleteUser(user: User) {
     this.preventInputChanged = true;
-    this.accountInfoProvider.DeleteUser(user.username).subscribe(
+    this.accountInfoProvider.deleteUser(user.username).subscribe(
       (result) => {
         let response: String = new String(result).toString();
         if (response !== 'Success') {
-          this._toastservice.openSnackBar(
-            this._snackBar,
+          this.toastService.openSnackBar(
+            this.snackBar,
             response.toString(),
             "Dismiss",
             ErrorColor
           )
         }
         else {
-          this._toastservice.openSnackBar(
-            this._snackBar,
+          this.toastService.openSnackBar(
+            this.snackBar,
             response.toString(),
             "Dismiss",
             SuccessColor
@@ -110,8 +106,8 @@ export class UsermanagementpageComponent implements OnInit {
       (error) => {
         this.preventInputChanged = false;
         console.log("Something wrong: " + error);
-        this._toastservice.openSnackBar(
-          this._snackBar,
+        this.toastService.openSnackBar(
+          this.snackBar,
           "Something wrnog",
           "Dismiss",
           ErrorColor
@@ -124,21 +120,21 @@ export class UsermanagementpageComponent implements OnInit {
     let oldValue: Boolean = user.is_active;
     user.is_active = event.checked;
     this.preventInputChanged = true;
-    this.accountInfoProvider.ToggleActivityUser(user).subscribe(
+    this.accountInfoProvider.toggleActivityUser(user).subscribe(
       (result) => {
         let response: String = new String(result).toString();
         if (response !== 'Success') {
           user.is_active = oldValue;
-          this._toastservice.openSnackBar(
-            this._snackBar,
+          this.toastService.openSnackBar(
+            this.snackBar,
             response.toString(),
             "Dismiss",
             ErrorColor
           );
         }
         else {
-          this._toastservice.openSnackBar(
-            this._snackBar,
+          this.toastService.openSnackBar(
+            this.snackBar,
             response.toString(),
             "Dismiss",
             SuccessColor
@@ -150,8 +146,8 @@ export class UsermanagementpageComponent implements OnInit {
       (error) => {
         this.preventInputChanged = false;
         console.log("Something wrong: " + error);
-        this._toastservice.openSnackBar(
-          this._snackBar,
+        this.toastService.openSnackBar(
+          this.snackBar,
           "Something wrnog",
           "Dismiss",
           ErrorColor
@@ -192,15 +188,15 @@ export class UsermanagementpageComponent implements OnInit {
     this.hasUserClickedSubmit = true;
     if (this.form.valid) {
       this.submitButtonTxt = "Creating and sending...";
-      this.accountInfoProvider.CreateNewUser(
+      this.accountInfoProvider.createNewUser(
         this.form.get("username").value,
         this.form.get("email").value,
         this.form.get("firstname").value,
         this.form.get("lastname").value
       ).subscribe(
         (result) => {
-          this._toastservice.openSnackBar(
-            this._snackBar,
+          this.toastService.openSnackBar(
+            this.snackBar,
             "Success",
             "Dismiss",
             SuccessColor
@@ -209,8 +205,8 @@ export class UsermanagementpageComponent implements OnInit {
         },
         (error) => {
           console.log(error);
-          this._toastservice.openSnackBar(
-            this._snackBar,
+          this.toastService.openSnackBar(
+            this.snackBar,
             "Something wrnog",
             "Dismiss",
             ErrorColor

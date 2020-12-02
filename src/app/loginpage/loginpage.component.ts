@@ -22,26 +22,22 @@ export class LoginpageComponent implements OnInit {
   submitButtonTxt: string = "Get Me In";
 
   // username and password field attribute
-  WarningTxt: string = 'Username cannot be empty';
-  AbnormalDetected: Boolean = false;
+  warningTxt: string = 'Username cannot be empty';
+  abnormalDetected: Boolean = false;
   usernameValue: string = '';
   passwordValue: string = '';
 
   // Loading trigger indication
-  IsLoading: Boolean = false;
+  isLoading: Boolean = false;
 
   triggered: Boolean = true;
 
   constructor(
-    private _router: Router,
-    private _eventEmiter: EventEmiterService,
+    private router: Router,
     private formBuilder: FormBuilder,
     private accountInfoProvider: AccountInfoProviderService,
-    private _snackBar: MatSnackBar,
-    private toastservice: ToastmessageService) {
-    this._eventEmiter.informPageLoc(
-      'login'
-    );
+    private snackBar: MatSnackBar,
+    private toastService: ToastmessageService) {
   }
 
   ngOnInit(): void {
@@ -70,24 +66,23 @@ export class LoginpageComponent implements OnInit {
     this.hasUserClickedSubmit = true;
     if (this.form.valid) {
       this.submitButtonTxt = "Validating...";
-      this.IsLoading = true;
-      this.accountInfoProvider.ValidateUserInfo(
+      this.isLoading = true;
+      this.accountInfoProvider.validateUserInfo(
         this.usernameValue,
         this.passwordValue
       ).subscribe(
         (result) => {
-          console.log(result);
-          this.IsLoading = false;
+          this.isLoading = false;
           this.submitButtonTxt = "Done";
           localStorage.setItem('username', this.usernameValue);
-          this._router.navigate(['/home']);
+          this.router.navigate(['']);
         },
         (error) => {
-          this.IsLoading = false;
+          this.isLoading = false;
           this.submitButtonTxt = "Get Me In";
           if (error.status == 401) {
-            this.toastservice.openSnackBar(
-              this._snackBar, 'Username or Password is incorrect', 'Dismiss', ErrorColor
+            this.toastService.openSnackBar(
+              this.snackBar, 'Username or Password is incorrect', 'Dismiss', ErrorColor
             )
           }
         }
@@ -95,8 +90,8 @@ export class LoginpageComponent implements OnInit {
     }
     else {
       if (!this.usernameValue || !this.passwordValue) {
-        this.WarningTxt = "Username or Password cannot be empty";
-        this.AbnormalDetected = true;
+        this.warningTxt = "Username or Password cannot be empty";
+        this.abnormalDetected = true;
       }
     }
   }
@@ -106,7 +101,7 @@ export class LoginpageComponent implements OnInit {
   Description: Reset all the attributes for input abnormal detection
    */
   resetAllValidation() {
-    this.AbnormalDetected = false;
+    this.abnormalDetected = false;
     this.hasUserClickedSubmit = false;
   }
 

@@ -7,41 +7,35 @@ import { UpdatepwdnewuserComponent } from './updatepwdnewuser/updatepwdnewuser.c
 import { PageNotFoundComponentComponent } from './page-not-found-component/page-not-found-component.component';
 import { UploadcsvpageComponent } from './uploadcsvpage/uploadcsvpage.component';
 import { UsermanagementpageComponent } from './usermanagementpage/usermanagementpage.component';
+import { AuthGuard } from './auth.guard';
+import { SiteLayoutComponent } from './_layout/site-layout/site-layout.compoenent';
 
 const routes: Routes = [
+  // Site routes 
+  // Includes the header
   {
-    path: 'home',
-    component: MainpageComponent
+    path: '',
+    component: SiteLayoutComponent,
+    children: [
+      { path: '', component: MainpageComponent, canActivate: [AuthGuard], pathMatch: 'full'},
+      { path: 'harvest-mouse', component: HarvestmousetabpageComponent,  canActivate: [AuthGuard] },
+      { path: 'upload-csv', component: UploadcsvpageComponent, canActivate: [AuthGuard] },
+      { path: 'user-management-page', component: UsermanagementpageComponent, canActivate: [AuthGuard]  }
+    ]
   },
   {
-    path: 'harvest-mouse',
-    component: HarvestmousetabpageComponent
-  },
-  {
-    path: 'upload-csv',
-    component: UploadcsvpageComponent
-  },
-  {
-    path: 'login',
-    component: LoginpageComponent
-  },
-  {
-    path: 'updatepwdnewuser',
+    path: 'update-pwd-new-user',
     component: UpdatepwdnewuserComponent
   },
   {
-    path: 'user-management-page',
-    component: UsermanagementpageComponent
+    path: 'login',
+    component: LoginpageComponent,
+    canActivate: [AuthGuard]
   },
   {
-    path: 'pagenotfound',
+    path: '**',
     component: PageNotFoundComponentComponent
   },
-  {
-    path: '',
-    redirectTo: '/home',
-    pathMatch: 'full'
-  }
 ];
 
 @NgModule({

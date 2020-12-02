@@ -38,10 +38,6 @@ export class HarvestmousepageComponent implements OnInit {
   // Reference to the table
   @ViewChild('table') table: MatTable<HarvestMouse>;
 
-  dataSource: MatTableDataSource<HarvestMouse>;
-
-  harvestMouseList: HarvestMouse[];
-
   // Identification of current rab
   @Input() tabName: string;
 
@@ -49,6 +45,9 @@ export class HarvestmousepageComponent implements OnInit {
 
   @Output() selectionEvent = new EventEmitter<SelectionModel<HarvestMouse>>();
 
+  dataSource: MatTableDataSource<HarvestMouse>;
+
+  harvestMouseList: HarvestMouse[];
   // flag indicated the textarea has been modified
   IsTextAreaModifed: boolean;
 
@@ -90,10 +89,10 @@ export class HarvestmousepageComponent implements OnInit {
 
   constructor(
     private harvestedMouseDataproviderService: HarvestedMouseDataproviderService,
-    private toastservice: ToastmessageService,
-    private diagservice: DiagService,
-    private _snackBar: MatSnackBar,
-    private diaglog: MatDialog
+    private toastService: ToastmessageService,
+    private diagService: DiagService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.IsTextAreaModifed = false;
   }
@@ -126,11 +125,11 @@ export class HarvestmousepageComponent implements OnInit {
   }
 
   /*
-  Function name: InsertDataSource
+  Function name: insertDataSource
   Description: This function allows the external data source insert into
                table in this component
   */
-  InsertDataSource(dataSource) {
+  insertDataSource(dataSource) {
     this.dataSource = dataSource;
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
@@ -178,8 +177,8 @@ export class HarvestmousepageComponent implements OnInit {
     if (this.expandedElement === element) {
       if (this.originalText) {
         if (this.originalText != this.expandedElement.comment) {
-          this.diagservice.openSimpleConfirmationDialog(
-            this.diaglog
+          this.diagService.openSimpleConfirmationDialog(
+            this.dialog
           ).subscribe(result => {
             if (result) {
               // mimic the close button clicked
@@ -197,8 +196,8 @@ export class HarvestmousepageComponent implements OnInit {
     else {
       if (this.originalText) {
         if (this.originalText != this.expandedElement.comment) {
-          this.diagservice.openSimpleConfirmationDialog(
-            this.diaglog
+          this.diagService.openSimpleConfirmationDialog(
+            this.dialog
           ).subscribe(result => {
             if (result) {
               this.restoreComment(element);
@@ -220,8 +219,8 @@ export class HarvestmousepageComponent implements OnInit {
   closeButtonClick() {
     if (this.originalText) {
       if (this.originalText != this.expandedElement.comment) {
-        this.diagservice.openSimpleConfirmationDialog(
-          this.diaglog
+        this.diagService.openSimpleConfirmationDialog(
+          this.dialog
         ).subscribe(result => {
           if (result) {
             // mimic the close button clicked
@@ -249,8 +248,8 @@ export class HarvestmousepageComponent implements OnInit {
   Description: This function will be called when the edit button is clicked
   */
   editOnClick() {
-    this.diagservice.openSingleEditDialog(
-      this.diaglog,
+    this.diagService.openSingleEditDialog(
+      this.dialog,
       this.expandedElement).subscribe(
         result => {
           if (result) {
@@ -273,8 +272,8 @@ export class HarvestmousepageComponent implements OnInit {
               data => {
 
                 console.log(data);
-                this.toastservice.openSnackBar(
-                  this._snackBar,
+                this.toastService.openSnackBar(
+                  this.snackBar,
                   "Mouse updated successfully",
                   "Dismiss",
                   SuccessColor
@@ -284,8 +283,8 @@ export class HarvestmousepageComponent implements OnInit {
               error => {
                 this.submitDisabled = false;
                 console.log(error);
-                this.toastservice.openSnackBar(
-                  this._snackBar,
+                this.toastService.openSnackBar(
+                  this.snackBar,
                   "Mouse updated failed",
                   "Dismiss",
                   ErrorColor
@@ -366,8 +365,8 @@ export class HarvestmousepageComponent implements OnInit {
     let harvestMouseList: HarvestMouse[] = [];
     harvestMouseList.push(this.expandedElement);
 
-    this.diagservice.openConfirmationDialog(
-      this.diaglog,
+    this.diagService.openConfirmationDialog(
+      this.dialog,
       harvestMouseList
     ).subscribe(result => {
       if (result) {
@@ -378,8 +377,8 @@ export class HarvestmousepageComponent implements OnInit {
           data => {
             console.log(data);
             this.dataFreshEventRequired.emit();
-            this.toastservice.openSnackBar(
-              this._snackBar,
+            this.toastService.openSnackBar(
+              this.snackBar,
               "Deleted successfully",
               "Dismiss",
               SuccessColor
@@ -388,8 +387,8 @@ export class HarvestmousepageComponent implements OnInit {
           error => {
             this.submitDisabled = false;
             console.log(error);
-            this.toastservice.openSnackBar(
-              this._snackBar,
+            this.toastService.openSnackBar(
+              this.snackBar,
               "Deleted failed",
               "Dismiss",
               ErrorColor
@@ -422,8 +421,8 @@ export class HarvestmousepageComponent implements OnInit {
       data => {
         this.submitDisabled = false;
         console.log(data);
-        this.toastservice.openSnackBar(
-          this._snackBar,
+        this.toastService.openSnackBar(
+          this.snackBar,
           "Comment updated successfully",
           "Dismiss",
           SuccessColor
@@ -434,8 +433,8 @@ export class HarvestmousepageComponent implements OnInit {
       error => {
         this.submitDisabled = false;
         console.log(error);
-        this.toastservice.openSnackBar(
-          this._snackBar,
+        this.toastService.openSnackBar(
+          this.snackBar,
           "Comment updated failed",
           "Dismiss",
           ErrorColor
