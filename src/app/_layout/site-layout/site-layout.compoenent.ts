@@ -4,7 +4,6 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { User } from 'src/app/interface/user';
 import { AccountInfoProviderService } from 'src/app/service/dataprovider.service';
-import { EventEmiterService } from 'src/app/service/event.emmiter.service';
 import { UserInfoProviderService } from 'src/app/service/user-info-provider.service';
 
 @Component({
@@ -33,7 +32,7 @@ export class SiteLayoutComponent implements OnInit {
     this.accountInfoProvider.userLogout().subscribe(
       result => {
         this.userInfoProvider.setCurrentUser(null);
-        this.router.navigate(['login']);
+        this.router.navigate(['/login']);
       },
       error => {
         console.log(error);
