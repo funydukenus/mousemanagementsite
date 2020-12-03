@@ -348,7 +348,7 @@ export class AccountInfoProviderService {
       headers: this.lowLevelLinkService.constructHeaederForCORSHeader()
     };
 
-    return this.http.post(accountCreateNewUser, formData, options);
+    return this.http.post(accountDeleteUser, formData, options);
   }
 
   getLoggedUserInfo() {
