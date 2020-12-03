@@ -11,6 +11,7 @@ namespace ResponseType {
   export const Blob = 'blob' as 'blob';
   export const Text = 'text' as 'text';
   export const Event = 'events' as 'events';
+  export const Body = 'body' as 'body';
 }
 
 // Main domain of the server
@@ -330,6 +331,7 @@ export class AccountInfoProviderService {
 
     // Insert into the option field
     let options = {
+      responseType: ResponseType.JSON,
       withCredentials: true,
       headers: this.lowLevelLinkService.constructHeaederForCORSHeader()
     };

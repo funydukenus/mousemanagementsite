@@ -195,6 +195,7 @@ export class UsermanagementpageComponent implements OnInit {
         this.form.get("lastname").value
       ).subscribe(
         (result) => {
+          this.submitButtonTxt = "Creating";
           this.toastService.openSnackBar(
             this.snackBar,
             "Success",
@@ -204,10 +205,10 @@ export class UsermanagementpageComponent implements OnInit {
           this.retrieveAllUserInfo();
         },
         (error) => {
-          console.log(error);
+          this.submitButtonTxt = "Creating";
           this.toastService.openSnackBar(
             this.snackBar,
-            "Something wrnog",
+            error.error,
             "Dismiss",
             ErrorColor
           )
