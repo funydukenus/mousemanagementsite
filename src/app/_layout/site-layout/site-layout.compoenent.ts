@@ -2,6 +2,7 @@ import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
+import { User } from 'src/app/interface/user';
 import { AccountInfoProviderService } from 'src/app/service/dataprovider.service';
 import { EventEmiterService } from 'src/app/service/event.emmiter.service';
 import { UserInfoProviderService } from 'src/app/service/user-info-provider.service';
@@ -13,10 +14,14 @@ import { UserInfoProviderService } from 'src/app/service/user-info-provider.serv
 })
 export class SiteLayoutComponent implements OnInit {
 
+  currentUser: User;
+
   constructor(
     private accountInfoProvider: AccountInfoProviderService,
     private router: Router,
-    private userInfoProvider: UserInfoProviderService) { }
+    private userInfoProvider: UserInfoProviderService) {
+    this.currentUser = this.userInfoProvider.getCurrentUser();
+  }
 
   @ViewChild('sidenav') sidenav: MatDrawer;
 
@@ -34,5 +39,13 @@ export class SiteLayoutComponent implements OnInit {
         console.log(error);
       }
     )
+  }
+
+  getPosition(): string {
+    if (this.currentUser.is_admin) {
+      return "Administrator";
+    } else {
+      return "Staff";
+    }
   }
 }

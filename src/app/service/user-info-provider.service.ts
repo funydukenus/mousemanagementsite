@@ -81,4 +81,14 @@ export class UserInfoProviderService {
   setCurrentUser(user: User): void {
     this.currentLoggedUserInfo = user;
   }
+
+  /*
+   Function name:
+     getCurrentUser
+   Description:
+     Return current logged user
+   */
+  getCurrentUser(): User {
+    return this.currentLoggedUserInfo;
+  }
 }

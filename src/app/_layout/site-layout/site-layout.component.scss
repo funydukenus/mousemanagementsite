@@ -19,3 +19,26 @@
 .side-bar-opener:hover {
   cursor: pointer;
 }
+
+.user-info-block{
+  width: 100%;
+  text-align: center;
+}
+
+.user-info-label{
+  color: black;
+}
+
+.circle-icon {
+  width: 100px !important;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.link-info{
+  cursor: pointer;
+}
+
+.link-info:hover{
+  text-decoration: underline;
+}

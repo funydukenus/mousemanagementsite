@@ -17,8 +17,8 @@ const routes: Routes = [
     path: '',
     component: SiteLayoutComponent,
     children: [
-      { path: '', component: MainpageComponent, canActivate: [AuthGuard], pathMatch: 'full'},
-      { path: 'harvest-mouse', component: HarvestmousetabpageComponent,  canActivate: [AuthGuard] },
+      // { path: '', component: MainpageComponent, canActivate: [AuthGuard], pathMatch: 'full'},
+      { path: '', component: HarvestmousetabpageComponent,  canActivate: [AuthGuard], pathMatch: 'full'},
       { path: 'upload-csv', component: UploadcsvpageComponent, canActivate: [AuthGuard] },
       { path: 'user-management-page', component: UsermanagementpageComponent, canActivate: [AuthGuard]  }
     ]
