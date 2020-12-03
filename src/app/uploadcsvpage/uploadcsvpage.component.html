@@ -1,4 +1,5 @@
 <div class="jumbotron">
+  <mat-progress-bar *ngIf="loaded" mode="indeterminate"></mat-progress-bar>
   <h1>Upload CSV</h1>
   <p>Upload an CSV file. Click <a href='assets/template.csv'>here</a> to download an example.</p>
 
@@ -6,6 +7,20 @@
   <button type="button" class="btn btn-info functional-button" (click)="uploadButtonClick()">
     Upload CSV File
   </button>
+  <div class="debug-window">
+    <div class="upload-file-window">
+      <h2>{{FileUploadIndicator}}</h2>
+      <mat-progress-bar mode="determinate" [value]="progressBarValue"></mat-progress-bar>
+    </div>
+    <div class="debug-parsing-window">
+      <button *ngIf="showStartParsingButton" type="button" class="btn btn-info functional-button"
+        (click)="startParsing()">
+        Start Parsing
+      </button>
+      <h2 *ngIf="showStartParsingButton">{{parsingIndicator}}</h2>
+      <div class="debug-msg-window">
+        <pre>{{mouseDebugMsg}}</pre>
+      </div>
+    </div>
+  </div>
 </div>
-
-<mat-progress-bar *ngIf="loaded" mode="indeterminate"></mat-progress-bar>

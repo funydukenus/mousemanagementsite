@@ -1,14 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../interface/user';
 import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
 namespace ResponseType {
   export const JSON = 'json' as 'json';
   export const ArrayBuffer = 'arraybuffer' as 'arraybuffer';
   export const Blob = 'blob' as 'blob';
   export const Text = 'text' as 'text';
+  export const Event = 'events' as 'events';
 }
 
 // Main domain of the server
@@ -23,6 +25,8 @@ export let harvestMouseFileUploadUrl: string = serverHarvestAppBaseUrl + 'import
 export let harvestMouseDeleteUrl: string = serverHarvestAppBaseUrl + 'delete';
 export let harvestMouseUpdateUrl: string = serverHarvestAppBaseUrl + 'update';
 export let getDataListUrl: string = serverHarvestAppBaseUrl + 'getdatalist';
+export let startParsingUrl: string = serverHarvestAppBaseUrl + 'parsing_imported_mouse';
+export let getMouseCsvInfoUrl: string = serverHarvestAppBaseUrl + 'gets_mouse_csv_info';
 
 /*
 Account information related API end point
@@ -39,6 +43,7 @@ export let accountIsAdmin: string = serverAccountAppBaseUrl + 'is-admin';
 export let accountCreateNewUser: string = serverAccountAppBaseUrl + 'create';
 export let accountDeleteUser: string = serverAccountAppBaseUrl + 'delete-user';
 export let accountGetLoggedInfoUser: string = serverAccountAppBaseUrl + 'get-logged-user-info';
+
 
 @Injectable({
   providedIn: 'root'
@@ -107,6 +112,7 @@ export class HarvestedMouseDataproviderService {
   harvestMouseList: HarvestMouse[];
 
   constructor(
+    private zone: NgZone,
     private http: HttpClient,
     private lowLevelLinkService: LowLevelLinkService) { }
 
@@ -182,8 +188,7 @@ export class HarvestedMouseDataproviderService {
 
   /*
   Function name: FileUploadRequest
-  Description: Upload the file to the server and make the import operation,
-                     fail to provide the file will return null value
+  Description: Upload the file to the server.
   */
   fileUploadRequest(file: File, url: string) {
     // Make sure there is a file to upload
@@ -193,6 +198,9 @@ export class HarvestedMouseDataproviderService {
 
       // Insert into the option field
       let options = {
+        reportProgress: true,
+        observe: ResponseType.Event,
+        withCredentials: true,
         headers: this.lowLevelLinkService.constructHeaederForCORSHeader()
       };
 
@@ -201,6 +209,25 @@ export class HarvestedMouseDataproviderService {
     else {
       return null;
     }
+  }
+
+  /*
+  Function name: startParsingRequest
+  Description: Trigger parsing operation
+  */
+  startParsingRequest() {
+    // Insert into the option field
+    let options = {
+      responseType: ResponseType.JSON,
+      withCredentials: true,
+      headers: this.lowLevelLinkService.constructHeaederForCORSHeader()
+    };
+
+    return this.http.post(startParsingUrl, new FormData(), options);
+  }
+
+  getMouseFileInfoRequest() {
+    return this.lowLevelLinkService.httpGetRequest(getMouseCsvInfoUrl);
   }
 }
 

@@ -65,72 +65,77 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
     this.harvestedMouseDataproviderService.getDataList().subscribe(
       data => {
         project_list = data['projectTitleList'];
-        project_list.forEach(
-          tab_cri => {
-            let filterInputString = "project_title@" + tab_cri + "@4";
-            let existed: boolean = false;
-            let not_existed: boolean = true;
-            // Checks if exists
-            this.tabConfig.forEach(
-              data => {
-                if (data.tabName == tab_cri) {
-                  existed = true;
-                  return;
+        if (project_list.length === 0) {
+          this.tabConfig.splice(0, this.tabConfig.length);
+          this.loaded = false;
+        }
+        else {
+          project_list.forEach(
+            tab_cri => {
+              let filterInputString = "project_title@" + tab_cri + "@4";
+              let existed: boolean = false;
+              let not_existed: boolean = true;
+              // Checks if exists
+              this.tabConfig.forEach(
+                data => {
+                  if (data.tabName == tab_cri) {
+                    existed = true;
+                    return;
+                  }
                 }
-              }
-            )
+              )
 
-            // Checks if exists
-            this.tabConfig.forEach(
-              data => {
-                if (!(project_list.includes(data.tabName))) {
-                  this.removeFromTab(data);
-                  not_existed = true;
-                  return;
+              // Checks if exists
+              this.tabConfig.forEach(
+                data => {
+                  if (!(project_list.includes(data.tabName))) {
+                    this.removeFromTab(data);
+                    not_existed = true;
+                    return;
+                  }
                 }
-              }
-            )
+              )
 
-            if (not_existed && existed) {
-              return;
+              if (not_existed && existed) {
+                return;
+              }
+
+              this.tabConfig.push(
+                {
+                  tabName: tab_cri,
+                  filterString: [filterInputString],
+                  datasource: new MatTableDataSource<HarvestMouse>(),
+                  harvestMouseList: [],
+                  tabComponent: null
+                }
+              );
             }
+          )
 
-            this.tabConfig.push(
-              {
-                tabName: tab_cri,
-                filterString: [filterInputString],
-                datasource: new MatTableDataSource<HarvestMouse>(),
-                harvestMouseList: [],
-                tabComponent: null
-              }
-            );
-          }
-        )
+          this.changeDetectorRef.detectChanges();
 
-        this.changeDetectorRef.detectChanges();
+          // Convert view children query set to array
+          this.tabList.toArray().forEach(
+            // For each of found HarvestedMouse Component
+            curTabCom => {
+              // For each of the tab config
+              this.tabConfig.forEach(
+                tabConfigEle => {
+                  let tabNameFromTabConfig: string = tabConfigEle.tabName;
 
-        // Convert view children query set to array
-        this.tabList.toArray().forEach(
-          // For each of found HarvestedMouse Component
-          curTabCom => {
-            // For each of the tab config
-            this.tabConfig.forEach(
-              tabConfigEle => {
-                let tabNameFromTabConfig: string = tabConfigEle.tabName;
-
-                // If the found HarvestedMouse has the same tabName
-                // as the tabConfig, assign the tabComponent
-                // to this tabConfig
-                if (tabNameFromTabConfig == curTabCom.tabName) {
-                  tabConfigEle.tabComponent = curTabCom;
+                  // If the found HarvestedMouse has the same tabName
+                  // as the tabConfig, assign the tabComponent
+                  // to this tabConfig
+                  if (tabNameFromTabConfig == curTabCom.tabName) {
+                    tabConfigEle.tabComponent = curTabCom;
+                  }
                 }
-              }
-            )
-          }
-        )
-
-        // Fresh All the mouse lists in each of the tabs
-        this.refreshMouseListsAllTabs();
+              )
+            }
+          )
+          // Fresh All the mouse lists in each of the tabs
+          this.refreshMouseListsAllTabs();
+        }
       }
     );
   }

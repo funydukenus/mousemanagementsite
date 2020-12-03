@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export var SuccessColor: string = "green-snackbar";
 export var ErrorColor: string = "red-snackbar";
 export var InProgressColor: string = "yellow-snackbar";
+export var WarningColor: string = "yellow-snackbar";
 
 @Injectable({
   providedIn: 'root'
