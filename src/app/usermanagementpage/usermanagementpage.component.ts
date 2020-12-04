@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { User } from '../interface/user';
-import { AccountInfoProviderService } from '../service/dataprovider.service';
+import { AccountInfoProviderService, ResponseFrame } from '../service/dataprovider.service';
 import { EventEmiterService } from '../service/event.emmiter.service';
 import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastmessage.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -64,13 +64,24 @@ export class UsermanagementpageComponent implements OnInit {
   }
 
   retrieveAllUserInfo(): void {
-    console.log("GetAllUserInfo - Start getting info");
     this.accountInfoProvider.getAllUserInfo().subscribe(
-      (data) => {
-        this.userInfoContent = <User[]>JSON.parse(<string>data)['user_list'];
+      (result) => {
+        let responseFrame: ResponseFrame = <ResponseFrame>result;
+        if (responseFrame.result != 0) {
+          this.userInfoContent = <User[]>JSON.parse(<string>responseFrame.payload)['user_list'];
+        } else {
+          this.displayToastMsg(
+            responseFrame.payload,
+            ErrorColor
+          )
+        }
       },
       (error) => {
         this.userInfoContent = [];
+        this.displayToastMsg(
+          "Network Error:" + error,
+          ErrorColor
+        )
       }
     )
   }
@@ -83,35 +94,28 @@ export class UsermanagementpageComponent implements OnInit {
     this.preventInputChanged = true;
     this.accountInfoProvider.deleteUser(user.username).subscribe(
       (result) => {
-        let response: String = new String(result).toString();
-        if (response !== 'Success') {
-          this.toastService.openSnackBar(
-            this.snackBar,
-            response.toString(),
-            "Dismiss",
-            ErrorColor
-          )
-        }
-        else {
-          this.toastService.openSnackBar(
-            this.snackBar,
-            response.toString(),
-            "Dismiss",
+        let responseFrame: ResponseFrame = <ResponseFrame>result;
+        if (responseFrame.result != 0) {
+          this.displayToastMsg(
+            "Delete user successful",
             SuccessColor
-          )
-          this.retrieveAllUserInfo();
+          );
+        } else {
+          this.displayToastMsg(
+            responseFrame.payload,
+            ErrorColor
+          );
         }
         this.preventInputChanged = false;
+        this.retrieveAllUserInfo();
       },
       (error) => {
-        this.preventInputChanged = false;
-        console.log("Something wrong: " + error);
-        this.toastService.openSnackBar(
-          this.snackBar,
-          "Something wrnog",
-          "Dismiss",
+        this.userInfoContent = [];
+        this.displayToastMsg(
+          "Network Error:" + error,
           ErrorColor
-        )
+        );
+        this.preventInputChanged = false;
       }
     );
   }
@@ -122,36 +126,30 @@ export class UsermanagementpageComponent implements OnInit {
     this.preventInputChanged = true;
     this.accountInfoProvider.toggleActivityUser(user).subscribe(
       (result) => {
-        let response: String = new String(result).toString();
-        if (response !== 'Success') {
-          user.is_active = oldValue;
-          this.toastService.openSnackBar(
-            this.snackBar,
-            response.toString(),
-            "Dismiss",
+        let responseFrame: ResponseFrame = <ResponseFrame>result;
+
+        this.preventInputChanged = false;
+        // If the response has no issue
+        if (responseFrame.result != 0) {
+          this.displayToastMsg(
+            "Toggled Success",
+            SuccessColor
+          );
+
+        } else {
+          this.displayToastMsg(
+            responseFrame.payload,
             ErrorColor
           );
         }
-        else {
-          this.toastService.openSnackBar(
-            this.snackBar,
-            response.toString(),
-            "Dismiss",
-            SuccessColor
-          );
-          this.retrieveAllUserInfo();
-        }
-        this.preventInputChanged = false;
+        this.retrieveAllUserInfo();
       },
       (error) => {
         this.preventInputChanged = false;
-        console.log("Something wrong: " + error);
-        this.toastService.openSnackBar(
-          this.snackBar,
-          "Something wrnog",
-          "Dismiss",
+        this.displayToastMsg(
+          "Network Error:" + error,
           ErrorColor
-        )
+        );
       }
     )
 
@@ -195,23 +193,29 @@ export class UsermanagementpageComponent implements OnInit {
         this.form.get("lastname").value
       ).subscribe(
         (result) => {
-          this.submitButtonTxt = "Creating";
-          this.toastService.openSnackBar(
-            this.snackBar,
-            "Success",
-            "Dismiss",
-            SuccessColor
-          )
-          this.retrieveAllUserInfo();
+          let responseFrame: ResponseFrame = <ResponseFrame>result;
+
+          if (responseFrame.result != 0) {
+            this.submitButtonTxt = "Creating";
+            this.displayToastMsg(
+              "User created success",
+              SuccessColor
+            );
+            this.retrieveAllUserInfo();
+          } else {
+            this.submitButtonTxt = "Creating";
+            this.displayToastMsg(
+              responseFrame.payload,
+              ErrorColor
+            );
+          }
         },
         (error) => {
           this.submitButtonTxt = "Creating";
-          this.toastService.openSnackBar(
-            this.snackBar,
-            error.error,
-            "Dismiss",
+          this.displayToastMsg(
+            "Network Error",
             ErrorColor
-          )
+          );
         }
       );
     }
@@ -245,5 +249,15 @@ export class UsermanagementpageComponent implements OnInit {
         }
       }
     }
+  }
+
+  /*
+  Function name: displayToastMsg
+  Description: Display the toast msg in this components
+   */
+  displayToastMsg(msg: string, color: string): void {
+    this.toastService.openSnackBar(
+      this.snackBar, msg, 'Dismiss', color
+    );
   }
 }

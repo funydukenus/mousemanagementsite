@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../interface/user';
-import { AccountInfoProviderService } from './dataprovider.service';
+import { AccountInfoProviderService, ResponseFrame } from './dataprovider.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,18 +24,21 @@ export class UserInfoProviderService {
       observer => {
         this.accountInfoProvider.getLoggedUserInfo().subscribe(
           (result) => {
-            if ((result === "Not logged") || (result === "User not found")) {
-              this.currentLoggedUserInfo = null;
+            let responeFrame: ResponseFrame = <ResponseFrame>result;
+
+            if (responeFrame.result !== 0) {
+              this.currentLoggedUserInfo = <User>JSON.parse(<string>responeFrame.payload);
             }
             else {
-              this.currentLoggedUserInfo = <User>JSON.parse(<string>result);
+              this.currentLoggedUserInfo = null;
             }
             observer.next();
-            console.log("retrieveUserInfoAsync,OK:" + result);
           },
           (error) => {
+            // Not handling the network error
+            // Let user login again
+            this.currentLoggedUserInfo = null;
             observer.next();
-            console.log("retrieveUserInfoAsync,ERROR:" + error);
           }
         )
       }

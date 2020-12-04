@@ -2,7 +2,7 @@ import { Component, Inject, ViewChild, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { MatAccordion } from '@angular/material/expansion';
-import { HarvestedMouseDataproviderService } from '../service/dataprovider.service';
+import { HarvestedMouseDataproviderService, ResponseFrame } from '../service/dataprovider.service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -99,25 +99,24 @@ export class DialogSingleEditComponent implements OnInit {
     this.initDataOption();
 
     this.harvesteddataproviderService.getDataList().subscribe(
-      data => {
-        this.getDataOptionByName('MouseLine').listOfData = JSON.parse(JSON.stringify(data['mouseLineList']));
-        this.getDataOptionByName('GenoType').listOfData = JSON.parse(JSON.stringify(data['genoTypeList']));
-        this.getDataOptionByName('PhenoType').listOfData = JSON.parse(JSON.stringify(data['phenoTypeList']));
-        this.getDataOptionByName('Handler').listOfData = JSON.parse(JSON.stringify(data['handlerList']));
-        this.getDataOptionByName('ProjectTitle').listOfData = JSON.parse(JSON.stringify(data['projectTitleList']));
-        // this.getDataOptionByName('Experiement').listOfData = JSON.parse(JSON.stringify(data['ExperiementList']));
-        console.log(this.dataOptionList);
-        this.dataOptionList.forEach(
-          optionElement => {
-            optionElement.filteredOptions = optionElement.control.valueChanges.pipe(
-              startWith(''),
-              map(value => this._filter(value, optionElement))
-            )
-          });
-        this.getDataOptionByName('ProjectTitle').control.disable();
-      },
-      error => {
-        console.log(error);
+      (result) => {
+        let responseFrame: ResponseFrame = <ResponseFrame>result;
+        if (responseFrame.result != 0) {
+          this.getDataOptionByName('MouseLine').listOfData = JSON.parse(JSON.stringify(responseFrame.payload['mouseLineList']));
+          this.getDataOptionByName('GenoType').listOfData = JSON.parse(JSON.stringify(responseFrame.payload['genoTypeList']));
+          this.getDataOptionByName('PhenoType').listOfData = JSON.parse(JSON.stringify(responseFrame.payload['phenoTypeList']));
+          this.getDataOptionByName('Handler').listOfData = JSON.parse(JSON.stringify(responseFrame.payload['handlerList']));
+          this.getDataOptionByName('ProjectTitle').listOfData = JSON.parse(JSON.stringify(responseFrame.payload['projectTitleList']));
+          this.getDataOptionByName('Experiement').listOfData = JSON.parse(JSON.stringify(responseFrame.payload['experiementList']));
+          this.dataOptionList.forEach(
+            optionElement => {
+              optionElement.filteredOptions = optionElement.control.valueChanges.pipe(
+                startWith(''),
+                map(value => this._filter(value, optionElement))
+              )
+            });
+          this.getDataOptionByName('ProjectTitle').control.disable();
+        }
       }
     );
   }

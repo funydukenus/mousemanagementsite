@@ -4,7 +4,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AccountInfoProviderService } from '../service/dataprovider.service';
+import { AccountInfoProviderService, ResponseFrame } from '../service/dataprovider.service';
 import { EventEmiterService } from '../service/event.emmiter.service';
 import { ErrorColor, SuccessColor, ToastmessageService } from '../service/toastmessage.service';
 
@@ -54,11 +54,16 @@ export class UpdatepwdnewuserComponent implements OnInit {
       this.secretKey = secret_key;
       this.username = username;
       this.accountInfoProvider.checkSecretKey(secret_key, username).subscribe(
-        result => {
-          this.isValid = true;
+        (result) => {
+          let responseFrame: ResponseFrame = <ResponseFrame>result;
+          if (responseFrame.result == 0) {
+            this.router.navigate(['**']);
+          } else {
+            this.isValid = true;
+          }
         },
 
-        error => {
+        (error) => {
           this.router.navigate(['**']);
         }
       );
@@ -87,31 +92,40 @@ export class UpdatepwdnewuserComponent implements OnInit {
   OnClickSubmit(data) {
     this.hasUserClickedSubmit = true;
     if (this.form.valid) {
-      this.submitButtonTxt = "Updating...";
-      this.isLoading = true;
+      this.updateUiBeforeChangePwd("Updating...");
+
       this.accountInfoProvider.newUserChangePassword(
         this.secretKey,
         this.username,
         this.passwordValue,
       ).subscribe(
-        result => {
-          this.isLoading = false;
-          this.submitButtonTxt = "Done";
-          this.toastService.openSnackBar(
-            this.snackBar, 'Success! Redirected to login page in 3s', 'Dismiss', SuccessColor
-          )
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 3000)
-        },
-        error => {
-          this.isLoading = false;
-          this.submitButtonTxt = "Update";
-          if (error.status == 401) {
-            this.toastService.openSnackBar(
-              this.snackBar, 'Username or Secrete is incorrect', 'Dismiss', ErrorColor
-            )
+        (result) => {
+          let responseFrame: ResponseFrame = <ResponseFrame>result;
+
+          if(responseFrame.result != 0){
+            this.updateUiAfterChangePwd("Done");
+            this.displayToastMsg(
+              "Success! Redirected to login page in 3s",
+              SuccessColor
+            );
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000)
+          } else {
+            this.updateUiAfterChangePwd("Update");
+            this.displayToastMsg(
+              responseFrame.payload,
+              ErrorColor
+            );
           }
+
+        },
+        (error) => {
+          this.updateUiAfterChangePwd("Update");
+          this.displayToastMsg(
+            "Network Error",
+            ErrorColor
+          );
         }
       )
     }
@@ -130,5 +144,33 @@ export class UpdatepwdnewuserComponent implements OnInit {
   resetAllValidation() {
     this.abnormalDetected = false;
     this.hasUserClickedSubmit = false;
+  }
+
+  /*
+  Function name: updateUiBeforeChangePwd
+  Description: Reset all the attributes for input abnormal detection
+   */
+  updateUiBeforeChangePwd(buttonString: string): void{
+    this.isLoading = true;
+    this.submitButtonTxt = buttonString;
+  }
+
+  /*
+  Function name: resetAllValidation
+  Description: Reset all the attributes for input abnormal detection
+   */
+  updateUiAfterChangePwd(buttonString: string): void{
+    this.isLoading = false;
+    this.submitButtonTxt = buttonString;
+  }
+
+  /*
+  Function name: displayToastMsg
+  Description: Display the toast msg in this components
+   */
+  displayToastMsg(msg: string, color: string): void {
+    this.toastService.openSnackBar(
+      this.snackBar, msg, 'Dismiss', color
+    );
   }
 }

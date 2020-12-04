@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input, EventEmitter, Output } from '@angular/core';
-import { HarvestedMouseDataproviderService } from '../service/dataprovider.service';
+import { HarvestedMouseDataproviderService, ResponseFrame } from '../service/dataprovider.service';
 import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastmessage.service';
 import { HarvestMouse } from '../interface/harvestmouse';
 import { MatSort } from '@angular/material/sort';
@@ -269,26 +269,31 @@ export class HarvestmousepageComponent implements OnInit {
             this.harvestedMouseDataproviderService.updateHarvestedMouseRequest(
               harvestMouseList
             ).subscribe(
-              data => {
+              (result) => {
+                let responseFrame: ResponseFrame = <ResponseFrame>result;
 
-                console.log(data);
-                this.toastService.openSnackBar(
-                  this.snackBar,
-                  "Mouse updated successfully",
-                  "Dismiss",
-                  SuccessColor
-                )
-                this.dataFreshEventRequired.emit();
-              },
-              error => {
                 this.submitDisabled = false;
-                console.log(error);
-                this.toastService.openSnackBar(
-                  this.snackBar,
-                  "Mouse updated failed",
-                  "Dismiss",
+
+                if (responseFrame.result != 0) {
+                  this.displayToastMsg(
+                    "Mouse updated successfully",
+                    SuccessColor
+                  );
+                  this.dataFreshEventRequired.emit();
+                } else {
+                  this.displayToastMsg(
+                    responseFrame.payload,
+                    ErrorColor
+                  );
+                }
+
+              },
+              (error) => {
+                this.submitDisabled = false;
+                this.displayToastMsg(
+                  "Network Error",
                   ErrorColor
-                )
+                );
               }
             );
           }
@@ -374,25 +379,28 @@ export class HarvestmousepageComponent implements OnInit {
         this.harvestedMouseDataproviderService.deleteHarvestedMouseRequest(
           harvestMouseList
         ).subscribe(
-          data => {
-            console.log(data);
-            this.dataFreshEventRequired.emit();
-            this.toastService.openSnackBar(
-              this.snackBar,
-              "Deleted successfully",
-              "Dismiss",
-              SuccessColor
-            )
-          },
-          error => {
+          (result) => {
+            let responseFrame: ResponseFrame = <ResponseFrame>result;
             this.submitDisabled = false;
-            console.log(error);
-            this.toastService.openSnackBar(
-              this.snackBar,
-              "Deleted failed",
-              "Dismiss",
-              ErrorColor
-            )
+            if (responseFrame.result != 0) {
+              this.dataFreshEventRequired.emit();
+              this.displayToastMsg(
+                "Mouse deleted successfully",
+                SuccessColor
+              );
+            } else {
+              this.displayToastMsg(
+                responseFrame.payload,
+                SuccessColor
+              );
+            }
+          },
+          (error) => {
+            this.submitDisabled = false;
+            this.displayToastMsg(
+              "Network Error",
+              SuccessColor
+            );
           }
         )
       }
@@ -442,4 +450,14 @@ export class HarvestmousepageComponent implements OnInit {
       }
     );
   }
+  /*
+  Function name: displayToastMsg
+  Description: Display the toast msg in this components
+   */
+  displayToastMsg(msg: string, color: string): void {
+    this.toastService.openSnackBar(
+      this.snackBar, msg, 'Dismiss', color
+    );
+  }
+
 }

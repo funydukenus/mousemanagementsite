@@ -3,7 +3,11 @@ import { HarvestMouse } from '../interface/harvestmouse';
 import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../interface/user';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+
+export interface ResponseFrame{
+  result: number,
+  payload: any
+}
 
 namespace ResponseType {
   export const JSON = 'json' as 'json';
@@ -27,7 +31,6 @@ export let harvestMouseDeleteUrl: string = serverHarvestAppBaseUrl + 'delete';
 export let harvestMouseUpdateUrl: string = serverHarvestAppBaseUrl + 'update';
 export let getDataListUrl: string = serverHarvestAppBaseUrl + 'getdatalist';
 export let startParsingUrl: string = serverHarvestAppBaseUrl + 'parsing_imported_mouse';
-export let getMouseCsvInfoUrl: string = serverHarvestAppBaseUrl + 'gets_mouse_csv_info';
 
 /*
 Account information related API end point
@@ -113,7 +116,6 @@ export class HarvestedMouseDataproviderService {
   harvestMouseList: HarvestMouse[];
 
   constructor(
-    private zone: NgZone,
     private http: HttpClient,
     private lowLevelLinkService: LowLevelLinkService) { }
 
@@ -126,16 +128,12 @@ export class HarvestedMouseDataproviderService {
     let url = harvestMouseDeleteUrl;
 
     // Setting up http headers for the file uploading
-    let headers = new HttpHeaders({
-      'enctype': 'multipart/form-data',
-      'Accept': 'application/json'
-    });
 
     let mouse_list_obj = {
       'mouse_list': harvestedMouseArray
     }
     let options = {
-      headers: headers,
+      headers: this.lowLevelLinkService.constructHeaederForCORSHeader(),
       body: mouse_list_obj
     }
 
@@ -225,10 +223,6 @@ export class HarvestedMouseDataproviderService {
     };
 
     return this.http.post(startParsingUrl, new FormData(), options);
-  }
-
-  getMouseFileInfoRequest() {
-    return this.lowLevelLinkService.httpGetRequest(getMouseCsvInfoUrl);
   }
 }
 

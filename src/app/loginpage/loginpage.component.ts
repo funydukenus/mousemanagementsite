@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, ViewEncapsulation } from '@angular/core';
 import { EventEmiterService } from '../service/event.emmiter.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AccountInfoProviderService } from '../service/dataprovider.service';
+import { AccountInfoProviderService, ResponseFrame } from '../service/dataprovider.service';
 import { ToastmessageService, ErrorColor } from '../service/toastmessage.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -62,10 +62,10 @@ export class LoginpageComponent implements OnInit {
   }
 
   /*
-  Function name: OnClickSubmit
+  Function name: loginButtonClick
   Description: This function trigger when the sumbit button is clicked
    */
-  OnClickSubmit(data) {
+  loginButtonClick(data) {
     this.hasUserClickedSubmit = true;
     if (this.form.valid) {
       this.submitButtonTxt = "Validating...";
@@ -75,22 +75,28 @@ export class LoginpageComponent implements OnInit {
         this.passwordValue
       ).subscribe(
         (result) => {
-          let user: User;
-          this.isLoading = false;
-          this.submitButtonTxt = "Done";
+          let responseFrame: ResponseFrame = <ResponseFrame>result;
+          this.resetUiAfterValidation();
 
-          user = <User>JSON.parse(<string>result);
-          this.userInfoProviderService.setCurrentUser(user);
-          this.router.navigate(['']);
-        },
-        (error) => {
-          this.isLoading = false;
-          this.submitButtonTxt = "Get Me In";
-          if (error.status == 401) {
-            this.toastService.openSnackBar(
-              this.snackBar, 'Username or Password is incorrect', 'Dismiss', ErrorColor
+          if(responseFrame.result !== 0){
+            let user: User;
+            user = <User>JSON.parse(<string>responseFrame.payload);
+
+            this.userInfoProviderService.setCurrentUser(user);
+            this.router.navigate(['']);
+          } else {
+            this.displayToastMsg(
+              responseFrame.payload,
+              ErrorColor
             )
           }
+        },
+        (error) => {
+          this.resetUiAfterValidation();
+          this.displayToastMsg(
+            'Network Error: ' + error,
+            ErrorColor
+          )
         }
       )
     }
@@ -106,9 +112,28 @@ export class LoginpageComponent implements OnInit {
   Function name: resetAllValidation
   Description: Reset all the attributes for input abnormal detection
    */
-  resetAllValidation() {
+  resetAllValidation(): void{
     this.abnormalDetected = false;
     this.hasUserClickedSubmit = false;
+  }
+
+  /*
+  Function name: resetUiAfterValidation
+  Description: Reset all UI changes after account validation
+   */
+  resetUiAfterValidation(): void{
+    this.isLoading = false;
+    this.submitButtonTxt = "Get Me In";
+  }
+
+  /*
+  Function name: displayToastMsg
+  Description: Display the toast msg in this components
+   */
+  displayToastMsg(msg: string, color: string): void{
+    this.toastService.openSnackBar(
+      this.snackBar, msg, 'Dismiss', color
+    );
   }
 
 }

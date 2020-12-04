@@ -1,14 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { HarvestedMouseDataproviderService, harvestMouseFileUploadUrl } from '../service/dataprovider.service';
+import { HarvestedMouseDataproviderService, harvestMouseFileUploadUrl, ResponseFrame } from '../service/dataprovider.service';
 import { EventEmiterService } from '../service/event.emmiter.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ToastmessageService, SuccessColor, ErrorColor, WarningColor } from '../service/toastmessage.service';
-import { HttpEventType } from '@angular/common/http';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { MatProgressBar } from '@angular/material/progress-bar';
 
-interface ErrorMsg {
-  error_msg: string
-}
 
 @Component({
   selector: 'app-uploadcsvpage',
@@ -46,7 +43,7 @@ export class UploadcsvpageComponent implements OnInit {
   */
   fileInputChange(event: any) {
     let file: File = event.target.files[0];
-    // this.showInProgress();
+
     this.harvestedMouseDataproviderService.fileUploadRequest(file, harvestMouseFileUploadUrl).subscribe(
       (result) => {
         if (result.type === HttpEventType.Response) {
@@ -57,13 +54,28 @@ export class UploadcsvpageComponent implements OnInit {
         if (result.type === HttpEventType.UploadProgress) {
           let percentDone: number = Math.round(100 * result.loaded / result.total);
           this.progressBarValue = percentDone;
-          console.log(this.progressBarValue);
           this.FileUploadIndicator = percentDone + " % Done";
         }
         if (result.type === HttpEventType.Sent) {
           this.FileUploadIndicator = "Start sending";
           this.uploadingInProgress = true;
           this.progressBarValue = 0;
+        }
+
+        if (result instanceof HttpResponse) {
+          let responseFrame: ResponseFrame = <ResponseFrame>result.body;
+          if (responseFrame.result != 0) {
+            this.FileUploadIndicator = "Upload complete";
+            this.showStartParsingButton = true;
+          }
+          else {
+            this.FileUploadIndicator = "Error occur, Please upload again";
+            this.showStartParsingButton = false;
+            this.displayToastMsg(
+              responseFrame.payload,
+              ErrorColor
+            )
+          }
         }
       }
     )
@@ -82,34 +94,41 @@ export class UploadcsvpageComponent implements OnInit {
 
   startParsing() {
     this.parsingIndicator = "Parsing...";
+    this.showInProgress();
     this.harvestedMouseDataproviderService.startParsingRequest().subscribe(
-      (data) => {
-        let msg = <ErrorMsg>data;
-        this.mouseDebugMsg = msg.error_msg;
-        this.parsingIndicator = "Parsing done";
-        if (this.mouseDebugMsg === "") {
-          this.toastService.openSnackBar(
-            this.snackBar,
-            "Parse successful!",
-            "Dismiss",
-            SuccessColor
-          )
+      (result) => {
+        let responseFrame: ResponseFrame = <ResponseFrame>result;
+        this.inProgressDone();
+
+        if (responseFrame.result != 0) {
+          this.mouseDebugMsg = responseFrame.payload;
+          this.parsingIndicator = "Parsing done";
+
+          if (this.mouseDebugMsg === "") {
+            this.displayToastMsg(
+              "Parse successful!",
+              SuccessColor
+            );
+          } else {
+            this.displayToastMsg(
+              "Partial Parse. Please refer to the debug window for more details",
+              WarningColor
+            );
+          }
         } else {
-          this.toastService.openSnackBar(
-            this.snackBar,
-            "Partial Parse. Please refer to the debug window for more details",
-            "Dismiss",
-            WarningColor
-          )
+          this.displayToastMsg(
+            responseFrame.payload,
+            ErrorColor
+          );
         }
+
       },
       (error) => {
-        this.toastService.openSnackBar(
-          this.snackBar,
-          "Something wrong! Please contact adminstrator",
-          "Dismiss",
-          SuccessColor
-        )
+        this.inProgressDone();
+        this.displayToastMsg(
+          "Network Error",
+          ErrorColor
+        );
       }
     )
   }
@@ -120,5 +139,15 @@ export class UploadcsvpageComponent implements OnInit {
 
   inProgressDone() {
     this.loaded = false;
+  }
+
+  /*
+  Function name: displayToastMsg
+  Description: Display the toast msg in this components
+   */
+  displayToastMsg(msg: string, color: string): void {
+    this.toastService.openSnackBar(
+      this.snackBar, msg, 'Dismiss', color
+    );
   }
 }
