@@ -10,7 +10,8 @@
 <mat-tab-group (selectedTabChange)="selectedTabChange($event)">
   <mat-tab *ngFor="let tab of tabConfig; let i = index" label="{{tab.tabName}}">
     <app-harvestmousepage (dataFreshEventRequired)="refreshTabAndData()"
-      (selectionEvent)="selectionEventTrigger($event)" #tab [tabName]='tab.tabName'></app-harvestmousepage>
+      (selectionEvent)="selectionEventTrigger($event)" 
+      (pageChangedEvent)="pageEventTrigger($event, tab)"
+      #tab [tabName]='tab.tabName' [listNum]='tab.listNum' [pageDisabled]='tab.disabled'></app-harvestmousepage>
   </mat-tab>
 </mat-tab-group>
-

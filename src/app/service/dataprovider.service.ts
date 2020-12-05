@@ -4,6 +4,13 @@ import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../interface/user';
 import { environment } from '../../environments/environment';
 
+
+export interface MouseRequestForm{
+  filterOption: string[],
+  pageSize: number,
+  pageIndex: number
+}
+
 export interface ResponseFrame{
   result: number,
   payload: any
@@ -31,7 +38,7 @@ export let harvestMouseDeleteUrl: string = serverHarvestAppBaseUrl + 'delete';
 export let harvestMouseUpdateUrl: string = serverHarvestAppBaseUrl + 'update';
 export let getDataListUrl: string = serverHarvestAppBaseUrl + 'getdatalist';
 export let startParsingUrl: string = serverHarvestAppBaseUrl + 'parsing_imported_mouse';
-
+export let harvestMouseTotalNum: string = serverHarvestAppBaseUrl + 'list_num';
 /*
 Account information related API end point
 */
@@ -85,6 +92,10 @@ export class LowLevelLinkService {
 
     if (params) {
       httpParams = httpParams.set('filter', params[0]);
+      if(params.length >= 2){
+        httpParams = httpParams.set('page_index', params[1]);
+        httpParams = httpParams.set('page_size', params[2]);
+      }
     }
     httpParams = httpParams.set('symbol', this.last_random_symbol);
     // Insert into the option field
@@ -171,9 +182,19 @@ export class HarvestedMouseDataproviderService {
   Description: Making the get method to query the harvested mouse list
                      from the server
   */
-  getHarvestMouseList(params?: string[]) {
+  getHarvestMouseList(mouseRequestForm: MouseRequestForm) {
     let url = harvestMouseListUrl;
+    let params: string[] = [mouseRequestForm.filterOption[0], mouseRequestForm.pageIndex + "", mouseRequestForm.pageSize + ""];
     return this.lowLevelLinkService.httpGetRequest(url, params);
+  }
+
+  /*
+  Function name: getHarvestMouseListNum
+  Description: Get the total number of the entire mouse list
+  */
+  getHarvestMouseListNum(mouseRequestForm: MouseRequestForm){
+    let url = harvestMouseTotalNum;
+    return this.lowLevelLinkService.httpGetRequest(url, mouseRequestForm.filterOption);
   }
 
   /*

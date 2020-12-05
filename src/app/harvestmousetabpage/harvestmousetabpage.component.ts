@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChildren, ViewChild, QueryList, ChangeDetectorRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { HarvestedMouseDataproviderService, ResponseFrame } from '../service/dataprovider.service';
+import { HarvestedMouseDataproviderService, MouseRequestForm, ResponseFrame } from '../service/dataprovider.service';
 import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastmessage.service';
 import { HarvestmousepageComponent } from '../harvestmousepage/harvestmousepage.component';
 import { HarvestMouse } from '../interface/harvestmouse';
@@ -11,13 +11,18 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { DiagService } from '../service/diag.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer } from '@angular/material/sidenav';
+import { PageEvent } from '@angular/material/paginator';
 
 interface TabConfig {
   filterString: string[],
   tabName: string,
   datasource: MatTableDataSource<HarvestMouse>,
   harvestMouseList: HarvestMouse[],
-  tabComponent: HarvestmousepageComponent
+  tabComponent: HarvestmousepageComponent,
+  listNum: number,
+  pageIndex: number,
+  pageSize: number,
+  disabled: Boolean
 }
 
 @Component({
@@ -108,7 +113,11 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                     filterString: [filterInputString],
                     datasource: new MatTableDataSource<HarvestMouse>(),
                     harvestMouseList: [],
-                    tabComponent: null
+                    tabComponent: null,
+                    pageIndex: 0, // Taking default page 0
+                    pageSize: 10,  // Taking 10 per page by default,
+                    listNum: 0,
+                    disabled: false
                   }
                 );
               }
@@ -172,7 +181,6 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                datasource assign to the tabConfig
   */
   refreshMouseListsAllTabs() {
-    console.log(this.tabConfig);
     this.tabConfig.forEach(
       tabConfig => {
         this.getMouseTabList(
@@ -192,47 +200,85 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
   getMouseTabList(tabConfig: TabConfig) {
     // Load the harvested mouse list when the page is loaded
     this.showInProgress();
-    this.harvestedMouseDataproviderService.getHarvestMouseList(
-      tabConfig.filterString
+    let filterOption: string[] = tabConfig.filterString;
+    let pageIndex: number = tabConfig.pageIndex;
+    let pageSize: number = tabConfig.pageSize;
+    let mouseRequestForm: MouseRequestForm = {
+      filterOption,
+      pageIndex,
+      pageSize
+    }
+    tabConfig.disabled = true;
+    this.harvestedMouseDataproviderService.getHarvestMouseListNum(
+      mouseRequestForm
     ).subscribe(
       (result) => {
         let responseFrame: ResponseFrame = <ResponseFrame>result;
-
         if (responseFrame.result != 0) {
-          let the_data = <HarvestMouse[]>JSON.parse(<string>responseFrame.payload)['mouse_list'];
-          tabConfig.harvestMouseList = the_data;
-          if (!tabConfig.harvestMouseList) {
-            let the_data: HarvestMouse = <HarvestMouse>JSON.parse(<string>responseFrame.payload);
-            tabConfig.harvestMouseList = [];
-            tabConfig.harvestMouseList.push(the_data);
-          }
-          tabConfig.datasource = new MatTableDataSource<HarvestMouse>(
-            tabConfig.harvestMouseList);
-          tabConfig.tabComponent.insertDataSource(tabConfig.datasource);
-          tabConfig.tabComponent.refreshSelected();
-          this.trackedLoadedTabCom = this.trackedLoadedTabCom + 1;
-          if (this.trackedLoadedTabCom == this.tabList.length) {
+          tabConfig.listNum = responseFrame.payload;
+          this.harvestedMouseDataproviderService.getHarvestMouseList(
+            mouseRequestForm
+          ).subscribe(
+            (result) => {
+              tabConfig.disabled = false;
+
+              let responseFrame: ResponseFrame = <ResponseFrame>result;
+
+              if (responseFrame.result != 0) {
+                let the_data = <HarvestMouse[]>JSON.parse(<string>responseFrame.payload)['mouse_list'];
+                tabConfig.harvestMouseList = the_data;
+                if (!tabConfig.harvestMouseList) {
+                  let the_data: HarvestMouse = <HarvestMouse>JSON.parse(<string>responseFrame.payload);
+                  tabConfig.harvestMouseList = [];
+                  tabConfig.harvestMouseList.push(the_data);
+                }
+                tabConfig.datasource = new MatTableDataSource<HarvestMouse>(
+                  tabConfig.harvestMouseList);
+                tabConfig.tabComponent.insertDataSource(tabConfig.datasource, tabConfig.listNum);
+                tabConfig.tabComponent.refreshSelected();
+                this.trackedLoadedTabCom = this.trackedLoadedTabCom + 1;
+                if (this.trackedLoadedTabCom == this.tabList.length) {
+                  this.displayToastMsg(
+                    "Loaded list completed",
+                    SuccessColor
+                  );
+                }
+              } else {
+                this.displayToastMsg(
+                  responseFrame.payload,
+                  ErrorColor
+                );
+              }
+
+              this.inProgressDone();
+            },
+            (error) => {
+              this.displayToastMsg(
+                "Network Error",
+                ErrorColor
+              );
+            }
+          );
+        } else {
+          (error) => {
+            tabConfig.disabled = false;
+            this.inProgressDone();
             this.displayToastMsg(
-              "Loaded list completed",
-              SuccessColor
+              responseFrame.payload,
+              ErrorColor
             );
           }
-        } else {
-          this.displayToastMsg(
-            responseFrame.payload,
-            ErrorColor
-          );
         }
-
-        this.inProgressDone();
       },
       (error) => {
+        tabConfig.disabled = false;
+        this.inProgressDone();
         this.displayToastMsg(
           "Network Error",
           ErrorColor
         );
       }
-    );
+    )
   }
 
   /*
@@ -280,6 +326,12 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  pageEventTrigger(pageEvent: PageEvent, currentTab: TabConfig) {
+    currentTab.pageIndex = pageEvent.pageIndex;
+    currentTab.pageSize = pageEvent.pageSize;
+    this.getMouseTabList(currentTab);
+  }
+
   groupDeleted() {
     this.diagService.openConfirmationDialog(
       this.dialog,
@@ -292,7 +344,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
         ).subscribe(
           (result) => {
             let responseFrame: ResponseFrame = <ResponseFrame>result;
-            if(responseFrame.result != 0) {
+            if (responseFrame.result != 0) {
               this.displayToastMsg(
                 "Deleted successfully",
                 SuccessColor

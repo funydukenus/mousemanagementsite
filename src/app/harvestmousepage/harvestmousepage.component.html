@@ -62,5 +62,6 @@
     <tr mat-row *matRowDef="let row; columns: ['expandedDetail'];" class="element-detail-row"></tr>
 
   </table>
-  <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  <mat-paginator [disabled]="pageDisabled" [length]="listNum" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" (page)="pageChanged($event)">
+  </mat-paginator>
 </div>

@@ -4,7 +4,7 @@ import { ToastmessageService, SuccessColor, ErrorColor } from '../service/toastm
 import { HarvestMouse } from '../interface/harvestmouse';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatTable } from '@angular/material/table';
@@ -41,9 +41,17 @@ export class HarvestmousepageComponent implements OnInit {
   // Identification of current rab
   @Input() tabName: string;
 
+  // Length of the list
+  @Input() listNum: number;
+
+  // Used to disable paginator when requesting server data
+  @Input() pageDisabled: Boolean;
+
   @Output() dataFreshEventRequired = new EventEmitter<any>();
 
   @Output() selectionEvent = new EventEmitter<SelectionModel<HarvestMouse>>();
+
+  @Output() pageChangedEvent = new EventEmitter<PageEvent>();
 
   dataSource: MatTableDataSource<HarvestMouse>;
 
@@ -129,10 +137,9 @@ export class HarvestmousepageComponent implements OnInit {
   Description: This function allows the external data source insert into
                table in this component
   */
-  insertDataSource(dataSource) {
+  insertDataSource(dataSource, totalLength) {
     this.dataSource = dataSource;
     this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
   }
 
   /*
@@ -426,27 +433,30 @@ export class HarvestmousepageComponent implements OnInit {
     this.harvestedMouseDataproviderService.updateHarvestedMouseRequest(
       harvestMouseList
     ).subscribe(
-      data => {
-        this.submitDisabled = false;
-        console.log(data);
-        this.toastService.openSnackBar(
-          this.snackBar,
-          "Comment updated successfully",
-          "Dismiss",
-          SuccessColor
-        )
+      (result) => {
+        let responseFrame: ResponseFrame = <ResponseFrame>result;
+        
+        if (responseFrame.result != 0) {
+          this.dataFreshEventRequired.emit();
+          this.displayToastMsg(
+            "Comment updated successfully",
+            SuccessColor
+          );
+        } else {
+          this.displayToastMsg(
+            responseFrame.payload,
+            ErrorColor
+          );
+        }
         this.IsTextAreaModifed = false;
         this.originalText = this.expandedElement.comment;
       },
-      error => {
+      (error) => {
         this.submitDisabled = false;
-        console.log(error);
-        this.toastService.openSnackBar(
-          this.snackBar,
-          "Comment updated failed",
-          "Dismiss",
+        this.displayToastMsg(
+          "Network Error",
           ErrorColor
-        )
+        );
       }
     );
   }
@@ -458,6 +468,14 @@ export class HarvestmousepageComponent implements OnInit {
     this.toastService.openSnackBar(
       this.snackBar, msg, 'Dismiss', color
     );
+  }
+
+  /*
+  Function name: pageChanged
+  Description: Trigger when page changed event occured
+  */
+  pageChanged(event: PageEvent){
+    this.pageChangedEvent.emit(event);
   }
 
 }
