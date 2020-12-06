@@ -63,7 +63,6 @@ export class UserInfoProviderService {
             let responeFrame: ResponseFrame = <ResponseFrame>result;
 
             if (responeFrame.result !== 0) {
-              console.log(responeFrame);
               if (responeFrame.payload == 0) {
                 this.isUserListEmpty = true;
               } else {

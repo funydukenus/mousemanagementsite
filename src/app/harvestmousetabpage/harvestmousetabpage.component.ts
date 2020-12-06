@@ -223,7 +223,6 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
               tabConfig.disabled = false;
 
               let responseFrame: ResponseFrame = <ResponseFrame>result;
-
               if (responseFrame.result != 0) {
                 let the_data = <HarvestMouse[]>JSON.parse(<string>responseFrame.payload)['mouse_list'];
                 tabConfig.harvestMouseList = the_data;
@@ -234,7 +233,8 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
                 }
                 tabConfig.datasource = new MatTableDataSource<HarvestMouse>(
                   tabConfig.harvestMouseList);
-                tabConfig.tabComponent.insertDataSource(tabConfig.datasource, tabConfig.listNum);
+                
+                tabConfig.tabComponent.insertDataSource(tabConfig.datasource);
                 tabConfig.tabComponent.refreshSelected();
                 this.trackedLoadedTabCom = this.trackedLoadedTabCom + 1;
                 if (this.trackedLoadedTabCom == this.tabList.length) {

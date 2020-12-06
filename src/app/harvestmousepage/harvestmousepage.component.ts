@@ -30,10 +30,10 @@ import { MatDialog } from '@angular/material/dialog';
 export class HarvestmousepageComponent implements OnInit {
 
   // Reference the sort html element in the template
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   // Reference the paginator html element in the template
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   // Reference to the table
   @ViewChild('table') table: MatTable<HarvestMouse>;
@@ -137,7 +137,7 @@ export class HarvestmousepageComponent implements OnInit {
   Description: This function allows the external data source insert into
                table in this component
   */
-  insertDataSource(dataSource, totalLength) {
+  insertDataSource(dataSource) {
     this.dataSource = dataSource;
     this.dataSource.sort = this.sort;
   }
@@ -262,8 +262,6 @@ export class HarvestmousepageComponent implements OnInit {
           if (result) {
             var birth_date = new Date(result.harvestedMouse.birth_date);
             var end_date = new Date(result.harvestedMouse.end_date);
-            console.log(birth_date);
-            console.log(end_date);
             result.harvestedMouse.birth_date = birth_date.getFullYear() + "-" +
               this.appendLeadingZeroes((birth_date.getMonth() + 1)) + "-" +
               this.appendLeadingZeroes(birth_date.getDate());

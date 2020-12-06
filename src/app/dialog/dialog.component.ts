@@ -162,10 +162,10 @@ export class DialogSingleEditComponent implements OnInit {
     setTimeout(() => this.disableAnimation = false);
   }
 
-  consolidateData(result: boolean): resultSingleEdit {
+  consolidateData(): resultSingleEdit {
     return {
       harvestedMouse: this.harvestedMouse,
-      result: result
+      result: this.checkDataModifed()
     }
   }
 
@@ -200,8 +200,6 @@ export class DialogSingleEditComponent implements OnInit {
     this.harvestedMouse.end_date = this.endDate.getFullYear() + "-" + this.appendLeadingZeroes((this.endDate.getMonth() + 1)) + "-" + this.appendLeadingZeroes(this.endDate.getDate());
     let origJSONObj = JSON.stringify(this.origHarvestedMouse);
     let JSONObj = JSON.stringify(this.harvestedMouse);
-    console.log(origJSONObj);
-    console.log(JSONObj);
     return origJSONObj !== JSONObj;
   }
 }
