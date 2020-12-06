@@ -9,7 +9,10 @@ import { AccountInfoProviderService, ResponseFrame } from './dataprovider.servic
 export class UserInfoProviderService {
 
   checkLoggedObseveralbe: Observable<Boolean>;
+  checkUserNumObseveralbe: Observable<Boolean>;
   currentLoggedUserInfo: User = null;
+
+  isUserListEmpty: Boolean;
 
   constructor(private accountInfoProvider: AccountInfoProviderService) { }
 
@@ -44,6 +47,44 @@ export class UserInfoProviderService {
       }
     )
     return this.checkLoggedObseveralbe;
+  }
+
+  /*
+  Function name:
+    retrieveUserInfoAsync
+  Description:
+    Return User data if the user has been logged into the system
+  */
+  retrieveUserNumAsync(): Observable<Boolean> {
+    this.checkUserNumObseveralbe = new Observable(
+      observer => {
+        this.accountInfoProvider.getUserNum().subscribe(
+          (result) => {
+            let responeFrame: ResponseFrame = <ResponseFrame>result;
+
+            if (responeFrame.result !== 0) {
+              console.log(responeFrame);
+              if (responeFrame.payload == 0) {
+                this.isUserListEmpty = true;
+              } else {
+                this.isUserListEmpty = false;
+              }
+            }
+            else {
+              this.isUserListEmpty = false;
+            }
+            observer.next();
+          },
+          (error) => {
+            // Not handling the network error
+            // Let user login again
+            this.isUserListEmpty = false;
+            observer.next();
+          }
+        )
+      }
+    )
+    return this.checkUserNumObseveralbe;
   }
 
   /*
@@ -93,5 +134,14 @@ export class UserInfoProviderService {
    */
   getCurrentUser(): User {
     return this.currentLoggedUserInfo;
+  }
+
+
+  userListEmpty(): Boolean {
+    return this.isUserListEmpty;
+  }
+
+  markListNotEmpty(): void {
+    this.isUserListEmpty = false;
   }
 }

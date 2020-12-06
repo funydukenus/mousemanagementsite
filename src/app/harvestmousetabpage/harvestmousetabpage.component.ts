@@ -79,7 +79,7 @@ export class HarvestmousetabpageComponent implements OnInit, AfterViewInit {
           else {
             project_list.forEach(
               tab_cri => {
-                let filterInputString = "project_title@" + tab_cri + "@4";
+                let filterInputString = "projectTitle@" + tab_cri + "@4";
                 let existed: boolean = false;
                 let not_existed: boolean = true;
                 // Checks if exists

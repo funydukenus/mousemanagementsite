@@ -54,6 +54,7 @@ export let accountIsAdmin: string = serverAccountAppBaseUrl + 'is-admin';
 export let accountCreateNewUser: string = serverAccountAppBaseUrl + 'create';
 export let accountDeleteUser: string = serverAccountAppBaseUrl + 'delete-user';
 export let accountGetLoggedInfoUser: string = serverAccountAppBaseUrl + 'get-logged-user-info';
+export let accountGetUserNum: string = serverAccountAppBaseUrl + 'get_num_user';
 
 
 @Injectable({
@@ -337,13 +338,13 @@ export class AccountInfoProviderService {
     return this.http.post(accountToggleActivityUser, formData, options);
   }
 
-  createNewUser(username: string, email: string, firstname: string, lastname: string) {
+  createNewUser(username: string, email: string, firstname: string, lastname: string, for_admin: Boolean) {
     let formData: FormData = new FormData();
     formData.append('username', username);
     formData.append('email', email);
     formData.append('firstname', firstname);
     formData.append('lastname', lastname);
-
+    formData.append('for_admin', for_admin.toString());
     // Insert into the option field
     let options = {
       responseType: ResponseType.JSON,
@@ -353,7 +354,6 @@ export class AccountInfoProviderService {
 
     return this.http.post(accountCreateNewUser, formData, options);
   }
-
 
   deleteUser(username: string) {
     let formData: FormData = new FormData();
@@ -370,5 +370,9 @@ export class AccountInfoProviderService {
 
   getLoggedUserInfo() {
     return this.lowLevelLinkService.httpGetRequest(accountGetLoggedInfoUser);
+  }
+
+  getUserNum(){
+    return this.lowLevelLinkService.httpGetRequest(accountGetUserNum);
   }
 }

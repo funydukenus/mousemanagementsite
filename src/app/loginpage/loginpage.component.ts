@@ -83,6 +83,7 @@ export class LoginpageComponent implements OnInit {
             user = <User>JSON.parse(<string>responseFrame.payload);
 
             this.userInfoProviderService.setCurrentUser(user);
+            this.userInfoProviderService.isUserListEmpty
             this.router.navigate(['']);
           } else {
             this.displayToastMsg(

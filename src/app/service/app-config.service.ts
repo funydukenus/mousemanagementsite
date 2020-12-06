@@ -8,11 +8,15 @@ export class AppConfigService {
 
   public load(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.userInfoProviderService.retrieveUserInfoAsync().subscribe(
+      this.userInfoProviderService.retrieveUserNumAsync().subscribe(
         () => {
-          resolve(true);
+          this.userInfoProviderService.retrieveUserInfoAsync().subscribe(
+            () => {
+              resolve(true);
+            }
+          );
         }
-      );
+      )
     });
   }
 }

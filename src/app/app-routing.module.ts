@@ -9,6 +9,7 @@ import { UploadcsvpageComponent } from './uploadcsvpage/uploadcsvpage.component'
 import { UsermanagementpageComponent } from './usermanagementpage/usermanagementpage.component';
 import { AuthGuard } from './auth.guard';
 import { SiteLayoutComponent } from './_layout/site-layout/site-layout.compoenent';
+import { FirstTimeUserComponent } from './first-time-user/first-time-user.component';
 
 const routes: Routes = [
   // Site routes 
@@ -26,6 +27,11 @@ const routes: Routes = [
   {
     path: 'update-pwd-new-user',
     component: UpdatepwdnewuserComponent
+  },
+  {
+    path: 'first-time-user',
+    component: FirstTimeUserComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'login',

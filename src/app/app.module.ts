@@ -35,6 +35,7 @@ import { BottomSheetColSelComponent } from './service/bottomsheet.service';
 import { GenderConverter } from './pipe/gender.pipe';
 import { TableHeaderConverter } from './pipe/tableheader.pipe';
 import { AppConfigService } from './service/app-config.service';
+import { FirstTimeUserComponent } from './first-time-user/first-time-user.component';
 
 export function init_app(appConfigService: AppConfigService) {
   return () => appConfigService.load();
@@ -57,7 +58,8 @@ export function init_app(appConfigService: AppConfigService) {
     PageNotFoundComponentComponent,
     UploadcsvpageComponent,
     UsermanagementpageComponent,
-    SiteLayoutComponent
+    SiteLayoutComponent,
+    FirstTimeUserComponent
   ],
   imports: [
     BrowserModule,

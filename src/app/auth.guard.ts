@@ -21,6 +21,15 @@ export class AuthGuard implements CanActivate {
   }
 
   checkLogin(nextUrl: string): true | UrlTree {
+
+    if (this.userInfoProviderService.userListEmpty()) {
+      if (nextUrl === '/first-time-user') {
+        return true;
+      } else {
+        return this.router.parseUrl('first-time-user');
+      }
+    }
+
     if (this.userInfoProviderService.isUserLogged()) {
       // If user has logged in and the next page is login page
       // direct to home page
