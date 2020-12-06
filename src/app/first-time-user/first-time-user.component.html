@@ -1,6 +1,10 @@
 <div *ngIf="isValid" class="login-block">
     <h1 class="login-title">First Time User ( Creating Super User Info )</h1>
     <mat-progress-bar *ngIf="isLoading" mode="query"></mat-progress-bar>
+    <p class="note">
+        Note: After super user is created, a confirmation email will be sent out by application owner for you
+        to create a new password
+    </p>
     <form [formGroup]="form" #userlogin="ngForm" (ngSubmit)="OnClickSubmit(userlogin.value)">
         <input type="text" placeholder="Username" name="username" id="username" formControlName="username" required>
         <input type="email" placeholder="Email" name="email" id="email" formControlName="email" required
