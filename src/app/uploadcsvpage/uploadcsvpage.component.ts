@@ -71,12 +71,22 @@ export class UploadcsvpageComponent implements OnInit {
           else {
             this.FileUploadIndicator = "Error occur, Please upload again";
             this.showStartParsingButton = false;
+            this.fileInputButton.nativeElement.value = "";
             this.displayToastMsg(
               responseFrame.payload,
               ErrorColor
             )
           }
         }
+      },
+      (error) => {
+        this.FileUploadIndicator = "Error occur, Please upload again";
+        this.showStartParsingButton = false;
+        this.fileInputButton.nativeElement.value = "";
+        this.displayToastMsg(
+          "Network Error",
+          ErrorColor
+        )
       }
     )
   }

@@ -28,7 +28,7 @@ export class UserInfoProviderService {
         this.accountInfoProvider.getLoggedUserInfo().subscribe(
           (result) => {
             let responeFrame: ResponseFrame = <ResponseFrame>result;
-
+            
             if (responeFrame.result !== 0) {
               this.currentLoggedUserInfo = <User>JSON.parse(<string>responeFrame.payload);
             }
