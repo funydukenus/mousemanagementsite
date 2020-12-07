@@ -35,6 +35,8 @@ export class UsermanagementpageComponent implements OnInit {
 
   emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
 
+  loaded: Boolean = false;
+
   constructor(
     private accountInfoProvider: AccountInfoProviderService,
     private toastService: ToastmessageService,
@@ -64,8 +66,10 @@ export class UsermanagementpageComponent implements OnInit {
   }
 
   retrieveAllUserInfo(): void {
+    this.loaded = true;
     this.accountInfoProvider.getAllUserInfo().subscribe(
       (result) => {
+        this.loaded = false;
         let responseFrame: ResponseFrame = <ResponseFrame>result;
         if (responseFrame.result != 0) {
           this.userInfoContent = <User[]>JSON.parse(<string>responseFrame.payload)['user_list'];

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { EventEmiterService } from '../service/event.emmiter.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AccountInfoProviderService, ResponseFrame } from '../service/dataprovider.service';
@@ -31,8 +31,10 @@ export class LoginpageComponent implements OnInit {
 
   // Loading trigger indication
   isLoading: Boolean = false;
-
   triggered: Boolean = true;
+
+  // submit button
+  @ViewChild('submitButton') submitButton: ElementRef;
 
   constructor(
     private router: Router,
@@ -85,6 +87,7 @@ export class LoginpageComponent implements OnInit {
             this.userInfoProviderService.setCurrentUser(user);
             this.router.navigate(['']);
           } else {
+            this.resetAllValidation();
             this.displayToastMsg(
               responseFrame.payload,
               ErrorColor
@@ -134,6 +137,10 @@ export class LoginpageComponent implements OnInit {
     this.toastService.openSnackBar(
       this.snackBar, msg, 'Dismiss', color
     );
+  }
+
+  mimicSubmitButtonEvent():void{
+    this.submitButton.nativeElement.click();
   }
 
 }
