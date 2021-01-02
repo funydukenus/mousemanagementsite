@@ -1,12 +1,14 @@
 <div class="jumbotron">
 
-  <h1>Upload CSV</h1>
-  <p>Upload an CSV file. Click <a href='assets/template.csv'>here</a> to download an example.</p>
-
-  <input type="file" accept="" #fileInput style="display:none;" (change)="fileInputChange($event)" accept=".csv">
-  <button type="button" class="btn btn-info functional-button" (click)="uploadButtonClick()">
-    Upload CSV File
-  </button>
+  <div class="description">
+    <h1>Upload CSV</h1>
+    <p>Upload an CSV file. Click <a href='assets/template.xlsx'>here</a> to download an example.</p>
+    <p>Use the template(Excel) and generate the csv to upload to here</p>
+    <input type="file" accept="" #fileInput style="display:none;" (change)="fileInputChange($event)" accept=".csv">
+    <button type="button" class="btn btn-info functional-button" (click)="uploadButtonClick()">
+      Upload CSV File
+    </button>
+  </div>
   <div class="debug-window">
     <div class="upload-file-window">
       <h2>{{FileUploadIndicator}}</h2>
@@ -19,9 +21,9 @@
       </button>
       <h2 *ngIf="showStartParsingButton">{{parsingIndicator}}</h2>
       <mat-progress-bar *ngIf="loaded" mode="indeterminate"></mat-progress-bar>
-      <div class="debug-msg-window">
-        <pre>{{mouseDebugMsg}}</pre>
-      </div>
+    </div>
+    <div class="debug-msg-window">
+      <pre>{{mouseDebugMsg}}</pre>
     </div>
   </div>
 </div>
