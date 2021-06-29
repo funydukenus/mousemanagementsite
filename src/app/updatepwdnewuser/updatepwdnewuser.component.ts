@@ -4,134 +4,173 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataproviderService } from '../service/dataprovider.service';
+import { AccountInfoProviderService, ResponseFrame } from '../service/dataprovider.service';
 import { EventEmiterService } from '../service/event.emmiter.service';
 import { ErrorColor, SuccessColor, ToastmessageService } from '../service/toastmessage.service';
 
 @Component({
-   selector: 'app-updatepwdnewuser',
-   templateUrl: './updatepwdnewuser.component.html',
-   styleUrls: ['./updatepwdnewuser.component.scss']
+  selector: 'app-updatepwdnewuser',
+  templateUrl: './updatepwdnewuser.component.html',
+  styleUrls: ['./updatepwdnewuser.component.scss']
 })
 export class UpdatepwdnewuserComponent implements OnInit {
 
-   // Reference to the form object
-   form: FormGroup;
-   hasUserClickedSubmit: Boolean = false;
+  // Reference to the form object
+  form: FormGroup;
+  hasUserClickedSubmit: Boolean = false;
 
-   // Reference submit button
-   submitButtonTxt: string = "Update";
+  // Reference submit button
+  submitButtonTxt: string = "Update";
 
-   // username and password field attribute
-   WarningTxt: string = 'Username cannot be empty';
-   AbnormalDetected: Boolean = false;
-   passwordValue: string = '';
+  // username and password field attribute
+  warningTxt: string = 'Username cannot be empty';
+  abnormalDetected: Boolean = false;
+  passwordValue: string = '';
 
-   // Loading trigger indication
-   IsLoading: Boolean = false;
+  // Loading trigger indication
+  isLoading: Boolean = false;
 
-   triggered: Boolean = true;
+  triggered: Boolean = true;
 
-   IsValid: Boolean = false;
+  isValid: Boolean = false;
 
-   // Save current new user info
-   secret_key: string;
-   username: string;
+  // Save current new user info
+  secretKey: string;
+  username: string;
 
-   redirecedTimer;
+  redirecedTimer;
 
-   constructor(
-      private activatedRoute: ActivatedRoute,
-      private _router: Router,
-      private _eventEmiter: EventEmiterService,
-      private formBuilder: FormBuilder,
-      private dataprovider: DataproviderService,
-      private _snackBar: MatSnackBar,
-      private toastservice: ToastmessageService) {
-      this._eventEmiter.informPageLoc(
-         'updatenewuser'
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private accountInfoProvider: AccountInfoProviderService,
+    private snackBar: MatSnackBar,
+    private toastService: ToastmessageService) {
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      let secret_key = params['secret_key'];
+      let username = params['username'];
+      this.secretKey = secret_key;
+      this.username = username;
+      this.accountInfoProvider.checkSecretKey(secret_key, username).subscribe(
+        (result) => {
+          let responseFrame: ResponseFrame = <ResponseFrame>result;
+          if (responseFrame.result == 0) {
+            this.router.navigate(['**']);
+          } else {
+            this.isValid = true;
+          }
+        },
+
+        (error) => {
+          this.router.navigate(['**']);
+        }
       );
-      this.activatedRoute.queryParams.subscribe(params => {
-         let secret_key = params['secret_key'];
-         let username = params['username'];
-         this.secret_key = secret_key;
-         this.username = username;
-         this.dataprovider.CheckSecretKey(secret_key, username).subscribe(
-            result => {
-               this.IsValid = true;
-            },
+    });
+  }
 
-            error => {
-               this._router.navigate(['/pagenotfound']);
-            }
-         );
-      });
-   }
+  ngOnInit(): void {
+    // Setup FormControl for input validation
+    this.form = this.formBuilder.group({
+      password: [null, Validators.required]
+    });
 
-   ngOnInit(): void {
-      // Setup FormControl for input validation
-      this.form = this.formBuilder.group({
-         password: [null, Validators.required]
-      });
+    // Setup observer for value change event
+    this.form.valueChanges.subscribe(
+      userForm => {
+        this.resetAllValidation();
+        this.passwordValue = userForm.password;
+      }
+    )
+  }
 
-      // Setup observer for value change event
-      this.form.valueChanges.subscribe(
-         userForm => {
-            this.resetAllValidation();
-            this.passwordValue = userForm.password;
-         }
+  /*
+  Function name: OnClickSubmit
+  Description: This function trigger when the sumbit button is clicked
+   */
+  OnClickSubmit(data) {
+    this.hasUserClickedSubmit = true;
+    if (this.form.valid) {
+      this.updateUiBeforeChangePwd("Updating...");
+
+      this.accountInfoProvider.newUserChangePassword(
+        this.secretKey,
+        this.username,
+        this.passwordValue,
+      ).subscribe(
+        (result) => {
+          let responseFrame: ResponseFrame = <ResponseFrame>result;
+
+          if(responseFrame.result != 0){
+            this.updateUiAfterChangePwd("Done");
+            this.displayToastMsg(
+              "Success! Redirected to login page in 3s",
+              SuccessColor
+            );
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000)
+          } else {
+            this.updateUiAfterChangePwd("Update");
+            this.displayToastMsg(
+              responseFrame.payload,
+              ErrorColor
+            );
+          }
+
+        },
+        (error) => {
+          this.updateUiAfterChangePwd("Update");
+          this.displayToastMsg(
+            "Network Error",
+            ErrorColor
+          );
+        }
       )
-   }
-
-   /*
-   Function name: OnClickSubmit
-   Description: This function trigger when the sumbit button is clicked
-    */
-   OnClickSubmit(data) {
-      this.hasUserClickedSubmit = true;
-      if (this.form.valid) {
-         this.submitButtonTxt = "Updating...";
-         this.IsLoading = true;
-         this.dataprovider.NewUserChangePassword(
-            this.secret_key,
-            this.username,
-            this.passwordValue,
-         ).subscribe(
-            result => {
-               this.IsLoading = false;
-               this.submitButtonTxt = "Done";
-               this.toastservice.openSnackBar(
-                  this._snackBar, 'Success! Redirected to login page in 3s', 'Dismiss', SuccessColor
-               )
-               setTimeout(() => {
-                  this._router.navigate(['/login']);
-               }, 3000)
-            },
-            error => {
-               this.IsLoading = false;
-               this.submitButtonTxt = "Update";
-               if (error.status == 401) {
-                  this.toastservice.openSnackBar(
-                     this._snackBar, 'Username or Secrete is incorrect', 'Dismiss', ErrorColor
-                  )
-               }
-            }
-         )
+    }
+    else {
+      if (!this.passwordValue) {
+        this.warningTxt = "Password cannot be empty";
+        this.abnormalDetected = true;
       }
-      else {
-         if (!this.passwordValue) {
-            this.WarningTxt = "Password cannot be empty";
-            this.AbnormalDetected = true;
-         }
-      }
-   }
+    }
+  }
 
-   /*
-   Function name: resetAllValidation
-   Description: Reset all the attributes for input abnormal detection
-    */
-   resetAllValidation() {
-      this.AbnormalDetected = false;
-      this.hasUserClickedSubmit = false;
-   }
+  /*
+  Function name: resetAllValidation
+  Description: Reset all the attributes for input abnormal detection
+   */
+  resetAllValidation() {
+    this.abnormalDetected = false;
+    this.hasUserClickedSubmit = false;
+  }
+
+  /*
+  Function name: updateUiBeforeChangePwd
+  Description: Reset all the attributes for input abnormal detection
+   */
+  updateUiBeforeChangePwd(buttonString: string): void{
+    this.isLoading = true;
+    this.submitButtonTxt = buttonString;
+  }
+
+  /*
+  Function name: resetAllValidation
+  Description: Reset all the attributes for input abnormal detection
+   */
+  updateUiAfterChangePwd(buttonString: string): void{
+    this.isLoading = false;
+    this.submitButtonTxt = buttonString;
+  }
+
+  /*
+  Function name: displayToastMsg
+  Description: Display the toast msg in this components
+   */
+  displayToastMsg(msg: string, color: string): void {
+    this.toastService.openSnackBar(
+      this.snackBar, msg, 'Dismiss', color
+    );
+  }
 }

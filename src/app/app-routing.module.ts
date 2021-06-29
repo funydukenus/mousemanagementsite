@@ -7,45 +7,45 @@ import { UpdatepwdnewuserComponent } from './updatepwdnewuser/updatepwdnewuser.c
 import { PageNotFoundComponentComponent } from './page-not-found-component/page-not-found-component.component';
 import { UploadcsvpageComponent } from './uploadcsvpage/uploadcsvpage.component';
 import { UsermanagementpageComponent } from './usermanagementpage/usermanagementpage.component';
+import { AuthGuard } from './auth.guard';
+import { SiteLayoutComponent } from './_layout/site-layout/site-layout.compoenent';
+import { FirstTimeUserComponent } from './first-time-user/first-time-user.component';
 
 const routes: Routes = [
-   {
-      path: 'home',
-      component: MainpageComponent
-   },
-   {
-    path: 'harvest-mouse',
-    component: HarvestmousetabpageComponent
-   },
-   {
-    path: 'upload-csv',
-    component: UploadcsvpageComponent
-   },
-   {
-      path: 'login',
-      component: LoginpageComponent
-   },
-   {
-      path: 'updatepwdnewuser',
-      component: UpdatepwdnewuserComponent
-   },
-   {
-      path: 'user-management-page',
-      component: UsermanagementpageComponent
-   },
-   {
-      path: 'pagenotfound',
-      component: PageNotFoundComponentComponent
-   },
-   {
-      path: '',
-      redirectTo: '/home',
-      pathMatch: 'full'
-   }
+  // Site routes 
+  // Includes the header
+  {
+    path: '',
+    component: SiteLayoutComponent,
+    children: [
+      // { path: '', component: MainpageComponent, canActivate: [AuthGuard], pathMatch: 'full'},
+      { path: '', component: HarvestmousetabpageComponent,  canActivate: [AuthGuard], pathMatch: 'full'},
+      { path: 'upload-csv', component: UploadcsvpageComponent, canActivate: [AuthGuard] },
+      { path: 'user-management-page', component: UsermanagementpageComponent, canActivate: [AuthGuard]  }
+    ]
+  },
+  {
+    path: 'update-pwd-new-user',
+    component: UpdatepwdnewuserComponent
+  },
+  {
+    path: 'first-time-user',
+    component: FirstTimeUserComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'login',
+    component: LoginpageComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponentComponent
+  },
 ];
 
 @NgModule({
-   imports: [RouterModule.forRoot(routes)],
-   exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }

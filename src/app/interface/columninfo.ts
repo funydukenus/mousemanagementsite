@@ -1,4 +1,4 @@
-export interface ColumnInfo{
-   columnaName:string,
-   display: boolean
+export interface ColumnInfo {
+  columnaName: string,
+  display: boolean
 }

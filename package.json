@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "start local": "ng start",
     "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "heroku-postbuild": "ng build --aot --prod"
+    "heroku-postbuild": "ng build --aot --configuration=production --output-hashing=all --source-map=true --named-chunks=false --build-optimizer=true"
   },
   "private": true,
   "dependencies": {
@@ -27,10 +28,14 @@
     "angular2-cookie": "^1.2.6",
     "angular4-material-table": "^0.8.0",
     "bootstrap": "^4.4.1",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.0.0",
     "express": "^4.17.1",
     "jquery": "^3.5.1",
+    "js-sha512": "^0.8.0",
     "path": "^0.12.7",
     "rxjs": "~6.5.4",
+    "spinkit": "^2.0.1",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
   },
@@ -58,5 +63,8 @@
   "engines": {
     "node": "10.15.3",
     "npm": "6.9.0"
+  },
+  "browser": {
+    "crypto": false
   }
 }

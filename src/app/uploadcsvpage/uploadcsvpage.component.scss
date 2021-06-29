@@ -1,0 +1,39 @@
+.jumbotron{
+    height: 100vh;
+}
+
+.description{
+    height: 20%;
+}
+
+.debug-window {
+    height: 50%;
+}
+
+.upload-file-window {
+    width: 300px;
+    height: 20%;
+}
+
+.debug-parsing-window {
+    height: 20%;
+}
+
+.debug-msg-window{
+    height: 60%;
+    overflow-y: scroll;
+    background-color: white;
+    opacity: 0.7;
+}
+
+::ng-deep .mat-progress-bar-fill::after {
+    background-color: #1e457c;
+}
+
+::ng-deep .mat-progress-bar-buffer {
+    background: #e4e8eb;
+}
+
+::ng-deep .mat-progress-bar {
+    border-radius: 2px;
+}

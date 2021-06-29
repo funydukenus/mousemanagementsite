@@ -1,0 +1,53 @@
+<mat-sidenav-container>
+    <mat-sidenav #sidenav mode="over">
+        <div class="top">
+            <a mat-list-item (click)="sidenav.close()" routerLink="">
+                <img src='/assets/images/dukenus-logo.png' />
+            </a>
+            <div class="user-info-block">
+                <img class="circle-icon" src="/assets/images/person-icon.png" />
+                <h2 class="user-info-label">{{currentUser.lastname}} {{currentUser.firstname}}</h2>
+                <h5 class="user-info-label">{{currentUser.email}}</h5>
+                <h5 class="user-info-label">{{getPosition()}}</h5>
+            </div>
+            <mat-list>
+                <mat-list-item (click)="sidenav.close()" routerLink="">
+                    <mat-icon class="link-info" matListIcon>pest_control_rodent</mat-icon>
+                    <p class="link-info" matLine>
+                        Havest Mouse
+                    </p>
+                </mat-list-item>
+                <mat-list-item (click)="sidenav.close()" routerLink="/upload-csv">
+                    <mat-icon class="link-info" matListIcon>note_add</mat-icon>
+                    <p class="link-info" matLine>
+                        Upload CSV File
+                    </p>
+                </mat-list-item>
+                <mat-list-item *ngIf="currentUser.is_admin" mat-list-item (click)="sidenav.close()"
+                    routerLink="/user-management-page">
+                    <mat-icon class="link-info" matListIcon>account_circle</mat-icon>
+                    <p class="link-info" matLine>
+                        User Management
+                    </p>
+                </mat-list-item>
+                <mat-list-item class="logout" (click)="sidenav.close()" (click)="logout()">
+                    <mat-icon class="link-info" matListIcon>login</mat-icon>
+                    <p class="link-info" matLine>
+                        Log Out
+                    </p>
+                </mat-list-item>
+            </mat-list>
+        </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar>
+            <a class="side-bar-opener" (click)="sidenav.toggle()">
+                <mat-icon class="material-icons">menu</mat-icon>
+            </a>
+            <span>FNY Lab</span>
+        </mat-toolbar>
+        <div class="root-container">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
