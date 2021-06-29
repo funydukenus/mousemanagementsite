@@ -334,50 +334,6 @@ export class HarvestmousepageComponent implements OnInit {
               (result) => {
                 let responseFrame: ResponseFrame = <ResponseFrame>result;
 
-<<<<<<< HEAD
-   /*
-   Function name: editOnClick
-   Description: This function will be called when the edit button is clicked
-   */
-   editOnClick() {
-      this.diagservice.openSingleEditDialog(
-         this.diaglog,
-         this.expandedElement).subscribe(
-            result => {
-               if (result) {
-                  var birth_date = new Date(result.harvestedMouse.birth_date);
-                  var end_date = new Date(result.harvestedMouse.end_date);
-                  result.harvestedMouse.birth_date = birth_date.getFullYear() + "-" +
-                     this.appendLeadingZeroes((birth_date.getMonth() + 1)) + "-" +
-                     this.appendLeadingZeroes(birth_date.getDate());
-                  result.harvestedMouse.end_date = end_date.getFullYear() + "-" +
-                     this.appendLeadingZeroes((end_date.getMonth() + 1)) + "-" +
-                     this.appendLeadingZeroes(end_date.getDate());
-                  let harvestMouseList: HarvestMouse[] = [];
-                  harvestMouseList.push(result.harvestedMouse);
-                  this.submitDisabled = true;
-                  this.dataprovider.updateHarvestedMouseRequest(
-                     harvestMouseList
-                  ).subscribe(
-                     data => {
-                        this.toastservice.openSnackBar(
-                           this._snackBar,
-                           "Mouse updated successfully",
-                           "Dismiss",
-                           SuccessColor
-                        )
-                        this.dataFreshEventRequired.emit();
-                     },
-                     error => {
-                        this.submitDisabled = false;
-                        this.toastservice.openSnackBar(
-                           this._snackBar,
-                           "Mouse updated failed",
-                           "Dismiss",
-                           ErrorColor
-                        )
-                     }
-=======
                 this.submitDisabled = false;
 
                 if (responseFrame.result != 0) {
@@ -390,7 +346,6 @@ export class HarvestmousepageComponent implements OnInit {
                   this.displayToastMsg(
                     responseFrame.payload,
                     ErrorColor
->>>>>>> master
                   );
                 }
 
