@@ -29,15 +29,14 @@ export class BottomsheetService {
   templateUrl: 'bottom-sheet-col-sel-component.html',
 })
 export class BottomSheetColSelComponent {
-  colInfoList: ColumnInfo[];
-  colList: string[];
-  constructor(
-    private _bottomSheetRef: MatBottomSheetRef<BottomSheetColSelComponent>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {
-    console.log(data.colInfoList);
-    this.colInfoList = data.colInfoList;
-    this.colList = data.colList;
-  }
+   colInfoList: ColumnInfo[];
+   colList: string[];
+   constructor(
+      private _bottomSheetRef: MatBottomSheetRef<BottomSheetColSelComponent>,
+      @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {
+      this.colInfoList = data.colInfoList;
+      this.colList = data.colList;
+   }
 
   /*
   Funtion name: checkBoxChangedEventTrigger

@@ -95,6 +95,9 @@ export class HarvestmousepageComponent implements OnInit {
   // Used to control accessbility of the button
   submitDisabled: boolean = false;
 
+  // Used to control filters
+  columnSelectOptions: JSON;
+
   constructor(
     private harvestedMouseDataproviderService: HarvestedMouseDataproviderService,
     private toastService: ToastmessageService,
@@ -119,20 +122,6 @@ export class HarvestmousepageComponent implements OnInit {
   }
 
   /*
-  Function name: applyFilter
-  Description: This is the callback function when the filter text input
-               event changed trigger
-  */
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue;
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
-  /*
   Function name: insertDataSource
   Description: This function allows the external data source insert into
                table in this component
@@ -140,6 +129,74 @@ export class HarvestmousepageComponent implements OnInit {
   insertDataSource(dataSource) {
     this.dataSource = dataSource;
     this.dataSource.sort = this.sort;
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      let filters = JSON.parse(filter);
+      let matchFound = true;
+
+      if (Object.keys(filters).length <= 0) {
+        return matchFound;
+      }
+
+      for (let key in filters) {
+        matchFound = (matchFound && filters[key].includes(data[key]));
+      }
+      return matchFound;
+    }
+    this.columnSelectOptions = this.prepareColumnSelectOptions(dataSource);
+  }
+
+  /*
+  Function name: prepareColumnSelectOptions
+  Description: This function prepares column select options
+  */
+  prepareColumnSelectOptions(dataSource) {
+    let result:any = {};
+    dataSource.data.forEach(row => {
+      Object.keys(row).forEach(key => {
+        if (typeof row[key] !== 'string'){
+          return;
+        }
+
+        if (typeof result[key] == 'undefined') {
+          result[key] = [];
+        }
+        if (!result[key].includes(row[key])) {
+          result[key].push(row[key]);
+        }
+      })
+    })
+
+    return result;
+  }
+
+  /*
+  Function name: columnOptions
+  Description: This function returns select options based on column
+  */
+  columnOptions(key: string) {
+    if (typeof this.columnSelectOptions == 'undefined') {
+      return [];
+    }
+    return this.columnSelectOptions[key];
+  }
+
+  isOptionSelected(key: string, value: string) {
+    let selectedOptions = JSON.parse(this.dataSource.filter || "{}");
+    if (typeof selectedOptions == 'undefined') {
+      return false;
+    }
+    return selectedOptions[key].contains(value);
+  }
+
+  updateSelectedOptions(event, key) {
+    let selectedOptions = JSON.parse(this.dataSource.filter || "{}");
+    if (event.value.length > 0) {
+      selectedOptions[key] = event.value;
+    } else {
+      delete selectedOptions[key];
+    }
+
+    this.dataSource.filter = JSON.stringify(selectedOptions);
   }
 
   /*
@@ -433,7 +490,7 @@ export class HarvestmousepageComponent implements OnInit {
     ).subscribe(
       (result) => {
         let responseFrame: ResponseFrame = <ResponseFrame>result;
-        
+
         if (responseFrame.result != 0) {
           this.dataFreshEventRequired.emit();
           this.displayToastMsg(
